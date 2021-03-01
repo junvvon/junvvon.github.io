@@ -1,12 +1,13 @@
 import React from 'react';
 import { TodoTemplateProps } from './TodoTemplate.type';
+import { StyledTodoTemplate, AppTitle, Content } from './TodoTemplate.style';
 
 const TodoTemplate: React.FC<TodoTemplateProps> = ({ children }) => {
   return (
-    <div className="TodoTemplate">
-      <div className="app-title">일정 관리</div>
-      <div className="content">{children}</div>
-    </div>
+    <StyledTodoTemplate>
+      <AppTitle>일정 관리</AppTitle>
+      <Content>{children}</Content>
+    </StyledTodoTemplate>
   );
 };
 
