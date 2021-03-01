@@ -6,4 +6,6 @@ export interface todo {
 
 export interface TodoListProps {
   todos: Array<todo>;
+  onRemove: (id: number) => void;
+  onToggle: (id: number) => void;
 }

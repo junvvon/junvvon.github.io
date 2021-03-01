@@ -12,16 +12,20 @@ import {
   Remove,
 } from './TodoListItem.style';
 
-const TodoListItem: React.FC<TodoListItemProps> = ({ todo }) => {
-  const { text, checked } = todo;
+const TodoListItem: React.FC<TodoListItemProps> = ({
+  todo,
+  onRemove,
+  onToggle,
+}) => {
+  const { id, text, checked } = todo;
 
   return (
     <StyledTodoListItem>
-      <Checkbox checked={checked}>
+      <Checkbox checked={checked} onClick={() => onToggle(id)}>
         {checked ? <MdCheckBox /> : <MdCheckBoxOutlineBlank />}
         <Text checked={checked}>{text}</Text>
       </Checkbox>
-      <Remove>
+      <Remove onClick={() => onRemove(id)}>
         <MdRemoveCircleOutline />
       </Remove>
     </StyledTodoListItem>

@@ -1,1 +1,3 @@
-export interface TodoInsertProps {}
+export interface TodoInsertProps {
+  onInsert: (text: string) => void;
+}

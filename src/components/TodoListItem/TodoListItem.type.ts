@@ -4,4 +4,6 @@ export interface TodoListItemProps {
     text: string;
     checked: boolean;
   };
+  onRemove: (id: number) => void;
+  onToggle: (id: number) => void;
 }
