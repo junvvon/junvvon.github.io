@@ -3,7 +3,7 @@ import { Route, Link } from 'react-router-dom';
 import About from './pages/About';
 import Home from './pages/Home';
 
-function App() {
+const App = () => {
   return (
     <div>
       <ul>
@@ -16,9 +16,9 @@ function App() {
       </ul>
       <hr />
       <Route path="/" component={Home} exact={true} />
-      <Route path="/about" component={About} />
+      <Route path={['/about', '/info']} component={About} />
     </div>
   );
-}
+};
 
 export default App;
