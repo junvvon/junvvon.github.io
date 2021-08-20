@@ -4,6 +4,8 @@ This blog was made with React.
 
 [https://julrumg.github.io/react-blog](https://julrumg.github.io/react-blog)
 
+[![Deploy Project](https://github.com/Julrum/julrum.github.io/actions/workflows/deploy.yml/badge.svg?branch=master)](https://github.com/Julrum/julrum.github.io/actions/workflows/deploy.yml)
+
 ## Available Scripts
 
 In the project directory, you can run:
