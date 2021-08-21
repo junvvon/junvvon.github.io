@@ -4,6 +4,8 @@
     "paths": {
       "@App": ["./App.tsx"],
 
+      "@contents": ["./contents"],
+      "@contents/*": ["./contents/*"],
       "@common": ["./common"],
       "@common/*": ["./common/*"],
       "@components": ["./components"],
