@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { RouterProps } from '@global/Router.type';
+import { RouterProps } from '@common/router.type';
 
 const History: React.FC<RouterProps> = ({ history }) => {
   const handleGoBack = () => {

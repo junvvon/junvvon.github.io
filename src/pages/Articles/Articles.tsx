@@ -2,7 +2,7 @@ import React from 'react';
 import { NavLink, Route } from 'react-router-dom';
 import Article from './Article';
 import { ArticlesProps } from './Articles.type';
-import WithRouter from '@root/router/WithRouter';
+import WithRouter from '@router/WithRouter';
 
 const Articles: React.FC<ArticlesProps> = ({}) => {
   const activeStyle = {
