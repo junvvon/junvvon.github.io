@@ -1,6 +1,6 @@
 import React from 'react';
 import { withRouter } from 'react-router-dom';
-import { RouterProps } from '@global/Router.type';
+import { RouterProps } from '@common/router.type';
 
 const WithRouter: React.FC<RouterProps> = ({ location, match, history }) => {
   return (

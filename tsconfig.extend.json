@@ -4,12 +4,10 @@
     "paths": {
       "@App": ["./App.tsx"],
 
-      "@root": ["./"],
-      "@root/*": ["./*"],
+      "@common": ["./common"],
+      "@common/*": ["./common/*"],
       "@components": ["./components"],
       "@components/*": ["./components/*"],
-      "@global": ["./global"],
-      "@global/*": ["./global/*"],
       "@pages": ["./pages"],
       "@pages/*": ["./pages/*"],
       "@router": ["./router"],
