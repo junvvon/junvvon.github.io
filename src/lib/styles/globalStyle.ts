@@ -24,7 +24,7 @@ const GlobalStyle = createGlobalStyle`
 		height: 100%;
 	}
 	code {
-	  font-family: D2Coding, source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+	  font-family: 'D2Coding ligature', source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 	}
 	* {
  		box-sizing: border-box;

@@ -13,7 +13,9 @@
       "@pages": ["./pages"],
       "@pages/*": ["./pages/*"],
       "@router": ["./router"],
-      "@router/*": ["./router/*"]
+      "@router/*": ["./router/*"],
+      "@styles": ["./lib/styles"],
+      "@styles/*": ["./lib/styles/*"]
     }
   }
 }
