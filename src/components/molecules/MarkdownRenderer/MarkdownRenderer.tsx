@@ -2,8 +2,9 @@
 import React, { useState, useEffect } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
-import { MarkdownStyle, Pre } from './MarkdownRenderer.style';
+import { MarkdownStyle } from './MarkdownRenderer.style';
 import READMEMarkdown from '@contents/posts/README.md';
+import CodeBlock from '@components/atoms/CodeBlock';
 
 const MarkdownRenderer: React.FC = () => {
   const [markdown, setMarkdown] = useState('');
@@ -20,13 +21,7 @@ const MarkdownRenderer: React.FC = () => {
     <MarkdownStyle>
       <ReactMarkdown
         plugins={[remarkGfm]}
-        components={{
-          code: (props) => (
-            <Pre>
-              <code {...props} />
-            </Pre>
-          ),
-        }}
+        components={{ code: (props) => <CodeBlock {...props} /> }}
       >
         {markdown}
       </ReactMarkdown>

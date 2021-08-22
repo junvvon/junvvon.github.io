@@ -13,6 +13,9 @@ declare module 'styled-components' {
       main: string;
       sub: string;
       placeholder: string;
+      inlineCodeColor: string;
+      inlinebg: string;
+      codebg: string;
       white: string;
       background: string;
       bgDivider: string;

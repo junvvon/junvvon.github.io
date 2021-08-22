@@ -1,7 +1,7 @@
 import React from 'react';
 import { Wrapper } from './Home.style';
 import { HomeProps } from './Home.type';
-import MarkdownRenderer from '@components/atoms/MarkdownRenderer';
+import MarkdownRenderer from '@components/molecules/MarkdownRenderer';
 
 // eslint-disable-next-line
 const Home: React.FC<HomeProps> = ({}) => {
