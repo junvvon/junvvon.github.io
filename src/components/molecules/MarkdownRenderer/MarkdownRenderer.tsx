@@ -5,6 +5,7 @@ import remarkGfm from 'remark-gfm';
 import { MarkdownStyle } from './MarkdownRenderer.style';
 import READMEMarkdown from '@contents/posts/README.md';
 import CodeBlock from '@components/atoms/CodeBlock';
+import QuoteBlock from '@components/atoms/QuoteBlock';
 
 const MarkdownRenderer: React.FC = () => {
   const [markdown, setMarkdown] = useState('');
@@ -21,7 +22,10 @@ const MarkdownRenderer: React.FC = () => {
     <MarkdownStyle>
       <ReactMarkdown
         plugins={[remarkGfm]}
-        components={{ code: (props) => <CodeBlock {...props} /> }}
+        components={{
+          code: (props) => <CodeBlock {...props} />,
+          blockquote: (props) => <QuoteBlock {...props} />,
+        }}
       >
         {markdown}
       </ReactMarkdown>
