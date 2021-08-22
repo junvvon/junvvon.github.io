@@ -11,6 +11,11 @@ export const MenuBarSpace = styled.div`
   height: 64px;
 `;
 
+export const ContentWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+`;
+
 export const Content = styled.div`
   width: 768px;
   height: 100%;
