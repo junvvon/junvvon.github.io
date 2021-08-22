@@ -12,10 +12,15 @@ export const MenuBarSpace = styled.div`
 `;
 
 export const Content = styled.div`
-  width: 100%;
+  width: 768px;
   height: 100%;
-  display: flex;
-  justify-content: center;
+  @media (max-width: 1024px) {
+    width: 736px;
+  }
+  @media (max-width: 736px) {
+    width: 100%;
+  }
+  padding: 1rem;
 
   background-color: ${({ theme }) => theme.colors.white};
 `;
