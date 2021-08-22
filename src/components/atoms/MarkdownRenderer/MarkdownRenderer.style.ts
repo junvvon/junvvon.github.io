@@ -14,4 +14,5 @@ export const Pre = styled.pre`
   padding: 2rem;
   line-height: 1.5rem;
   margin: 2rem auto;
+  overflow-x: auto;
 `;
