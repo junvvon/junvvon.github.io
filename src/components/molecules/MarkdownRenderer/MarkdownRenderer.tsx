@@ -25,6 +25,28 @@ const MarkdownRenderer: React.FC = () => {
         components={{
           code: (props) => <CodeBlock {...props} />,
           blockquote: (props) => <QuoteBlock {...props} />,
+          em: ({ ...props }) => {
+            if (
+              props.children[0] &&
+              typeof props.children[0] === 'string' &&
+              props.children[0].startsWith('^')
+            ) {
+              console.log(props.children[0]);
+              return (
+                <sup>
+                  {props.children[0].substring(1, props.children[0].length - 1)}
+                </sup>
+              );
+            }
+            if (
+              props.children[0] &&
+              typeof props.children[0] === 'string' &&
+              props.children[0].startsWith('~')
+            ) {
+              return <sub>{props.children[0].substring(1)}</sub>;
+            }
+            return <i {...props} />;
+          },
         }}
       >
         {markdown}
