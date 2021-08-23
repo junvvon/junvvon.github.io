@@ -1,1065 +1,671 @@
-# 에러 처리하기
+# 메모리 관리
 
-C++는 이렇게 **예상치 못한 예외적인 상황**에 대처하도록 **익셉션**(**예외**)이라는 기능을 제공한다.
+메모리 할당과 관리는 C++ 프로그래밍에서도 특히 문제가 발생하기 쉬운 부분이다.
 
-## 에러와 예외
+## 동적 메모리 다루기
 
-### 익셉션의 정체
+### 메모리의 작동 과정 살펴보기
 
-**익셉션**이란 코드에서 발생한 ’예외, 상황이나 에러가 코드의 정상적인 실행 흐름에 퍼지지 않도록 알려주는 메커니즘이다. 익셉션 메커니즘을 적용하면 에러가 발생한 코드는 익셉션을 **던지고** _^throw^_ (**발생시키고**), 이를 처리하는 코드는 발생한 익셉션을 **받아서 처리** _^catch^_ 하는 식으로 작동한다. 익셉션을 처리하는 과정은 기존 프로그램과 달리 순차적으로 실행되지 않는다. 어떤 코드가 익셉션을 던지면 프로그램의 정상 실행 흐름은 잠시 멈추고 **익셉션 핸들러** _^exception^_ _^handler^_ **예외 처리기**)로 제어권을 넘긴다. 이때 핸들러의 위치는 다양하다.
-
-### C++에서 익셉션이 필요한 이유
-
-C++에서 에러를 표시하는 방법들이 표준처럼 굳어진 방식이 있다. 이 방식을 C++에서도 그대로 적용한 사례도 많다. 하지만 이러한 일관성 없이 나름대로 정한 관례대로 구현한 함수들이 뒤섞이면 문제가 발생할 수 있다. 호출한 함수가 예상과 다른 방식으로 코드를 리턴하기 때문이다.
-
-또 다른 문제는 C++ 함수는 리턴 타입을 하나만 지정할 수 있다는 점이다. 그래서 에러와 결과를 모두 리턴하려면 다른 수단을 마련해야 한다. 한 가지 방법은 값을 두 개 이상 저장할 수 있는 std::pair나 std::tuple에 결과와 에러를 하나로 묶어서 리턴하는 것이다. 다른 방법은 여러 값을 담는 struct나 클래스를 직접 정의해서 함수의 결과와 에러 상태를 그 struct나 클래스의 인스턴스로 만들어서 리턴하는 것이다. 에러나 리턴값을 레퍼런스 매개변수로 전달하거나 리턴값 중 어느 하나로 표현하는 방법도 있다. 어떤 방식을 사용하든지 리턴값을 직접 보고 에러 발생 여부를 확인하는 작업은 함수를 호출한 측의 몫이다. 다른 곳에서 에러를 처리한다면 그곳으로 반드시 전달해야 하는데, 이렇게 하면 에러에 대한 핵심 세부사항을 놓치기 쉽다.
-
-익셉션 메커니즘을 활용하면 에러를 쉽고 일관성 있고 안전하게 처리할 수 있다. 기존에 C나 C++에서 활용하던 비공식 에러 처리 가법에 비해 익셉션 메커니즘이 뛰어난 점은 다음과 같다.
-
-- 에러를 리턴값으로 표현하면 호출한 측에서 깜박하고 리턴값을 검사하지 않거나 상위 함수로 전달하지 못 할 수 있다. C++17의 [[nodiscard]] 어트리뷰트를 활용하면 리턴 코드를 무시하지 못하게 설정할 수 있긴 하지만 완벽한 해결책이라고 볼 수는 없다. 반면 익셉션은 깜박 잊고 처리하지 않거나 무시할 수 없다. 발생한 익셉션을 처리하지 않으면 프로그램이 즉시 멈추가 때문이다.
-
-- 에러를 정수 타입 리턴 코드로 표현하면 구체적인 정보를 담기 힘들다. 반면 익셉션은 에러를 처리하는 데 필요한 정보를 마음껏 담을 수 있다. 또한 익셉션은 에러뿐만 아니라 다른 부가 정보도 담을 수 있다. 물론 익셉션 메커니즘을 남용한다고 보는 프로그래머도 많다.
-
-- 익셉션 메커니즘은 콜 스택의 중간 단계를 건너뛸 수 있다. 다시 말해 여러 함수가 연속적으로 호출됐을 때 중간에 호출된 함수에서 에러를 처리하지 않고 콜 스택의 최상위 함수에서 에러를 처리하게 만들 수 있다. 반면 리턴 코드를 활용하면 함수 호출의 각 단계마다 반드시 에러 코드를 다음 단계로 전달하도록 작성해야 한다.
-
-요즘은 드물지만 예전 컴파일러에서는 에러를 처리하는 모든 함수에 오버헤드가 발생한느 경우가 많았다. 최신 컴파일러는 익셉션이 발생하지 않으면 오버헤드가 거의 없고, 익셉션이 실제로 발생했을 때만 약간의 오버헤드가 발생하도록 잘 타협하고 있다. 익셉션은 말 그대로 예외이기 때문에 이렇게 상황에 따라 오버헤드를 최소화하도록 처리하는 것이 합리적이다.
-
-### 바람직한 에러 처리 방식
-
-익셉션을 활용하면 에러 처리 기능을 체계적으로 구현하면 단점보다 장점이 많다. 따라서 이 장에서는 익셉션 메커니즘을 구체적으로 살펴본다. 또한 표준 라이브러리나 부스트 _^Boost^_ 같은 유명한 라이브러리는 익셉션을 적극 활용하고 있다. 따라서 이런 라이브러리를 사용하려면 익셉션을 다루는 방법을 익혀둬야 한다.
-
-## 익셉션 처리 과정
-
-### 익셉션 던지고 받기
-
-프로그램에 익셉션을 구현하는 코드는 두 부분으로 나뉜다. 하나는 발생한 익셉션을 처리하는 try/catch 문이고, 다른 하나는 익셉션을 던지는 throw 문이다.
-
-try/catch 문은 다음과 같이 구성된다.
+메모리 한 칸을 레이블이 달린 상자로 표현한다. 여기서 레이블은 그 메모리를 사용하는 변수 이름에 해당한다. 그리고 상자에 담긴 데이터는 그 변수(메모리)에 현재 저장된 값이다.
+이 코드는 함수 안에 있으므로 `i`는 로컬 변수다.
 
 ```c++
-try {
-		// 익셉션이 발생할 수 있는 코드
-	} catch (익셉션_타입1 익셉션_이름) {
-		// 익셉션_타입1 익셉션을 처리하는 코드
-	} catch (익셉션_타입2 익셉션_이름) {
-		// 익셉션_타입2 익셉션을 처리하는 코드
-}
+int i = 7;
 ```
 
-예외 상황이 발생할 수 있는 코드에 throw 문으로 익셉션을 직접 던져도 된다. 또한 throw 문으로 익셉션을 직접 던지거나 익셉션을 던지는 함수를 호출하는 문장이 담긴 함수를 호출할 수도 있다. 후자의 경우 여러 단계의 호출 과정을 거칠 수도 있다.
+이러한 로컬 변수 `i`를 **자동 변수**(automatic variable)고 부르며 스택에 저장된다. 프로그램의 실행 흐름이 이 변수가 선언된 스코프를 벗어나면 할당된 메모리가 자동으로 해제된다.
 
-익셉션이 발생하지 않으면 catch 블록은 실행되지 않고, try 문의 마지막 문장을 실행하고 나서 try/catch 문을 빠져나와 바로 다음 문장을 실행한다.
+| 스택 |     | 힙  |     |
+| :--: | --- | :-: | --- |
+| `i`  |     |  7  |     |
 
-반면 익셉션이 발생하면 throw 도는 throw 문이 담긴 함수를 호출하는 문장의 바로 뒤에 있는 코드는 실행되지 않고, 발생한 익셉션의 타입에 맞는 catch 블록으로 실행 흐름이 바뀐다.
-
-catch 블록에서 더 이상 실행 흐름이 바뀌지 않는다면, 다시 말해 어떤 값을 리턴하거나, 다른 익셉션을 던지거나, 발생한 익셉션을 그대로 다시 던지는 등의 작업을 수행하지 않으면 방금 실행한 catch 블록의 마지막 문장을 끝낸 후 try/catch 문을 빠져나와 그다음 코드를 실행한다.
-
-익셉션 처리 코드를 작성하는 방법을 구체적으로 살펴보기 위해 다음과 같이 0으로 나누는 상황을 감시하는 함수를 만들어보자. 이 코드는 \<stdexcept> 헤더에 정의된 std::invalid_argument라는 익셉션을 던진다.
-
-```c++
-double SafeDivide(double num, double den)
-{
-	if (den == 0)
-	throw invalid_argument("Divide by zero");
-	return num / den;
-}
-
-int main ()
-{
-	try {
-		cout << SafeDivide(5, 2) << endl;
-		cout << SafeDivide(10, 0) << endl;
-		cout << SafeDivide(3, 3) << endl;
-	} catch (const invalid_argument& e) {
-		cout << "Caught exception: " << e.what() << endl;
-	}
-	return 0;
-}
-```
-
-여기서 throw는 C++에서 정의된 키워드로서, 익셉션을 던지려면 반드시 이 키워드를 써야 한다. throw 문에 나온 invalid_argument ( )는 던질 invalid_argument 타입의 익셉션 객체를 생성한다. invalid_argument는 C++ 표준 라이브러리에서 제공하는 표준 익셉션 중 하나다. 표준 라이브러리에 정의된 익셉션은 일정한 계층을 형성하고 있다. 이 계층 구조에 속한 클래스마다 what ( ) 메서드가 있는데, 이 메서드는 익셉션을 표현하는 const char\* 스트링을 리턴한다. 이 값은 익셉션 생성자의 인수로 전달하는 방식으로 설정한다.
-
-### 익셉션 타입
-
-던질 수 있는 익셉션의 타입에는 제한이 없다. 간단한 int 타입 객체를 던져도 된다. 또는 다음과 같이 C 스타일 스트링인 const char\* 타입으로 던져도 된다. 스트링에 예외 상황에 대한 정보를 담을 때 유용한 기법이다.
-
-```c++
-vector<int> readIntegerFile(string_view fileName)
-{
-	ifstream inputstream(fileName.data());
-	if (inputstream.fail()) {
-		// 파일 열기 실패: 익셉션을 던진다.
-		throw "Unable to open file";
-	}
-	// 나머지 코드 생략
-}
-```
-
-const char\* 타입의 익셉션을 받는 부분은 다음과 같이 그 값을 출력할 수 있다.
-
-```c++
-try {
-	myInts = readIntegerFile(fileName);
-} catch (const char* e) {
-	cerr << e << endl;
-	return 1;
-}
-```
-
-하지만 예제처럼 기본 타입을 사용하기보다는 타입을 새로 정의하는 것이 바람직한데 그 이유는 다음과 같다.
-
-- 객체의 클래스 이름에 예외 상황에 대한 정보를 드러낼 수 있다.
-
-- 예외 상황의 종류뿐만 아니라 다른 정보도 담을 수 있다.
-
-C++ 표준 라이브러리에 미리 정의돼 있는 익셉션 클래스를 활용할 수도 있고, 익셉션 클래스를 직접 정의할 수도 있다. 구체적인 방법은 뒤에서 소개한다.
-
-### 익셉션 객체를 const 레퍼런스로 받기
-
-exception 객체를 던질 때 catch 문을 다음과 같이 작성했다.
-
-```c++
-} catch (const exception& e) {
-```
-
-그런데 익셉션 객체를 const 레퍼런스로 받지 않아도 된다. 다음과 같이 그냥 값으로 받아도 된다.
-
-```c++
-} catch (exception e) {
-```
-
-또는 non-const 레퍼런스로 받아도 된다.
-
-```c++
-} catch (exception& e) {
-```
-
-또한 const char\* 타입으로 던지는 예제에서 본 것처럼 포인터 타입을 던져도 된다.
-
-> 익셉션 객체는 항상 const 레퍼런스로 받는 것이 좋다. 익셉션 객체를 값으로 받으면 객체 슬라이싱이 발생한다.
-
-### 여러 가지 익셉션 던지고 받기
-
-readIntegerFile ( )에서는 파일 열기 실패 말고도 다른 문제가 얼마든지 발생할 수 있다. 파일에서 데이터를 읽는 도중 포맷에 문제가 있어서 에러가 발생할 수도 있다. 이처럼 파일 열기에 실패하거나 데이터 읽기에 오류가 발생할 때 익셉션을 던지도록 readIntegerFile ( )들 다음과 같이 수정할 수 있다오 이번에는 exception을 상속한 runtime_error로 구현한다. 이 타입은 생성자를 호출할 때 예외에 대한 설명을 지정할 수 있다. runtime_error 익셉션 클래스는 \<stdexcept> 헤더에 정의돼 있다.
-
-```c++
-vector<int> readIntegerFile(string_view fileName)
-{
-	ifstream inputStream(fileName.data());
-	if (inputstream.fail()) {
-		// 파일 열기에 실패한 경우 : 익셉션을 던진다.
-		throw runtime_error("Unable to open the file.");
-	}
-
-	// 파일에서 정수를 하나씩 읽어 벡터에 추가한다.
-	vector<int> integers;
-	int temp;
-	while (inputstream >> temp) {
-    integers.push_back(temp);
-	}
-
-	if (linputStream.eof()) {
-		// 파일 끝(EOF)에 도달하지 않았다.
-		// 다시 말해 파일을 읽는 도중 에러가 발생한다.
-		// 따라서 익셉션을 던진다.
-		throw runtime_error("Error reading the file.");
-	}
-	return integers;
-}
-```
-
-앞에서 main ( ) 함수를 작성할 때 catch 구문이 runtime_error의 베이스 클래스인 exception 타입을 받도록 지정해뒀기 때문에 여기서는 변경할 필요 없다. 이렇게 하면 catch 문은 두 가지 상황을 모두 처리하게 된다.
-
-```c++
-try {
-	myInts = readIntegerFile(fileName);
-} catch (const exception& e) {
-	cerr << e.what() << endl;
-	return 1;
-}
-```
-
-이렇게 하지 않고 readIntegerFile ( )에서 익셉션을 두 가지 타입으로 따로 나눠서 던져도 된다. 다음 코드를 보면 파일을 열 수 없으면 invalid_argument 익셉션을 던지고, 정수를 읽을 수 없으면 runtime_error 익셉션을 던진다. invalid_argument와 runtime_error는 둘 다 C++ 표준 라이브러리인 \<stdexcept> 헤더 파일에 정의돼 있다.
-
-```c++
-vector<int> readIntegerFile(string_view fileName)
-{
-	ifstream inputStream(fileName.data());
-	if (inputstream.fail()) {
-		// 파일 열기에 실패한 경우 : 익셉션을 던진다.
-		throw invalid_argument("Unable to open the file.");
-	}
-
-	// 파일에서 정수를 하나씩 읽어 벡터에 추가한다.
-	vector<int> integers;
-	int temp;
-	while (inputStream >> temp) {
-		integers.push_back(temp);
-	}
-
-	if (!inputStream.eof()) {
-		// 파일 끝(EOF)에 도달하지 않았다.
-		// 다시 말해 파일을 읽는 도중 에러가 발생한다.
-		// 따라서 익셉션을 던진다.
-		throw runtime_error("Error reading the file.");
-	}
-	return integers;
-}
-```
-
-invalid_argument와 runtime_error에는 public 디폴트 생성자가 없고 string 인수를 받는 생성자만 있다.
-
-이제 main ( )에 invalid_argument를 받는 catch 문과 runtime_error를 받는 catch 문을 따로 작성한다.
-
-```c++
-try {
-	myInts = readIntegerFile(fileName);
-} catch (const invalid_argument& e) {
-	cerr << e.what() << endl;
-	return 1;
-} catch (const runtime_error& e) {
-	cerr << e.what() << endl;
-	return 2;
-}
-```
-
-try 블록에서 익셉션이 발생하면 컴파일러는 그 익셉션 타입과 일치하는 catch 문(핸들러)을 선택한다. 그러므로 readIntegerFile ( )에서 파일을 열 수 없으면 invalid_argument 객체를 던지고, main ( )의 첫 번째 catch 문에서 이를 처리한다. 반면 readIntegerFile ( )에서 파일을 읽는 데 문제가 발생하면 runtime_error를 던지고, main ( )의 두 번째 catch 문에서 이를 처리한다.
-
-#### 1. 익셉션 타입 매칭과 cosnt
-
-처리하려는 익셉션 타입에 const가 지정됐는지 여부는 매칭 과정에 영향을 미치지 않는다. 다시 말해 다음 문장은 runtime_error 타입에 속하는 모든 익셉션을 매칭한다.
-
-```c++
-} catch (const runtime_error& e) {
-```
-
-다음 문장도 마찬가지로 runtime_error 타입에 속하는 모든 익셉션을 매칭한다.
-
-```c++
-} catch (runtime_error& e) {
-```
-
-#### 2. 모든 익셉션 매칭하기
-
-catch 문에서 모든 종류의 익셉션에 매칭하려면 다음과 같이 특수한 문법으로 작성한다.
-
-```c++
-try {
-	myInts = readIntegerFile(fileName);
-} catch (...) {
-	cerr << "Error reading or opening file " << fileName << endl;
-	return 1;
-}
-```
-
-점 세 개를 연달아 쓴 부분은 오타가 아니다. 모든 익셉션 타입에 매칭하라는 와일드카드다. 문서에서 익셉션 타입이 정확히 나와 있지 않아서 모든 익셉션을 받게 만들 때 유용하다. 하지만 발생 가능한 익셉션을 확실히 알 수 있다면 이렇게 구현하지 않는 것이 좋다. 필요 없는 익셉션까지 처리하기 때문이다. 항상 익셉션 타입을 구체적으로 지정해서 꼭 필요한 익셉션만 받도록 작성하는 것이 바람직하다.
-
-모든 종류의 익셉션을 매칭하는 catch ( ... ) 구문은 디폴트 catch 핸들러를 구현할 때도 유용하다. 익셉션이 발생하면 catch 핸들러가 코드에 나열된 순서대로 검색하면서 조건에 맞는 것을 실행한다. 다음 예는 invalid_argument와 runtim_error만 catch 문을 별도로 작성하고, 나머지 익셉션은 디폴트 catch 핸들러로 처리하는 방법을 보여준다.
-
-```c++
-try {
-	// 익셉션이 발생할 수 있는 코드
-} catch (const invalid_argument& e) {
-	// invalid_argument 익셉션을 처리하는 핸들러 코드
-} catch (const runtime_error& e) {
-	// runtime_error 익셉션을 처리하는 핸들러 코드
-} catch (...) {
-	// 나머지 모든 익셉션을 처리하는 핸들러 코드
-}
-```
-
-### 처리하지 못한 익셉션
-
-프로그램에서 발생한 익셉션을 처리하는 곳이 하나도 없으면 프로그램이 종료돼버린다. 그래서 미처 처리하지 못한 익셉션을 모두 잡도록 main ( ) 함수 전체를 try/catch 구문으로 감싸는 패턴을 많이 사용한다. 예를 들면 다음과 같다.
-
-```c++
-try {
-	main(argc, argv);
-} catch (...) {
-	// 에러 메시지를 출력한 뒤 프로그램을 종료한다.
-}
-```
-
-그런데 이렇게 하면 뭔가 아쉬운 점이 있다. 애초에 익셉션을 사용하는 이유는 바람직하지 않은 예외 상황이 발생했을 때 대처할 기회를 얻는 데 있기 때문이다.
-
-> **반드시 프로그램에서 발생할 수 있는 익셉션을 모두 잡아서 처리하도록 작성한다.**
-
-catch 구문으로 처리하지 못한 익셉션이 남아 있다면 프로그램을 다르게 실행하도록 구현하는 방법도 있다. 예를 들어 프로그램이 잡지 못한 익셉션을 만나면 terminate ( ) 함수를 호출하게 만들 수 있다. 이 함수는 C++에서 기본으로 제공하며, 내부적으로 \<cstdlib> 헤더에 정의된 abort ( ) 함수를 호출해서 프로그램을 죽인다. 또는 set_terminate ( )에 인수를 받지 않고 리턴값도 없는 콜백 함수를 포인터로 지정하는 방식으로 terminate_handler를 직접 구현해도 된다. terminate ( ), set_terminate ( ), terminate_handler는 모두 \<excepotion> 헤더에 선언돼 있다. 사용법은 다음과 같다.
-
-```c++
-try {
-	main(argc, argv);
-} catch (...) {
-	if (terminate_handler != nullptr) {
-		terminate_handler();
-	} else {
-		terminate();
-	}
-}
-// 정상 종료 코드
-```
-
-아쉽지만 여기서 지정한 콜백 함수도 결국 에러를 무시하지 못하고 프로그램을 종료시킨다. 그래도 최소한 종료 직전에 유용한 정보를 담은 에러 메시지를 출력할 기회는 있다. 예를 들어 다음 코드를 보면 main ( )은 커스텀 콜백 함수인 myTerminate ( )를 terminate_handler로 지정했다. 이 핸들러는 readIntegerFile ( )이 던지는 익셉션을 제대로 처리하지 않고 그냥 에러 메시지만 출력한 뒤 exit ( )를 호출해서 프로그램을 종료시킨다. exit ( ) 함수는 프로세스를 종료하는 방식으로 표현하는 정숫값을 인수로 받는다. 이렇게 지정한 값은 OS로 전달된다.
-
-```c++
-void myTerminate()
-{
-	cout << "Uncaught exception!" << endl;
-	exit(1);
-}
-
-int main()
-{
-	set_terminate(myTerminate);
-
-	const string fileName = "IntegerFile.txt";
-	vector<int> myInts = readIntegerFile(fileName);
-
-	for (const auto& element : myInts) {
-		cout << element << "
-	}
-	cout << endl;
-	return 0;
-}
-```
-
-여기에는 나오지 않았지만 set_terminate ( ) 함수로 새로운 terminate_handler를 지정하면 기존에 설정된 핸들러를 리턴하다. terminate_handler는 프로그램 전체에서 접근할 수 있기 때문에 처리할 일이 끝나면 이를 리셋하는 것이 바람직하다. 이 예제에서는 terminate_handler를 사용하는 다른 코드가 없기 때문에 리셋하지 않았다.
-
-set_terminate ( )는 반드시 알아야 할 기능 중 하나지만, 에러 처리에 가장 효과적인 수단은 아니다. 그보다는 처리할 익셉션을 try/catch 구문에 구체적으로 지정해서 꼭 필요한 익셉션만 제대로 처리하는 것이 바람직하다.
-
-### noexcept
-
-기본적으로 함수가 던질 수 있는 익셉션의 종류에는 제한이 없다. 하지만 함수에 noexcept 키워드를 지정해서 어떠한 익셉션도 던지지 않는다고 지정할 수는 있다. 예를 들어 앞에서 본 readIntegerFile ( ) 함수에 noexcept를 지정하면 익셉션을 하나도 던지지 않는다.
-
-```c++
-vector<int> readIntegerFile(string_view fileName) noexcept;
-```
-
-> noexcept 키워드가 지정된 함수는 익셉션을 던지지 않는다.
-
-noexcept 키워드가 지정된 함수에 익셉션을 던지는 코드가 있으면 C++ 런타임은 terminate ( )를 호출해서 프로그램을 종료시킨다.
-
-파생 클래스에서 virtual 메서드를 오버라이드할 때 베이스 클래스에 정의된 메서드에 noexcept가 지정되지 않았더라도 오버라이드하는 메서드 noexcept를 지정할 수 있다. 하지만 그 반대로는 할 수 없다.
-
-### throw 리스트(현재 지원 중단 _및_ 삭제됨)
-
-이전 버전의 C++에서는 함수나 메서드에서 던질 수 있는 익셉션을 지정할 수 있다. 이를 **throw 리스트** 또는 **익셉션 명세** _^exception^_ _^specification^_ 라 부른다.
-
-> **C++11 에서는 익셉션 명시 기능에 대한 지원이 폐기됐고 C++17부터는 완전히 삭제됐다. 단, noexcept와 throw ( )는 남아 있다. throw ( )는 실질적으로 noexcept와 같다.**
-
-C++17부터 익셉션 명세 기능이 완전히 삭제되었지만 레거시 코드가 얼마든지 있기 때문에 간략히 소개한다. 앞에서 작성한 readIntegerFile ( )에 익셉션 명세를 지정하려면 다음과 같이 수정한다.
-
-```c++
-vector<int> readIntegerFile(string_view fileName)
-	throw(invalid_argument, runtime_error)
-{
-	// 나머지 코드는 그대로다.
-}
-```
-
-함수가 익셉션 명세에 없는 익셉션을 던지면 C++ 런타임은 std::unexcepted ( )를 호출한다. 이 메서드는 기본적으로 std::terminate ( )를 호출해서 프로그램을 종료한다.
-
-## 익셉션과 다형성
-
-던질 수 있는 익셉션 타입에는 제한이 없다. 하지만 대부분 클래스로 정의한다. 익셉션 타입을 클래스로 정의하면 계층 구조를 형성할 수 있기 때문에 익셉션을 처리하는 코드에서 다형성을 활용할 수 있다.
-
-### 표준 익셉션 클래스의 계층 구조
-
-앞에서 본 exception, runtime_error, invalid_argument는 모두 C++ 표준 익셉션 클래스 타입이다. C++ 표준 라이브러리에서 던지는 익셉션 객체의 클래스는 모두 표준 익셉션 클래스의 계층 구조에 속한다. 여기 나온 클래스는 모두 what ( ) 메서드를 가지고 있다. 이 메서드는 익셉션을 표혀하는 const char\* 타입의 스트링을 리턴하며, 에러 메시지 출력에 활용할 수 있다.
-
-익셉션 클래스는 대부분 what ( ) 메서드가 리턴할 스트링을 생성자의 인수로 지정해야 한다. 베이스 클래스인 exception은 반드시 생성자에 이 값을 전달해야 한다. 그래서 앞에 나온 예제에서 runtime_error나 invalid_argument를 생성할 때 스트링 인수를 전달했다. 이번에는 readIntegerFile ( )에서 에러 메시지를 만들 때 파일 이름도 함께 표시하도록 수정해보자. 이때 표준 사용자 정의 리터럴인 ’s'를 이용하여 스트링 리터럴을 std：:string으로 만든다.
-
-```c++
-vector<int> readIntegerFile(string_view fileName)
-{
-	ifstream inputStream(fileName.data());
-	if (inputstream.fail()) {
-		// 파일 열기에 실패한 경우 : 익셉션을 던진다.
-		const string error = "Unable to open the file "s + fileName.data();
-		throw invalid_argument(error);
-	}
-
-	// 파일에서 정수를 하나씩 읽어 벡터에 추가한다.
-	vector<int> integers;
-	int temp;
-	while (inputstream >> temp) {
-    integers.push_back(temp);
-	}
-
-	if (linputStream.eof()) {
-		// 파일 끝(EOF)에 도달하지 않았다.
-		// 다시 말해 파일을 읽는 도중 에러가 발생한다.
-		// 따라서 익셉션을 던진다.
-		const string error = "Unable to read file "s + fileName.data();
-		throw runtime_error(error);
-	}
-	return integers;
-}
-
-int main()
-{
-	// 이전 코드 생략
-	try {
-		myInts = readIntegerFile(fileName);
-  } catch (const invalid_argument& e) {
-    cerr << e.what() << endl;
-		return 1;
-	} catch (const runtime_error& e) {
-    cerr << e.what() << endl;
-		return 2;
-	}
-	// 나머지 코드 생략
-}
-```
-
-### 클래스 계층 구조에서 정확한 익셉션 타입 선택하기
-
-익셉션 타입을 클래스 계층으로 구성하면 catch 구문에서 다형성을 활용할 수 있다. 예를 들어 위 예제의 main ( ) 함수에서 readIntegerFile ( )을 호출한 뒤 나오는 두 catch 구문은 인수 타입만 다르고 동작은 똑같다. invalid_argument와 runtime_error는 모두 exception을 상속하기 때문에 두 catch 문을 다음과 같이 exception 타이의 인수를 받는 하나의 catch 문으로 합칠 수 있다.
-
-```c++
-try {
-	myInts = readIntegerFile(fileName);
-} catch (const exception& e) {
-  cerr << e.what() << endl;
-  return 2;
-}
-```
-
-이렇게 catch 구문이 인수를 exception 레퍼런스로 받으면 invalid_argument와 runtime_error뿐만 아니라 exception을 상속한 모든 파생 클래스 타입을 인수로 받을 수 있다. 단. 익셉션 계층에서 베이스로 올라갈수록 에러를 구체적으로 처리하기 힘들어진다. 일반적으로 catch 문에서 처리할 추상화 수준에 최대한 맞게 익셉션 타입을 지정한는 것이 바람직하다.
-
-> **catch 구문에 다형성을 적용하려면 반드시 인수를 레퍼런스 타입으로 받아야 한다. 값으로 받느면 슬라이싱이 발생해서 객체 정보가 손상될 수 있다.**
-
-다형성을 이용한 catch 구문이 여러 개라면 코드에 나온 순서대로 매칭된다. 다시 말해 가장 먼저 매칭되는 구문으로 결정된다. 앞에 나온 catch 문이 뒤에 나온 catch 문보다 추상적이라면(클래스 계층에서 위쪽에 있다면) 앞의 것을 먼저 선택한다. 따라서 구체적인 타입을 뒤에 적으면 한 번도 실행되지 않는다. 예를 들어 readIntegerFile ( )에서 던지는 invalid_argument를 꼭 잡아야 하는데, 다른 예외도 놓치지 않도록 가장 포괄적인 exception을 받는 catch 문도 넣을 때는 다음과 같이 구체적인 타입(invalid_argument)의 catch 문을 앞에 적는다.
-
-```c++
-try {
-	myInts = readIntegerFile(fileName);
-} catch (const invalid_argument& e) { // 파생 클래스를 먼저 적는다.
-	// 파일 이름이 잘못된 경우를 처리한다.
-} catch (const exception& e) { // exception 타입을 처리하는 코드를 그 뒤에 적는다.
-  cerr << e.what() << endl;
-	return 1;
-}
-```
-
-첫 번째 catch 문은 invalid_argument 타입을 처리하고, 두 번째 catch 문은 exception 타입에 속한 모든 익셉션을 잡는다. 그런데 다음과 같이 여기 나온 두 catch 문의 순서를 바꾸면 실행 결과가 달라진다.
-
-```c++
-try {
-	myInts = readIntegerFile(fileName);
-} catch (const exception& e) { // 베이스 클래스를 먼저 잡으면 의도와 달리 실행된다.
-  cerr << e.what() << endl;
-	return 1;
-} catch (const invalid_argument& e) {
-	// 파일 이름이 잘못된 경우를 처리한다.
-}
-```
-
-이렇게 하면 exception을 상속하는 익셉션은 모두 첫 번째 catch 문에서 처리되기 때문에 두 번째 catch 문은 한 번도 실행되지 않는다. 이렇게 작성하면 경고 메시지를 출력하는 컴파일러도 있지만, 완전히 믿을 수는 없다.
-
-### 익셉션 클래스 직접 정의하기
-
-익셉션 클래스를 직접 정의하면 다음 두 가지 장점이 있다.
-
-1. C++ 표준 라이브러리는 익셉션을 몇 가지 종류만 제공한다. 익셉션 클래스를 직접 정의하면 runtime_error처럼 광범위한 이름 대신 작성한 프로그램에서 발생하는 에러에 최대한 가까운 이름으로 표현할 수 있다.
-
-2. 원하는 정보를 익셉션에 얼마든지 추가할 수 있다. 표준 라이브러리에서 제공하는 익셉션은 에러 스트링만 넣을 수 있다.
-
-익셉션을 직접 정의할 때는 반드시 표준 exception 클래스를 직접 또는 간접적으로 상속하는 것이 좋다. 프로젝트 구성원이 모두 이 원칙을 따르면(그리고 이 원칙을 따르지 않는 서드파티 라이브러리가 없다면) 프로그램에서 발생하는 익셉션이 모두 exception을 상속하게 만들 수 있다. 이렇게 하면 에러 처리 코드에서 다형성을 이용하기 훨씬 쉽다.
-
-익셉션으로 사용할 클래스를 정의할 때 적용하면 좋은 팁이 하나 있다. 익셉션이 발생하면 그 익셉션 객체를 이동 생성자나 복제 생성자로 이동하거나 복제하게 된다. 따라서 익셉션으로 사용할 클래스를 정의할 때는 반드시 객체를 복제하거나 이동할 수 있게 만들어야 한다. 다시 말해 동적 할당 메모리를 사용한다면 클래스에 소멸자뿐만 아니라 복제 생성자와 복제 대입 연산자 그리고 이동 생성자와 이동 대입 연산자도 함께 정의한다.
-
-> **익셉션 객체는 최소 한 번 이상 이동하거나 복제된다.**
-
-익셉션을 레퍼런스로 받지 않고 값으로 받으면 복제가 여러 번 발생할 수 잇다.
-
-> 익셉션 객체를 레퍼런스(기왕이면 const 레퍼런스)로 받으면 쓸데 없는 복제 연산을 방지할 수 있다.
-
-### 중첩된 익셉션
-
-앞서 발생한 익셉션을 처리하는 도중에 또 다른 에러가 발생해서 새로운 익셉션이 전달될 수 있다. 아쉽게도 이렇게 중간에 익셉션이 발생하면 현재 처리하고 있던 익셉션 정보가 사라진다. 이를 해결하기 위해 C++는 먼저 잡은 익셉션을 새로 발생한 익셉션의 문맥 안에 포함시키는 **중첩된 익셉션** _^nested^_ _^exception^_ 이라는 기능을 제공한다. 이 기능을 다음 상황에서도 활용할 수 있다. 현재 구현하는 프로그램에서 A 타입 익셉션을 던지는 서드파티 라이브러리의 함수를 사용하는데, 현재 작성하는 프로그램에서는 B 타입 익셉션만 처리하게 만들고 싶을 수 있다. 이럴 때는 서드파티 라이브러리에서 발생하는 익셉션을 모두 B 타입 안에 중첩시키면 된다.
-
-어떤 익셉션을 처리하는 catch 문에서 새로운 익셉션을 던지고 싶다면 std::throw_with_nested ( )를 사용하면 된다. 나중에 발생한 익셉션을 처리하는 catch 문에서 먼저 발생했던 익셉션을 접근할 때는 dynamic_cast ( )를 이용하면 된다. 이때 먼저 발생한 익셉션은 nested_exception으로 표현한다. 구체적인 예를 통해 살펴보자. 먼저 다음과 같이 exception을 상속하고, 생성자에서 스트링을 인수로 받는 MyException 클래스를 정의한다.
-
-```c++
-class MyException : public std::exception
-{
-	public:
-		MyException(string_view message) : mMessage(message) {}
-		virtual const char* what() const noexcept override {
-			return mMessage.c_str();
-		}
-
-  private:
-		string mMessage;
-};
-```
-
-먼저 발생한 익셉션을 처리하다가 새로운 익셉션을 던져야 하는데 그 안에 앞서 발생한 익셉션을 담아서 던지려면 std::throw_with_nested ( ) 함수를 호출해야 한다. 다음 코드에 나온 doSomething ( ) 함수에서 runtime_error를 던지는데 바로 다음나온 catch 핸들러가 이를 잡아서 처리한다 이 핸들러는 몇 가지 메시지를 작성하고 나서 새로운 익셉션은 던지는데, 이때 throw_with_nested ( ) 함수를 이용하여 새로운 익셉션 안에 먼저 발생한 익셉션을 담아서 던진다. 익셉션을 중첩시키는 작업은 자동으로 처리된다.
-
-```c++
-void doSomething()
-{
-	try {
-		throw runtime_error("Throwing a runtime_error exception");
-	} catch (const runtime_error& e) {
-		cout << __func__ << " caught a runtime_error" << endl;
-		cout << __func__ << " throwing MyException" << endl;
-		throw_with_nested(
-		MyException("MyException with nested runntime_error"));
-	}
-}
-```
-
-아래 main ( ) 함수는 중첩된 익셉션을 처리하는 방법을 보여준다. 여기서는 doSomething ( ) 함수를 호출하는 코드가 있고, 그 아래에 MyException 익셉션을 처리하는 catch 핸들러가 나온다. 이 핸들러가 익셉션을 잡으면 메시지를 작성한 뒤 dynamic_cast ( )를 이용하여 현재 익셉션에 중첩된 익셉션에 접근한다. 그 안에 중첩된 익셉션이 없다면 널 포인터로 리턴한다. 중첩된 익셉션이 있다면 nested_exception의 rethrow_nested ( ) 메서드를 호출해서 중첩된 익셉션을 다시 던진다. 그러면 다른 try/catch 구문에서 이 익셉션을 처리할 수 있다.
-
-```c++
-int main()
-{
-	try {
-		doSomething();
-	} catch (const MyException& e) {
-		cout << __func__ << "caught MyException: " << e.what() << endl;
-    const auto* pNested = dynamic_cast<const nested_exception*>(&e);
-    if (pNested) {
-			try {
-				pNested->rethrow_nested();
-			} catch (const runtime_error& e) {
-				// 중첩된 익셉션을 처리한다.
-				cout << " Nested exception: " << e.what() << endl;
-			}
-		}
-	}
-	return 0;
-}
-```
-
-이 코드를 실행한 결과는 다음과 같다.
-
-```
-doSomething caught a runtime_error
-doSomething throwing MyException
-main caught MyException: MyException with nested runtime_error
-Nested exception: Throwing a runtime_error exception
-```
-
-앞에 나온 main ( ) 함수는 dynamic_cast ( )를 이용하여 중첩된 익셉션이 있는지 확인했다. 이렇게 중첩된 익셉션을 확인하기 위해 dynamic.cast ( )를 호출할 일이 많기 때문에 이 작업을 수행하는 std:: rethrow_if_nested ( )란 간단한 헬퍼 함수를 표준에 정의해뒀다. 이 헬퍼 함수의 사용법은 다음과 같다.
-
-```c++
-int main()
-{
-	try {
-		doSomething();
-	} catch (const MyException& e) {
-		cout << __func__ << "caught MyException: " << e.what() << endl;
-		try {
-			rethrow_if_nested(e);
-		} catch (const runtime_error& e) {
-      // 중첩된 익셉션을 처리한다.
-			cout << " Nested exception: " << e.what() << endl;
-		}
-	}
-	return 0;
-}
-```
-
-## 익셉션 다시 던지기
-
-throw 키워드는 현재 발생한 익셉션을 다시 던질 때 사용한다. 예를 들면 다음과 같다.
-
-```c++
-void g() { throw invalid_argument("Some exception"); }
-
-void f()
-{
-	try {
-		g();
-	} catch (const invalid_argument& e) {
-		cout << "caught in f: " << e.what() << endl;
-		throw; // 다시 던지기
-	}
-}
-
-int main()
-{
-	try {
-		f();
-	} caught (const invalid_argument& e) {
-		cout << "caught in main: " << e.what() << endl;
-	}
-	return 0;
-}
-```
-
-이 코드를 실행한 결과는 다음과 같다.
-
-```
-caught in f: Some exception
-caught in main: Some exception
-```
-
-여기서 throw e;와 같은 문장으로 익셉션을 다시 던지면 된다고 생각하기 쉽지만 그러면 안 된다. 익셉션 객체에 대한 슬라이싱이 발생하기 때문이다. 예를 들어 f ( )에서 std::exception을 잡고, main ( )에서 exception과 invalid_argument 익셉션을 모두 잡으려면 다음과 같이 수정한다.
-
-```c++
-void g() { throw invalid_argument("Some exception"); }
-
-void f()
-{
-	try {
-		g();
-	} catch (const exception& e) {
-		cout << "caught in f: " << e.what() << endl;
-		throw; // 다시 던지기
-	}
-}
-
-int main()
-{
-	try {
-		f();
-	} caught (const invalid_argument& e) {
-		cout << "invalid_argument caught in main: " << e.what() << endl;
-	} caught (const exception& e) {
-		cout << "exception caught in main: " << e.what() << endl;
-	}
-	return 0;
-}
-```
-
-여기서 invalid_argument가 exception을 상속한 점을 명심한다. 이 코드를 실행하면 예상대로 다음과 같이 출력된다.
-
-```
-caught in f: Some exception
-invalid_argument caught in main: Some exception
-```
-
-그런데 f ( )에서 throw; 문장을 다음과 같이 바꿔보자.
-
-```c++
-throw e;
-```
-
-그러면 실행 결과가 다음과 같이 나온다.
-
-```c++
-caught in f: Some exception
-exception caught in main: Some exception
-```
-
-이렇게 하면 main ( )이 exception 객체를 잡긴 하는데 invalid_argument 객체는 아니다. throw e; 문장에서 슬라이싱이 발생해서 invalid_argument가 exception으로 돼버렸기 때문이다.
-
-> **익셉션을 다시 던질 때는 항상 throw;로 적어야 한다. e란 익셉션을 다시 던지기 위해 throw e;와 같이 작성하면 안 된다.**
-
-## 스택 풀기와 청소
-
-어떤 코드가 익셉션을 던지면 이를 받아서 처리할 catch 핸들러를 스택에서 찾는다. 이때 catch 핸들러는 현재 스택 프레임에 바로 있을 수도 있고, 몇 단계의 함수 호출 스택을 거슬러 올라가야 나타날 수도 있다. 어떻게든 catch 핸들러를 발견하면 그 핸들러가 정의된 스택 단계로 되돌아가는데, 이 과정에서 중간 단계에 있던 스택 프레임을 모두 풀어버린다. 이를 **스택 풀기** _^stack^_ _^unwinding^_ 라 부르며, 스코프가 로컬인 소멸자를 모두 호출하고, 각 함수에서 미처 실행하지 못한 코드는 건너뛴다.
-
-그런데 스택 풀기가 발생할 때 포인터 변수를 해제하고 리소스를 정리하는 작업은 실행되지 않는다. 그래서 다음과 같은 경우 문제가 발생할 수 있다.
-
-```c++
-void funcOne();
-void funcTwo();
-
-int main()
-{
-	try {
-		funcOne();
-	} catch (const exception& e) {
-		cerr << "Exception caught!" << endl;
-		return 1;
-	}
-	return 0;
-}
-
-void funcOne()
-{
-	string str1;
-  string str2 = new string();
-  funcTwo();
-	delete str2;
-}
-
-void funcTwo()
-{
-	ifstream filestream;
-	fileStream.open("filename");
-	throw exception();
-	filestream.close();
-}
-```
-
-funcTwo ( )에서 익셉션을 던질 때 가장 가까운 핸들러는 main ( )에 있다. 그래서 실행 흐름은 즉시 funcTwo ( )에 있던 throw exception ( ); 문장에서 main ( )의 cerr << "Exception caught!" << endl;로 건너뛴다.
-
-funcTwo ( )의 실행 지점은 익셉션을 던진 문장에 여전히 머물러 있다. 따라서 그 뒤에 나온 다음 문장은 실행되지 않는다.
-
-```c++
-fileStream.close();
-```
-
-다행히 ifstream 소멸자는 호출된다. filestream이 스택에 있는 로컬 변수이기 때문이다. ifstream 소멸자가 파일을 대신 닫아주므로 리소스 누수가 발생하지 않는다. filestream을 동적으로 할당했다면 제거되지 않기 때문에 파일은 닫히지 않고 그대로 남게 된다.
-
-funcOne ( )에서 실행 지점이 funcTwo ( ) 호출에 있으므로 그 뒤에 나온 다음 문장은 실행되지 않는다.
-
-```c++
-delete str2;
-```
-
-따라서 메모리 누수가 발생한다. 스택 풀기 과정에서 str2에 대해 delete를 자동으로 호출해주지 않기 때문이다. 그런데 str1은 제대로 해제된다. 이는 스택에 있는 로컬 변수이기 때문이다. 스택 풀기 과정에서 로컬에 있는 변수는 모두 제대로 해제된다.
-
-> **익셉션 처리 구문을 작성할 때 메모리나 리소스 누수가 발생하지 않도록 주의한다.**
-
-바로 이 때문이 C 언어에서 사용하던 할당 모델과 익셉션 같은 최신 프로그래밍 기법을 섞어 _쓰면_ 안 된다. C 방식에서 new를 호출해서 C++처럼 보이게 만들어도 마찬가지다. C++로 코드를 작성할 때는 반드시 스택 기반 할당 방식을 적용해야 한다.
-
-### 스마트 포인터 활용
-
-스택 기반 할당 기법을 사용할 수 없다면 스마트 포인터를 활용한다. 그러면 익셉션 처리 과정에 메모리나 리소스 누수 방지 작업을 자동으로 처리할 수 있다. 스마트 포인터 객체가 제거될 때마다 그 포인터에 할당된 리소스도 헤제된다. 예를 들어 앞에서 본 funcOne ( ) 함수에서 스마트 포인터인 unique_ptr를 사용하도록 수정해보자. 참고로 이 포인터는 \<memory>에 정의돼 있다.
-
-```c++
-void funcOne()
-{
-	string str1;
-	auto str2 = make_unique<string>("hello");
-	funcTwo();
-}
-```
-
-여기서 str2 포인터는 funcOne ( )을 호출한 후 리턴될 때 또는 그 안에서 익셉션이 발생할 때 자동으로 제거된다.
-
-물론 특별히 이유가 있을 때만 동적으로 할당해야 한다. 예를 들어 앞에서 나온 funcOne에서 굳이 str2를 동적으로 할당할 필요가 없다. 스택 기반 string 변수로도 충분하다. 여기서 동적으로 할당한 이유는 단지 익셉션을 던진 후 일어나는 일을 간단히 보여주기 위해서다.
-
-### 익셉션을 잡고, 리소스 정리한 뒤, 익셉션 다시 던지기
-
-메모리 및 리소스 누수를 방지하기 위한 또 다른 기법으 각 함수마다 발생 가능한 익셉션을 모두 잡아서 리소스를 제대로 정리한 뒤 그 익셉션을 다시 스택의 상위 핸들러로 던지는 것이다. 예를 들어 funcOne ( )을 이렇게 처리하도록 수정하면 다음과 같다.
-
-```c++
-void funcOne()
-{
-	string str1;
-	string str2 = new string();
-	try {
-		funcTwo();
-	} catch (...) {
-		delete str2;
-		throw; // 같은 익셉션을 다시 위로 던진다.
-	}
-	delete str2;
-}
-```
-
-이 함수는 funcTwo ( )를 호출하는 문장과 여기서 발생하는 익셉션을 처리하는 핸들러를 정의하고 있다. 이 핸들러는 리소스를 정리한 뒤(str2에 대해 delete를 호출해서) 잡은 익셉션을 다시 던진다. 이렇게 현재 잡은 익셉션을 다시 던질 때는 throw란 키워드만 적어도 된다. 참고로 catch 문에서 모든 종류의 익셉션을 잡고 싶다면 위 코드처럼 ...을 지정한다.
-
-> **익셉션을 잡고, 리소스를 정리한 뒤, 익셉션을 다시 던지기보다는 스마트 포인터나 RAII 클래스를 사용하는 방법이 더 좋다.**
-
-## 익셉션 처리 과정에서 흔히 발생하는 문제
-
-### 메모리 할당 에러
-
-지금까지 소개한 예제는 모두 메모리 할당 에러가 발생하지 않는다고 가정했다. 현재 흔히 사용하는 64비트 플랫폼에서 이런 일이 발생할 일은 거의 없지만, 모바일 시스템이나 레거시 시스템에서는 메모리 할당 에러가 드물지 않게 발생한다. 이런 시스템에서는 반드시 메모리 할당 에러에 대처하는 코드를 구현해야 한다. 우누는 메모리 할당 에러를 처리하기 위한 다양한 기능을 제공한다.
-
-new나 new [ ]에서 메모리 할당할 수 없을 때 기본적으로 수행하는 동작은 \<new> 헤더 파일에 정의된 bad_alloc 익셉션을 던지는 것이다. 따라서 이 익셉션을 적절히 처리하는 catch 구문을 작성한다.
+New 키워드를 사용하면 힙 메모리가 할당된다. 다음 코드는 `ptr` 변수를 스택에 생성하고 `nullptr`로 초기화한 뒤 `ptr`가 동적으로 생성된 힙 메모리를 가리키도록 설정한다.
 
 ```c++
 int* ptr = nullptr;
-size_t integerCount = numeric_limits<size_t>::max();
-try {
-	ptr = new int[integerCount];
-} catch (const bad_alloc& e) {
-	cerr << __FILE__ << "(" << __LINE__
-    	 << "): Unable to allocate memory: " << e.what() << endl;
-	// 메모리 할당 에러를 처리한다.
-	return;
-}
-// 메모리 할당에 성공했다면 함수를 정상적으로 진행한다.
+ptr = new int;
+int* ptr = new int; // 한 줄 코드(one-liner)로 표현
 ```
 
-위 코드는 미리 정의된 전처리 기호인 \_\_FILE\_\_과 \_\_LINE\_\_을 사용하고 있다. 컴파일하면 이 기호 자리에 파일 이름과 현재 줄 번호가 들어간다. 이렇게 하면 디버깅하기 편하다.
+여기서 `ptr` 변수는 여전히 스택에 있지만, 이 변수가 가리키는 값은 힙에 있다. 포인터 역시 일종의 변수이기 때문에 스택이나 힙에 존재한다. 반면 동적 메모리는 항상 힙에 할당된다.
 
-물론 구현하는 프로그램에 따라 실행 과정에서 발생할 수 있는 모든 에러를 프로그램의 최상위 코드에서 try/catch 블록 하나만으로 처리해도 된다.
+| 스택  |                 | 힙  |        |
+| ----- | --------------- | --- | ------ |
+| `ptr` | _:arrow_right:_ | ?   | `*ptr` |
 
-한 가지 주의할 점은 에러 로깅 과정에 메모리 할당이 발생할 수 있는데, new 과정에 에러가 발생했다면 에러 메시지를 로깅하는 데 필요한 메모리도 없을 가능성이 높다.
-
-#### 1. 익셉션을 던지지 않는 new
-
-익셉션 메커니즘을 사용하지 않고, 예전 C 방식처럼 메모리 할당에 실패하면 널 포인터를 리턴하도록 작성해도 된다. C++는 **익셉션을 던지지 않는** nothrow 버전의 new와 new [ ]도 제공한다. 이 버전은 메모리 할당에 실패하면 익셉션을 던지지 않고 nullptr를 리턴한다. 이렇게 하려면 new 대신 new(nothrow) 구문을 사용한다. 예를 들면 다음과 같다.
+다음 코드는 포인터가 스택과 힙에 모두 있는 예를 보여준다.
 
 ```c++
-int* ptr = new(nothrow) int[integerCount];
-if (ptr == nullptr) {
-	cerr << __FILE__ << "(" << __LINE__
-			 << "): Unable to allocate memory: " << e.what() << endl;
-	// 메모리 할당 에러를 처리한다.
-	return;
-}
-// 메모리 할당에 성공했다면 함수를 정상적으로 진행한다.
+int** handle = nullptr;
+handle = new int*;
+*handle = new int;
 ```
 
-문법은 좀 어색하지만 ’nothrow’란 키워드에 new의 인수를 전달하듯이 적어야 한다(실제로 인수이기도 하다).
+여기서는 먼저 정수 포인터에 대한 포인터를 `handle`이란 변수로 선언했다. 그런 다음 정수 포인터를 담는 데 충분한 크기로 메모리를 할당한 뒤 그 메모리에 대한 포인터를 `handle`에 저장햇다. 이어서 이 메모리(`handle`)에 대한 정수를 담기 충분한 크기의 힙 메모리를 동적으로 할당했다. 이렇게 두 포인터 중 하나(`handle`)는 스택에, 다른 하나(`handle`)는 힙에 있도록 두 단계로 구성한 상태를 보여준다.
 
-#### 2. 메모리 할당 에러 처리 방식 커스터마이스하기
+|   스택   |                 |       힙       |            |
+| :------: | :-------------: | :------------: | :--------: |
+| `handle` | _:arrow_right:_ | _:arrow_down:_ | `*handle`  |
+|          |                 | _:arrow_down:_ |            |
+|          |                 |       ?        | `**handle` |
 
-C++는 **new 핸들러** 콜백 함수를 커스터마이즈하는 기능을 제공한다. 기본적으로 new와 new [ ]는 new 핸들러를 따로 사용하지 않고 bad_alloc 익셉션을 던지기만 한다. 그런데 new 핸들러를 정의하면 메모리 할당 루틴에서 에러가 발생했을 때 익셉션을 던지지 않고 정의된 new 핸들러를 호출한다. new 핸들러가 리턴하면 메모리 할당 루틴은 메모리를 다시 할당하려 시도하는데, 이때 실패해도 다시 new 핸들러를 호출한다. 따라서 new 핸들러에서 다음 세 가지 중 한 가지 방식으로 구현하지 않으면 무한 루프가 발생할 수 있다. 이 중 몇 가지 방식은 다른 방식보다 낫다. 각각을 살펴보자.
+### 메모리 할당과 해제
 
-- **메모리 추가하기** : 공간을 확보하기 위한 한 가지 방법은 프로그램 구동시 큰 덩어리의 메모리를 할당했다가 new 핸들러로 해제하게 만드는 것이다. 구체적인 활용 예로 메모리 할당 에러가 발생할 때 현재 사용자의 상태가 사리지지 않도록 저장해야 할 때가 있다. 여기서 핵심은 프로그램을 구동할 때 원하는 상태(예: 워드프로세서라면 문서 전체)를 저장할 수 있을 정도로 충분한 양의 메모리를 할당하는 데 있다. new 핸들러가 호출되면 이 블록을 해제한 뒤 상태(예: 문서)를 저장하고 프로그램을 다시 구동해서 저장된 상태(문서)를 불러오면 된다.
+변수가 사용할 공간은 `new` 키워드로 생성한다. 다 사용한 후 프로그램의 다른 영역에서 재사용하도록 이 공간을 해제하려면 `delete` 키워드를 사용한다. 물론 C++에서 `new`와 `delete`가 이렇게 간단할 리 없다.
 
-- **익셉션 던지기** : C++ 표준에서는 new 핸들러에서 익셉션을 던질 때 반드시 bad_alloc이나 이를 상속한 익셉션을 던지도록 명시하고 있다. 예를 들면 다음과 같다.
+#### 1. new와 delete 사용법
 
-  - bad_alloc를 상속한 document_recovery_alloc을 던진다. 이 익셉션을 catch 문으로 잡아서 문서를 저장하는 작업을 수행한 뒤 애플리케이션을 다시 구동한다.
-  - 또는 please_terminate_me 익셉션을 던진다. 이 익셉션도 bad_alloc을 상속한 것이다. 최상위 함수(예 : main ( ))에서 이 익셉션을 잡은 뒤 최상위 함수에서 리턴하도록 처리한다. 이때 exit ( )를 호출하지 말고 최상위 함수에서 리턴해서 프로그램을 종료시키는 것이 바람직하다.
+변수에 필요한 메모리 블록을 할당하려면 `new`에 그 변수의 타입을 지정해서 호출한다. 그러면 할당된 메모리에 대한 포인터가 리턴된다. 물론 이 포인터를 변수에 저장하는 등 관리하는 작업은 프로그래머의 몫이다. `new`의 리턴값을 무시하거나 그 포인터를 담았던 변수가 스코프를 벗어나면 할당했던 메모리에 **접근할 수 없다.** 이를 **메모리 누수**(**메모리 릭**, memory leak)라 부른다.
 
-- **다른 new 핸들러 설정하기** : 이론적으로 new 핸들러를 여러 개 만들어서 각각 메모리를 생성하고 문제가 발생하면 다른 new 핸들러를 설정할 수 있다. 하지만 실제 효과에 비해 코드가 복잡하다는 단점이 있다.
-
-new 핸들러에서 위 세 가지 작업 중 어느 하나라도 하지 않으면 메모리 할당 에러가 발생할 때 무한 루프에 빠진다.
-
-메모리 할당 에러가 발생할 때 new 핸들러를 호출하지 않게 하고 싶다면 new를 호출하기 전에 new 핸들러의 디폴트값인 nullptr로 잠시 되돌려둔다.
-
-new 핸들러는 \<new> 헤더 파일에 선언된 set_new_handler ( )를 호출해서 설정한다. 예를 들어 에러 메시지를 로그에 기록하고 익셉션을 던지도록 new 핸들러를 작성하면 다음과 같다.
+다음 코드는 `int`를 담은 공간만큼 메모리 누수가 발생하는 예를 보여준다. 이 코드를 실행한 후의 메모리 상태를 보여준다. 스택에서 직접적이든 간접적으로든 더 이상 접근할 수 없는 데이터 블록이 힙에 발생하면 메모리 누수가 발생한다.
 
 ```c++
-class please_terminatejne : public bad_alloc { };
-
-void myNewHandler()
+void leaky()
 {
-	cerr << "Unable to allocate memory." << endl;
-	throw please_terminate_me();
+	new int; // 버그! 메모리 누수가 발생한다.
+	cout << "방금 int 하나를 잃어버렸다." << endl;
 }
 ```
 
-new 핸들러에는 반드시 인수와 리턴값이 없어야 한다. 이렇게 하면 앞에서 설명한 세 가지 처리 방식 중 두 번째처럼 please_terminate_me가 발생한다.
+| 스택 |     | 힙  |                            |
+| ---- | --- | --- | -------------------------- |
+|      |     | ?   | 누수된 `int` 크기의 메모리 |
 
-이렇게 작성한 new 핸들러를 설정하는 방법은 다음과 같다.
+속도가 빠른 메모리를 무한 공급하지 않는 한 객체에 할당했던 메모리를 다른 용도로 사용할 수 있도록 해제해야 한다. 힙 메모리를 헤제하려면 다음과 같이 `delete` 키워드에 해제할 메모리를 가리키는 포인터를 지정한다.
 
 ```c++
-int main()
+int* ptr = new int;
+delete ptr;
+ptr = nullptr;
+```
+
+#### 2. malloc()
+
+C++를 처음 접하는 C 프로그래머는 `malloc()` 함수가 어디 갔는지 궁금할 것이다. C에서 `malloc()`은 인수로 지정한 바이트 수만큼 메모리를 할당한다. 일반적으로 `malloc()`을 이용하는 것이 훨씬 간편하고 이해하기도 쉽다. C++는 여전히 `malloc()`을 지원하지만 `malloc()`대신 `new`를 사용하는 것이 바람직하다. `new`는 단순히 메모리를 할당하는 데 그치지 않고 객체까지 만들기 때문이다.
+
+예를 들어 `Foo`라는 클래스의 객체를 생성한다고 하자. `malloc()` 함수는 메모리에서 일정한 영역만 따로 빼놓을 뿐 객체에 대해 알지도 못하고 관심도 없다. 반면 `new`를 호출한 문장은 적절한 크기의 메모리 공간이 할당될 뿐만 아니라 `Foo`의 생성자를 호출해서 객체를 생성한다. `free()` 함수와 `delete`의 관계도 이와 비슷하다. `free()`는 객체의 소멸자를 호출하지 않는 반면 `delete`는 소멸자를 호출해서 객체를 정상적으로 제거한다.
+
+#### 3. 메모리 할당에 실패한 경우
+
+기본적으로 `new`가 실패하면 프로그램이 종료된다. `new`로 요청한 만큼의 메모리가 없어서 익셉션이 발생하면 프로그램이 종료된다. 익셉션이 발생하지 않는 버전의 `new`도 있다. 이 버전은 익셉션 대신 `nullptr`를 리턴한다. 마치 C에서 `malloc()`을 호출할 때와 같다. 문법은 다음과 같다.
+
+```c++
+int* ptr = new(nothrow) int;
+```
+
+익셉션을 던지는 버전보다 `nothrow` 버전을 사용할 때 버그가 발생할 가능성이 높다. 표준 버전의 `new`를 사용하는 것이 바람직하다.
+
+### 배열
+
+#### 1. 기본 타입 배열
+
+프로그램에서 배열에 대한 메모리를 할당하면 실제 메모리에서도 **연속된** 공간을 할당한다. 이때 메모리의 한 칸은 배열의 한 원소를 담을 수 있는 크기로 할당된다.
+
+```c++
+int myArray[5];
+```
+
+| 스택         |     | 힙  |     |
+| ------------ | --- | --- | --- |
+| `myArray[0]` |     |     |     |
+| `myArray[1]` |     |     |     |
+| `myArray[2]` |     |     |     |
+| `myArray[3]` |     |     |     |
+| `myArray[4]` |     |     |     |
+
+배열을 힙에 선언할 때도 비슷하다. 배열의 위치를 가리키는 포인터를 사용한다는 점만 다르다.
+
+```c++
+int* myArrayPtr = new int[5];
+```
+
+| 스택         |                 | 힙  |              |
+| ------------ | --------------- | --- | ------------ |
+| `myArrayPtr` | _:arrow_right:_ |     | `myArray[0]` |
+|              |                 |     | `myArray[1]` |
+|              |                 |     | `myArray[2]` |
+|              |                 |     | `myArray[3]` |
+|              |                 |     | `myArray[4]` |
+
+힙에 저장된 배열은 원소가 저장된 위치만 다를 뿐 스택에 저장한 배열과 거의 같다. `myArrayPtr` 변수는 배열의 0번째 원소를 가리킨다.
+
+`new[]`를 호출한 횟수만큼 `delete[]`를 호출해서 배열에 할당했던 메모리를 해제하도록 코드를 작성해야 한다.
+
+```c++
+delete [] myArrayPtr;
+myArrayPtr = nullptr;
+```
+
+배열을 힙에 할당하면 실행 시간에 크기를 정할 수 있다는 장점이 있다.
+
+```c++
+Document* createDocArray()
 {
-  try {
-		// 새로 만든 new 핸들러를 설정하고 예전 것은 저장해둔다.
-		new_handler oldHandler = set_new_handler(myNewHandler);
-
-		// 할당 에러를 발생시킨다.
-		size_t numInts = numeric_limits<size_t>::max();
-		int* ptr = new int[numInts];
-
-		// 예전 new 핸들러로 되돌린다.
-		set_new_handler(oldHandler);
-	} catch (const please_termiante_me&) {
-		cerr << __FILE__ << "(" << __LlNE__
-				 << "): Unable to allocate memory: " << e.what() << endl;
-		return 1;
-	}
-	return 0;
+	size_t numDocs = askUserForNumberOfDocuments();
+	Document* docArray = new Document[numDocs];
+    return docArray;
 }
 ```
 
-여기서 new 핸들러는 함수 포인터 타입에 대한 typedef며, set_new_handler ( )는 이를 인수로 받는다.
+`docArray`는 동적으로 할당된 배열(dynamic allocatecd array)이다. 이는 **동적 배열**(dynamic array)과는 다르다. 배열 자체는 한 번 할당되면 크기가 변하지 않기 때문에 동적이라 볼 수 없다. 단지 할당할 블록의 크기를 실행 시간에 지정할 수 있을 뿐이다. 더 많은 데이터를 추가하도록 크기를 알아서 조절할 수는 없다.
 
-### 생성자에서 발생하는 에러
+C++는 `realloc()`이란 함수도 지원한다. 이 함수 역시 C 언어로부터 물려받은 것이다. 따라서 절대 사용하지 말기 바란다. C에서 `realloc()`은 새로 지정한 크기에 맞게 메모리 블록을 새로 할당하는 방식으로 배열의 크기를 동적으로 조절한다. 이 과정에서 기존 데이터를 새블록에 복사하고, 원래 블록은 삭제한다. C++에서 이렇게 처리하면 굉장히 위험하다. 사용자가 정의한 객체는 비트 단위 복사 작업에 맞지 않기 때문이다.
 
-이 절에서는 생성자에서 발생하는 익셉션을 처리하는 방법은 Matrix 클래스 템플릿을 사용하는 코드로 소개한다. 참고로 여기서는 생성자에서 할당한 리소스를 mMatrix라는 일반 포인터 _^raw^_ _^pointer^_ 로 표현하는데, 생성자 익셉션 처리 과정에서 발생할 수 있는 문제를 보여주기 위해 이렇게 했다. 실전에서는 이렇게 일반 포인터를 사용하면 안 되고, 표준 라이브러리에서 제공하는 컨테이너와 같은 안전한 방법으로 구현해야 한다. Matrix 클래스 템플릿은 다음과 같이 선언돼 있다.
+#### 2. 객체 배열
+
+객체에 대한 배열도 기본 타입 배열과 비슷하다. N개의 객체로 구성된 배열을 `new[N]`으로 할당하면 객체를 담기에 충분한 크기의 N개 블록이 연속된 공간에 할당된다. `new[]`을 호출하면 각 객체마다 제로 인수(=디폴트) 생성자(zero-argument constructor, 영인수 생성자)가 호출된다. 그래서 `new[]`로 객체 배열을 할당하면 형식에 맞게 초기화된 객체 배열을 가리키는 포인터가 리턴된다.
 
 ```c++
-template <typename T>
-class Matrix
+class Simple
 {
 	public:
-		Matrix(size_t width, size_t height);
-		virtual ~Matrix();
-	private:
-		void cleanup();
-
-  	size_t mWidth = 0;
-  	size_t mHeight = 0;
-  	T** mMatrix = nullptr;
-}
-```
-
-Matrix 클래스의 구현 코드는 다음과 같다. 여기서 첫 번째 new 호출은 try/catch 구문으로 묶여 있지 않다. 이 생성자는 나중에 해제할 리소스를 할당하지 않기 때문에 익셉션이 발생해도 문제없다. 하지만 그 뒤에 나오는 new 호출문은 생성자에서 메모리를 할당하기 때문에 익셉션이 발생할 때 반드시 메모리를 해제해야 한다. 그런데 T의 생성자에서 발생할 익셉션이 뭔지 알 수 없다. 그래서 catch 문이 모든 익셉션을 잡도록 ...을 지정했다. 참고로 첫 번째 new 호출로 할당된 원소가 nullptr란 값을 가진다. 이렇게 하면 cleanup ( ) 메서드에서 처리하기 편하다. nullptr에 대해 delete를 호출할 수 있기 때문이다.
-
-```c++
-template <typename T>
-Matrix<T>::Matrix(size_t width, size_T height)
-{
-	mMatrix = new T*[width] {}; // 배열을 영으로 초기화한다.
-
-  // mWidth와 mHeight 멤버를 생성자 이니셜라이저로 초기화하면 안 된다.
-	// 앞에 나온 mMatrix를 성공적으로 할당했을 때만 초기화해야 하기 때문이다.
-  mWidth = width;
-	mHeight = hegith;
-	try {
-		for (size_t i = 0; i < width; ++i) {
-			mMatrixfi] = new "「[height];
-		}
-	} catch(...) {
-		std::cerr << "Exception caught in constructor,, cleaning up..
-							<< std::endl;
-    cleanup();
-    // 발생한 익셉션을 모두 bad_alloc 익셉션 안에 중첩시킨다.
-    std::throw_with_nested(std::bad_alloc());
-  }
-}
-
-template <typename T>
-Matrix<T>::~Matrix()
-{
-	cleanup();
-}
-
-template <typename T>
-void Matrix<T>::cleanup()
-{
-	for (size_t i = 0; i < mWidth; ++i)
-		delete[] mMatrix[i];
-	delete[] mMatrix;
-	mMatrix = nullptr;
-	mWidth = mHeight = 0;
-}
-```
-
-> **익셉션이 발생해서 생성자를 벗어나면 그 객체에 대한 소멸자가 호출되지 않는다는 점을 반드시 명심한다.**
-
-앞에서 정의한 Matrix 클래스 템플릿을 다음과 같이 테스트해보자.
-
-```c++
-class Element
-{
-	// 코드가 최대한 간결하면서 최소한의 기능만 갖추개 할려면
-	// Element 클래스의 생성자에서 익셉션을 던질 수 있도록 작성한다.
-	private:
-		int mValue;
+	Simple() { cout << "Simple constructor called!" << endl; }
+	~Simple() { cout << "Simple destructor called!" << endl; }
 };
-
-int main()
-{
-	Matrix<Element> m(10, 10);
-	return 0;
-}
 ```
 
-여기 상속을 적용하면 어떻게 되는지 궁금할 것이다. 파생 클래스 생성자보다 베이스 클래스 생성자가 먼저 실행된다. 그래서 파생 클래스 생성자에서 익셉션이 발생하면 C++ 런타임은 생성자를 정상적으로 실행했던 베이스 클래스의 소멸자를 호출한다.
-
-> C++는 생성자 실행을 정상적으로 마친 객체에 대해 소멸자가 실행되도록 보장한다. 따라서 생성자에서 익셉션 없이 정상 처리된 객체는 소멸자가 반드시 호출된다.
-
-### 생성자를 위한 함수 try 블록
-
-생성자 이니셜라이저에서 발생한 익셉션은 어떻게 처리해야 할까? 이 절에서는 **함수 try 블록**이란 기능으로 이런 익셉션을 처리하는 방법을 소개한다. 함수 try 블록은 일반 함수뿐만 아니라 생성자에 적용할 수도 있다. 이 절에서는 생성자에 적용하는 방법을 소개한다. 이 기능이 추가된지 상당히 오래됐음에도 불구하고 숙련된 C++ 프로그래머조차 이 기능을 모르는 경우가 많다.
-
-생성자에 대한 함수 try 블록을 작성하는 방법을 의사코드로 표현하면 다음과 같다
+네 개의 `Simple` 객체로 구성된 배열을 할당하면 위 `Simple` 생성자가 네 번 호출된다.
 
 ```c++
-MyClass::MyClass()
-try
-  : ＜생성자 이니셜라이저＞
-{
-	/* ... 생성자 본문 … */
-}
-catch (const exception& e)
-{
-	/* ... */
-}
+Simple* mySimpleArray = new Simple[4];
 ```
 
-여기서 try 키워드를 생성자 이니셜라이저 바로 앞에 적었다. catch 문은 반드시 생성자를 닫는 중괄호 뒤에 나와야 한다. 그러므로 실질적으로 생성자 밖에 놓인다. 함수 try 블록을 생성자에 적용할 때는 다음과 같은 점에 주의한다.
+| 스택            |                 | 힙  |                    |
+| --------------- | --------------- | --- | ------------------ |
+| `mySimpleArray` | _:arrow_right:_ |     | `mySimpleArray[0]` |
+|                 |                 |     | `mySimpleArray[1]` |
+|                 |                 |     | `mySimpleArray[2]` |
+|                 |                 |     | `mySimpleArray[3]` |
 
-- catch 문은 생성자 이니셜라이저나 생성자 본문에서 발생한 익셉션을 잡아서 처리한다.
+#### 3. 배열 삭제하기
 
-- catch 문은 반드시 현재 발생한 익셉션을 다시 던지거나 새 익셉션을 만들어 던져야 한다. catch 문에서 이렇게 처리하지 않으면 런타임이 자동으로 현재 익셉션을 다시 던진다.
-
-- catch 문은 생성자에 전달된 인수에 접근할 수 있다.
-
-- catch 문이 함수 try 블록에서 익셉션을 잡으면 생성자의 실행을 정상적으로 마친 베이스 클래스나 그 객체로 된 멤버는 catch 문을 시작하기 전에 소멸된다.
-
-- catch 문 안에서는 객체로 된 멤버 변수에 접근하면 안 된다. 바로 앞에서 설명한 것처럼 catch 문이 실행되기 전에 소멸되기 때문이다. 그런데 익셉션이 발생하기 전에 그 객체에 논클래스 타입(예: 일반 포인터 타입) 데이터 멤버를 초기화했다면 여기에 접근할 수 있다. 단, 이런 리소스를 정리하는 작업은 catch 문에서 처리해야 한다. 뒤에 나온 코드가 이렇게 처리한다.
-
-- 함수 try 블록에 있는 catch 문은 그 안에 담긴 함수에서 값을 리턴할 때 return 키워드를 사용할 수 없다. 생성자는 원래 아무것도 리턴하지 않기 때문이다.
-
-앞에서 나열한 제약사항을 감안하면 생성자에 대한 함수 try 블록은 다음과 같은 제한된 상황에만 적합하다.
-
-- 생성자 이니셜라이저에서 던진 익셉션을 다른 익셉션으로 변환할 때
-
-- 메시지를 로그 파일에 기록할 때
-
-- 생성자 이니셜라이저에서 할당한, 소멸자로 자동 제거할 수 없는 리소스를 익셉션을 던지기 전에 해제할 때
-
-다음 예는 함수 try 블록을 구현하는 방법을 보여준다. 여기서 SubObject 클래스는 runtime_error 익셉션을 던지는 생성자 하나만 갖고 있다.
+`delete[]`를 호출하면 할당된 메모리를 해제할 뿐만 아니라 각 원소의 객체마다 **소멸자**를 호출한다.
 
 ```c++
-class SubObject
-{
-	public:
-		SubObject(int i);
-};
-
-SubObject::SubObject(int i)
-{
-	throw std::runtime_error(error("Exception by SubOject ctor"));
-}
+Simple* mySimpleArray = new Simple[4];
+delete [] mySimpleArray;
+mySimpleArray = nullptr;
 ```
 
-MyClass는 다음과 같이 int\* 타입의 멤버 변수 하나와 SubObject 타입의 멤버 변수 하나를 갖고 있다.
+배열의 원소가 객체일 때만 모든 원소에 대한 소멸자가 호출된다. 포인터 배열에 대해 `delete[]`를 호출할 때는 각 원소가 가리키는 객체를 일일이 해제해야 한다.
 
 ```c++
-class MyClass
-{
-	public:
-		MyClass();
-	private:
-		int* mData = nullptr;
-		SubObject mSubObject;
+const size_t size = 4;
+Simple** mySimplePtrArray = new Simple*[size];
+// 포인터마다 객체를 할당한다.
+for (size_t i = 0; i < size; i++) { mySimplePtrArray[i] = new Simple(); }
+// 할당된 객체를 삭제한다.
+for (size_t i = 0; i < size; i++) { delete mySimplePtrArray[i]; }
+// 배열을 삭제한다.
+delete [] mySimplePtrArray;
+mySimplePtrArray = nullptr;
 ```
 
-SubObject 클래스에는 디폴트 생성자가 없다. 다시 말새 mSubObject를 MyClass의 생성자 이니셜라이저로 초기화해야 한다. MyClass 생성자는 함수 try 블록을 이용하여 생성자 이니셜라이저에서 발생한 익셉션을 처리한다.
+#### 4. 다차원 배열
+
+다차원 배열이란 여러 개의 인텍스값을 사용하도록 일차원 배열을 확장한 것이다.
 
 ```c++
-MyClass::MyClass()
-try
-	: mData(new int[42]{l, 2, 3}), mSubObject(42)
-{
-	/* 생성자 바디 */
-}
-
-catch (const std::exception& e)
-{
-	// 메모리 정리
-	deleted mData;
-	mData = nuUptr;
-	cout << "function-try=block caught: '" << e.what() << "'" << endl;
-}
+char board[3][3] = {};
+// 테스트 코드
+board[0][0] = 'X';
+board[2][1] = 'O';
 ```
 
-여기서 명심할 점은 생성자에 대한 함수 try 블록 안에 있는 catch 문은 반드시 현재 익셉션을 다시 던지거나 새 익셉션을 생성해서 던져야 한다. 앞에 나온 catch 문을 보면 아무 익셉션도 던지지 않는데, 그러면 C++ 런타임이 현재 익셉션을 대신 던져준다. 앞에서 정의한 클래스를 사용하는 예를 간단히 들면 다음과 같다.
+##### 다차원 스택 배열
+
+실제로 메모리는 두 개의 축을 사용하지 않고 주소가 지정된 일차원 배열처럼 나열된다.
+
+실제로 이차원 배열은 내부적으로 일차원 배열처럼 표현되며, 배열의 크기와 이를 접근하는 방식만 다르다.
+
+| 스택          |     | 힙  |     |
+| ------------- | --- | --- | --- |
+| `board[0][0]` |     |     |     |
+| `board[0][1]` |     |     |     |
+| `board[0][2]` |     |     |     |
+| `board[1][0]` |     |     |     |
+| `board[1][1]` |     |     |     |
+| `board[1][2]` |     |     |     |
+| `board[2][0]` |     |     |     |
+| `board[2][1]` |     |     |     |
+| `board[2][2]` |     |     |     |
+
+다차원 배열의 한 원소에 접근할 때 각 인덱스는 다차원 배열에 속한 하위 배열에 접근할 인덱스로 사용한다.
+
+##### 다차원 힙 배열
+
+다차원 배열에서 차원 수를 실행 시간에 결정하고 싶다면 힙 배열로 생성한다. 이차원 배열의 경우 포인터에 대한 포인터로 원소에 접근하는 반면 *N*차원 배열은 *N*단계의 포인터로 접근한다는 점만 다르다.
 
 ```c++
-int main()
+char** board = new char[i][j]; // 버그! 컴파일 오류가 발생한다.
+```
+
+힙 배열에 대한 메모리 할당 방식은 스택 배열과 다르기 때문에 이렇게 작성하면 컴파일 에러가 발생한다. 힙에서는 메모리 공간이 연속적으로 할당되지 않기 때문에 스택 방식의 다차원 배열처럼 메모리를 할당하면 안 된다. 이럴 때는 힙 배열의 첫 번째 인덱스에 해당하는 차원의 배열을 연속적인 공간에 먼저 할당한다. 그런 다음 이 배열의 각 원소에 두 번째 인덱스에 해당하는 차원의 배열을 가리키는 포인터를 저장한다.
+
+아쉽지만 여기서 하위 배열을 할당하는 작업은 컴파일러에서 자동으로 처리할 수 없다. 첫 번째 차원의 배열이 가리키는 각 원소(하위 배열)에 대한 메모리는 마치 일차원 힙 배열을 할당하듯이 직접 하나씩 할당해야 한다.
+
+```c++
+char** allocateCharacterBoard(size_t xDimension, size_t yDimension)
 {
-	try {
-		MyClass m;
-	} catch (const std::exception& e) {
-		cout << "main() caught: 1" << e.what() << "'" << endl;
+	char** myArray = new char*[xDimension]; // 첫 번째 차원의 배열을 할당한다.
+	for (size_t i = 0; i < xDimension; i++) {
+		myArray[i] = new char[yDimension]; // i번째 하위 배열을 할당한다.
 	}
-	return 0;
+	return myArray;
 }
 ```
 
-이 코드를 실행하면 다음과 같이 출력된다.
+일일이 해제해야한다.
 
+```c++
+void releaseCharacterBoard(char** myArray, size_t xDimension) {
+	for (size_t i = 0; i < xDimension; i++) {
+		delete [] myArray[i]; // i번째 하위 배열을 할당한다.
+	}
+	delete [] myArray; // 첫 번째 차원의 배열을 해제한다.
+}
 ```
-function-try-block caught: 'Exception by SubObject ctor'
-main() caught: 'Exception by SubObject ctor'
+
+C 스타일 배열 대신 `std::array`나 `std::vector`와 같은 C++ 표준 라이브러리에서 제공하는 컨테이너를 사용한다.
+
+### 포인터 다루기
+
+### 1. 포인터의 작동 방식
+
+포인터는 두 가지 관점으로 이해할 수 있다. 수학적 사고에 익숙한 사람은 포인터를 주소로 본다. 포인터 연산(pointer arithmetic)을 쉽게 이해한다. 포인터는 메모리를 알 수 없는 방식으로 돌아다니는 통로가 아니다. 메모리의 한 지점을 가리키는 숫자에 불과하다.
+
+공간적 사고에 익숙한 사람은 포인터를 화살표로 생각하면 이해하기 쉽다. 포인터는 손가락으로 가리키는 것처럼 참조 단계를 표현한다. 이 관점에서 보면 여러 단계로 구성된 포인터에서 각 단계는 데이터에 이르는 경로라고 볼 수 있다.
+
+`*` 연산자로 포인터를 **역참조**하면 메모리에서 한 단계 더 들어가 볼 수 있다. 포인터를 주소 관점에서 보면 역참조는 포인터가 가리키는 주소로 점프하는 것과 같다. 역참조를 하는 부분을 그림으로 표현하면 출발 지점에서 목적지로 향하는 화살표로 나타낼 수 있다.
+
+`& `연산자를 사용하면 특정 지점의 주소를 얻을 수 있다. 이렇게 하면 메모리에 대한 참조 단계가 하나 더 늘어난다. 이 연산자를 주소 관점에서 보면 프로그램은 특정 메모리 지점을 숫자로 표현한 주소로 본다. 공간 관점에서 보면 표현식의 결과가 담긴 위치를 가리키는 화살표를 생성한다고 볼 수 있다. 그리고 이 화살표가 시작하는 지점을 포인터로 저장할 수 있다.
+
+#### 2. 포인터에 대한 타입 캐스팅
+
+포인터는 단지 메모리 주소에 불과해서 타입을 엄격히 따지지 않는다. XML 문서를 가리키는 포인터와 정수를 가리키는 포인터는 크기가 서로 같다. 포인터의 타입은 **C 스타일 캐스팅**을 이용해서 얼마든지 바꿀 수 있다.
+
+```c++
+Document* documentPtr = getDocument();
+char* myCharPtr = (char*)documentPtr;
 ```
 
-참고로 이 예제처럼 코드를 작성하면 위험하다. 초기화 순서에 따라 catch 문에 진입할 때 mData에 이상한 값을 할당될 수 있다. 이렇게 알 수 없는 값을 가진 포인터에 대해 delete를 호출하면 예상치 못한 동작이 나타날 수 있다. 그래서 위 예제에서 이런 문제를 방지하려면 mData 멤버를 std::unique_ptr와 같은 스마트 포인터로 선언하고, 함수 try 블록을 제거하는 것이다.
+**정적 캐스팅**(static cast)을 사용하면 좀 더 안전하다. 그러면 관련 없는 데이터 타입으로 포인터를 캐스팅하면 컴파일 에러가 발생한다.
 
-함수 try 블록은 생성자뿐만 아니라 일반 함수에도 적용할 수 있다. 하지만 일반 함수에서 이를 사용해서 나아질 것이 없다. 함수 본문 안에서 간단히 try/catch 문으로 표현해도 되기 때문이다. 단, 함수 try 블록을 생성자에서 사용할 때와 달리 일반 함수에서 사용하면 현재 익셉션을 다시 던지거나 catch 문에서 새 익셉션을 만들어서 던질 필요가 없고 C++ 런타임에서 대신 던져주지도 않는다.
+```c++
+Document* documentPtr = getDocument();
+char* myCharPtr = static_cast<char*>(documentPtr); // 버그! 컴파일 에러가 발생한다
+```
 
-### 소멸자에서 익셉션을 처리하는 방법
+정작 캐스팅하려는 포인터와 캐스팅 결과에 대한 포인터가 가리키는 객체가 서로 상속 관계에 있다면 컴파일 에러가 발생하지 않는다. 하지만 상속 관계에 있는 대상끼리 캐스팅할 때는 **동적 캐스팅**(dynamic cast)을 사용하는 것이 더 안전하다.
 
-소멸자에서 발생하는 에러는 반드시 소멸자 안에서 처리해야 한다. 소멸자에서 익셉션을 다른 곳으로 던지면 안 된다. 그 이유는 다음과 같다.
+## 배열과 포인터의 두 얼굴
 
-1. 소멸자를 명시적으로 `noexcept(false)`로 지정하지 않거나, 그 클래스에 있는 객체 _중_ 소멸자에 `noexcept(false)`가 지정된 것이 없다면 내부적으로 `noexcept`를 선언된 것으로 취급한다.`noexcept` 소멸자에서 익셉션을 던지면 C++ 런타임은 `std::terminate()`를 호출해서 프로그램을 종료한다.
+### 배열 = 포인터
 
-2. 소멸자는 이미 다른 익셉션이 발생해서 스택 풀기를 수행하는 과정에서도 실행될 수 있다. 스택 풀기를 하는 도중에 소멸자에서 익셉션을 던지면 C++ 런타임은 `std::terminate()`를 호출해서 애플리케이션을 종료한다. C++는 소멸자가 호출되는 원인이 일반 함수의 정상적인 종료인지 아니면 `delete`를 호출했기 때문인지 아니면 스택 풀기 때문인지 알아내는 기능을 제공한다. \<exception> 헤더 파일에 선언된 `uncaught_exceptions()` 함수를 호출하면 아직 잡지 않은 익셉션, 즉 이미 발생했지만(던져졌지만) 아직 `catch` 문에는 매칭되지 않은 익셉션 수를 리턴한다. `uncaught_exceptions()`의 리턴값이 0보다 크면 스택 풀기 과정에 있다는 뜻이다. 하지만 이 함수를 제대로 활용하기 힘들고 코드도 지저분해져서 사용하지 않는 것이 좋다. 참고로 C++17 이전에는 이 함수의 이름이 단수형인 `uncaught_exception()`이었고, bool 타입의 값을 리턴했다. 즉, true를 리턴하면 현재 스택 풀기 중에 있다는 뜻이다.
+힙 배열을 참조할 때만 포인터를 사용하는 것은 아니다. 스택 배열에 접근할 때도 포인터를 사용할 수 있다. 배열의 주소는 사실 인덱스가 0인 첫 번째 원소에 대한 주소다. 컴파일러는 배열의 변수 이름을 보고 배열 전체를 가리킨다고 알지만, 실제로는 배열의 첫 번째 원소에 대한 주소만 가리킬 뿐이다. 그래서 힙 배열과 똑같은 방식으로 포인터를 사용할 수 있다.
 
-3. 그렇다면 클라이언트는 어떤 액션을 취해야 할까? 클라이언트는 소멸자를 직접 호출하지 않고 delete를 이용하여 간접적으로 소멸자를 호출한다. 그런데 소멸자에서 익셉션을 던지면 클라이언트는 어떻게 처리해야 할까? 이미 delete를 호출한 객체에 다시 delete를 호출할 수도 없고, 소멸자를 직접 호출할 수도 없다. 이처럼 클라이언트가 할 수 있는 일이 없기 때문에 굳이 익셉션 처리의 부담을 줄 이유가 없다.
+```c++
+int myIntArray[10];
+int* myIntPtr = myIntArray;
+// 포인터로 배열 접근하기
+myIntPtr[4] = 5;
+```
 
-4. 소멸자는 객체에서 사용할 메모리나 리소스를 해제할 마지막 기회다. 함수 실행 도중에 익셉션을 던져 이 기회를 놓쳐버리면 다시 돌아가 메모리나 리소스를 해제할 수 없다.
+스택 배열을 포인터로 접근하는 기능은 배열을 함수에 넘길 때 특히 유용하다. 다음 함수는 정수 배열을 포인터로 받는다. 여기서 함수를 호출할 때 배열의 크기를 지정해야 한다. 포인터만으로는 크기를 알 수 없기 때문이다.
 
-> **소멸자에서 호출한 함수나 메서드에서 발생한 익셉션을 잡아서 처리할 때 조심하기 바란다.**
+```c++
+void doubleInts(int* theArray, size_t size)
+{
+	for (size_t i = 0; i < size; i++) {
+		theArray[i] *=2;
+	}
+}
+```
+
+이 함수를 호출할 때 스택 배열을 전달해도 되고 힙 배열을 전달해도 된다. 힙 배열을 전달하면 이미 포인터가 담겨 있어서 함수에 값으로 전달된다. 스택 배열을 전달하면 배열 변수를 전달하기 때문에 컴파일러가 이를 배열에 대한 포인터로 변환한다. 이때 프로그래머가 직접 첫 번째 원소의 주소를 넘겨도 된다.
+
+```c++
+size_t arrSize = 4;
+int* heapArray = new int[arrSize]{1, 5, 3, 4};
+doubleInts(heapArray, arrSize);
+delete [] heapArray;
+heapArray = nullptr;
+int stackArray[] = { 5, 7, 9, 11 };
+arrSize = std::size(stackArray); // C++17부터 <array>를 사용한다.
+//arrSize = sizeof(stackArray) / sizeof(stackArray[0]); // C++17 이전 방식
+doubleInts(stackArray, arrSize);
+doubleInts(&stackArray[0], arrSize);
+```
+
+컴파일러는 배열을 함수로 전달하는 부분을 포인터로 취급한다. 배열을 인수로 받아서 그 안에 담긴 값을 변경하는 함수는 복사본이 아닌 원본을 직접 수정한다. 포인터와 마찬가지로 배열을 전달하면 실제로 레퍼런스 전달 방식(pass-by-reference)의 효과가 나타난다. 함수에 전달한 값이 복사본이 아닌 원본 배열의 주소이기 때문이다. 다음에 나온 `doubleInts()` 코드는 포인터가 아닌 배열 배개변수를 받더라도 원본 배열이 변경되는 것을 보여준다.
+
+```c++
+void doubleInts(int theArray[], size_t size)
+{
+	for (size_t i = 0; i < size; i++) {
+		theArray[i] *= 2;
+	}
+}
+```
+
+컴파일러는 이 함수의 프로토타입에서 `theArray` 뒤에 대괄호(`[]`) 사이에 나온 숫자를 무시한다. 그래서 다음 세 가지 방식으로 표현한 문장은 모두 같다.
+
+```c++
+void doubleInts(int* theArray, size_t inSize);
+void doubleInts(int* theArray[], size_t inSize);
+void doubleInts(int* theArray[2], size_t inSize);
+```
+
+배열에 담긴 원소를 모두 복사하는 데 시간이 걸리 뿐만 아니라 메모리 공간도 상당히 차지한다. 이처럼 항상 포인터를 전달하기 때문에 컴파일러가 배열을 복사하는 코드를 추가할 필요가 없다.
+
+배열 문법으로 선언한 배열은 포인터로도 접근할 수 있다. 그리고 컴파일러는 함수로 전달하는 배열을 항상 포인터로 취급한다.
+
+### 포인터가 모두 배열은 아니다!
+
+포인터 자체는 의미가 없다. 임의의 메모리를 가리킬 수도 있고 객체나 배열을 가리킬 수도 있다. 언제든지 포인터에 배열 문법을 적용해도 되지만 실제로 포인터가 아니기 때문에 부적절한 경우도 있다. 예를 들면 다음과 같다.
+
+```c++
+int ptr = new int;
+```
+
+ptr이란 포인터는 정상적인 포인터지만 배열은 아니다. 이 포인터가 가리키는 값을 배열 문법(`ptr[0]`)으로 표현할 수 있지만 바람직한 작성 방식이 아닐 뿐만 아니라 좋은 점도 없다. 사실 이렇게 배열이 아닌 포인터를 배열 문법으로 표현하면 버그가 발생하기 쉽다.
+
+`ptr[1]`에 있는 메모리에 어떤 값이 있을 지 모르기 때문이다.
+
+> **모든 배열은 포인터로 참조할 수 있지만, 모든 포인터가 배열은 아니다.**
+
+## 로우레벨 메모리 연산
+
+C보다 C++가 훨씬 좋은 점 중 하나는 메모리에 신경을 덜 쓸 수 있다는 것이다. 객체를 이용할 때는 메모리 관리를 클래스 단위로만 신경 쓰면 된다. 생성자와 소멸자를 통해 메모리 관리 작업을 해야 할 시점만 알려주면 나머지 작업은 컴파일러가 도와준다. 이렇게 메모리 관리 작업을 클래스 단위로 숨기면 사용성이 크게 높아진다. 표준 라이브러리에서 제공하는 클래스만 봐도 쉽게 알 수 있다. 하지만 특정 애플리케이션이나 레거시 코드에서 메모리를 로우레벨로 다뤄야 할 때가 있다. 메모리를 저수준으로 관리하는 테크닉을 알아두면 여러모로 도움 된다.
+
+### 포인터 연산
+
+C++ 컴파일러는 포인터 연산을 수행할 때 포인터에 선언된 타입을 이용한다. 포인터를 `int`로 선언하고 그 값을 1만큼 증가시키면 포인터는 메모리에서 한 바이트가 아닌 `int` 크기만큼 이동한다. 이 연산은 주로 배열을 다루는 데 유용하다. 배열에 담긴 데이터는 모두 타입이 같을 뿐만 아니라 메모리에 연속적으로 저장돼 있기 때문이다.
+
+```c++
+int* myArray = new int[8];
+myArray[2] = 33;
+*(myArray + 2) = 33; // 바로 윗줄과 같은 기능을 하는 포인터 연산이다.
+```
+
+포인터 연산의 강점은 `myArray+2`와 같은 표현식으로 포인터를 표현하고, 이를 이용해서 더 작은 정수 배열을 표현할 수 있다는 데 있다. 다음과 같은 와이드 스트링(wide string)을 살펴보자. 와이드 스트링은 유니코드 문자를 지원해서 한국어와 같은 다국어를 표현할 수 있다. `wchar_t` 타입은 유니코드 문자를 지원하는 문자 타입 중 하나로, 대체로 크기가 한 바이트인 `char` 타입보다 크다. 스트링 리터럴이 와이드 스트링이라는 것을 컴파일러에 알려주려면 그 앞에 L을 붙인다.
+
+```c++
+const wchar_t* myString = L"Hello, World";
+wchar_t* toCaps(const wchar_t* inString);
+toCaps(myString + 7); // myString에서 World만 대문자로 바꾼다.
+```
+
+포인터 연산에서 뺄셈도 유용하다. 한 포인터에서 같은 타입의 포인터를 빼면 두 포인터 사이에 몇 바이트가 있는지가 아니라 포인터에 지정한 타입의 원소가 몇 개 있는지 알 수 있다.
+
+### 커스텀 메모리 관리
+
+C++에서는 기본으로 제공하는 메모리 할당 기능만으로도 대부분의 일을 처리할 수 있다. `new`와 `delete`의 내부 처리 과정을 살펴보면 메모리를 적절한 크기로 잘라서 전달하고, 현재 메모리에서 사용할 수 있는 공간을 관리하고, 다 쓴 메모리를 해제하는 데 필요한 모든 작업을 수행한다.
+
+메모리를 직접 관리하면 오버헤드를 좀 더 줄일 수 있다. 여기서 오버헤드란 `new`로 메모리를 할당하면 현재 프로그램에서 얼마나 할당했는지 기록하는 데 필요한 공간을 말한다. 이렇게 기록해둬야 `delete`를 호출할 때 딱 필요한 만큼 해제할 수 있다. 크기가 작은 객체가 많거나 사용하는 객체의 수가 엄청나게 많을 때는 이러한 오버헤드가 상당한 영향을 미친다.
+
+메모리를 직접 다룰 때 객체 크기를 사전에 알고 있다면 객체 크기를 관리할 공간을 줄일 수 있다. 크기가 작은 객체가 아주 많으면 이렇게 절약한 효과가 상당하다.
+
+### 가비지 컬렉션
+
+메모리를 정상 상태로 유지하기 위한 최후의 보루는 **가비지 컬렉션**(garbage collection)이다. 가비지 컬렉션을 제공하는 환경이라면 프로그래머가 객체에 할당된 메모리를 직접 해제할 일은 거의 없다. 더 이상 참조하지 않는 객체는 런타임 라이브러리에 의해 일정한 시점에 자동으로 해제된다.
+
+C++에서 가비지 컬렉션을 구현할 수는 있지만 쉽지 않다. 대신 메모리를 직접 할당하고 해제하는 작업을 보다 쉽게 처리할 수 있다.
+
+가비지 컬렉션을 구현하는 기법 중에 **표시 후 쓸기**(mark and sweep)란 알고리즘이 있다. 이 방식에 따르면 가비지 컬렉터가 프로그램에 있는 모든 포인터를 주기적으로 검사한 뒤 여기서 참조하는 메모리를 계속 사용하고 있는지 여부를 표시한다. 한 주기가 끝날 시점에 아무런 표시가 되지 않은 메모리는 더 이상 사용하지 않는 것으로 간주하고 해제한다.
+
+다음과 같은 방식으로 표시 후 쓸기 알고리즘을 C++에서 구현할 수 있다.
+
+1. 모든 포인터를 쉽게 탐색하도록 포인터를 가비지 컬렉터에 리스트 형태로 등록한다.
+2. 가비지 컬렉터가 객체의 사용 상태를 표시할 수 있도록 모든 객체가
+   `GarbageCollectible`과 같은 믹스인 클래스를 상속하게 만든다.
+3. 객체에 동시에 접근하지 못하도록 가비지 컬렉터가 작동하는 동안 포인터를 변경할 수 없게 한다.
+
+이런 식으로 가비지 컬렉터를 구현하려면 프로그래머가 해야 할 일이 상당히 많다. 그냥 `delete`로 처리할 때보다 오류가 많이 발생할 수 있다. 설령 완벽하게 구현된 가비지 컬렉터가 제공되더라도 모든 애플리케이션에 적합한 것은 아니다. 가비지 컬렉터의 단점을 몇가지 소개하면 다음과 같다.
+
+- 가비지 컬렉터가 작동하는 동안 프로그램이 멈출 수 있다.
+- 가비지 컬렉터가 있으면 소멸자가 비결정적으로(non-deterministically) 호출된다. 객체는 가비지 컬렉터에서 처리하기 전에는 제거되지 않기 때문에 객체가 스코프를 벗어나더라도 소멸자는 즉시 실행되지 않는다. 즉, 소멸자에서 처리하는 리소스 정리 작업은 일정한 시점에 이르기 전에는 실행되지 않는데, 얼마나 기다려야 할지 미리 알 수 없다.
+
+## 객체 풀
+
+객체 풀은 접시를 재사용하는 것에 비유할 수 있다. 사용할 접시 수를 미리 정해놓고, 음식을 먹고 난 빈 접시에 다시 음식을 담아오는 것이다. 객체 풀은 타입이 같은 여러 개의 객체를 지속적으로 사용해야 하지만 매번 객체를 생성하면 오버헤드가 상당히 커지는 상황에 적용하기 좋다.
+
+## 스마트 포인터
+
+스마트 포인터를 사용하면 동적으로 할당한 메모리를 관리하기 쉽다. 메모리 누수를 방지하려면 스마트 포인터를적극 활용하는 것이 좋다. 기본적으로 스마트 포인터는 메모리뿐만 아니라 동적으로 할당한 모든 리소스를 가리킨다. 스마트 포인터가 스코프를 벗어나거나 리셋되면 거기에 할당된 리소스가 자동으로 해제된다. 스마트 포인터는, 함수 스코프 안에서 동적으로 할당된 리소스를 관리하는 데 사용할 수도 있고, 클래스의 데이터 멤버로 사용할 수도 있다. 동적으로 할당된 리소스의 소유권을 함수의 인수로 넘겨줄 때도 스마트 포인터를 활용한다.
+
+C++는 스마트 포인터를 지원하는 기능을 언어 차원에서 다양하게 제공한다. 첫째, 템플릿을 이용하면 모든 포인터 타입에 대해 타입에 안전한 스마트 포인터 클래스를 작성할 수 있다. 둘째, 연산자 오버로딩을 이용하여 스마트 포인터 객체에 대한 인터페이스를 제공해서 스마트 포인터 객체를 일반 포인터처럼 활용할 수 있다. 특히 `*`와 `->`연산자를 오버로딩하면 스마트 포인터 객체를 일반 포인터처럼 역참조할 수 있다.
+
+스마트 포인터의 종류는 다양하다. 가장 간단한 것은 리소스에 대한 고유 소유권을 받는 것이다. 그래서 스마트 포인터가 스코프를 벗어간거나 리셋되면 참조하던 리소스를 해제한다. 표준 라이브러리에서 제공하는 `std::uniqne_ptr`가 바로 이러한 **고유(단독) 소유권 방식**을 지원한다.
+
+포인터를 관리하는 과정에서 발생하는 문제는 단순히 스코프를 벗어날 때 해제하는 것을 깜빡 잊는 것 말고도 많이 있다. 간혹 어떤 포인터의 복사본을 여러 객체나 코드에서 갖고 있을 때가 있다. 이러한 상황을 **앨리어싱**(aliasing)이라 부른다. 모든 리소스를 제대로 해제하려면 리소스를 마지막으로 사용한 포인터가 해제해야 한다. 그런데 코드의 어느 지점에서 그 리소스를 마지막으로 사용하는지 알기 힘들 때가 많다. 실행 시간에 입력되는 값에 따라 동작이 결정된다면 정확한 순서를 알아내기가 근본적으로 불가능하다. 그래서 리소스의 소유자를 추적하도록 **레퍼런스 카운팅**(reference counting, **참조 횟수 계산 방식**)을 구현한 스마트 포인터도 있다. 이 기능이 지원되는 스마트 포인터를 복사해서 리소스를 가리키는 인스턴스가 새로 생성되면 레퍼런스 카운트가 증가한다. 또한 이렇게 복사해서 만든 스마트 포인터 인스턴스가 스코프를 벗어나거나 리셋되면 레퍼런스 카운트가 감소한다. 레퍼런스 카운트가 0이 되면 그 리소스를 사용하는 곳이 없기 때문에 스마트 포인터에 의해 자동으로 해제된다. 표준 라이브러리에서 제공하는 `std::shared_ptr`가 바로 이러한 레퍼런스 카운팅을 이용하여 **공유 소유권**(shared ownership) 방식을 지원한다. C++ 표준에서 정한 `shared_ptr`는 스레드에 안전하다. 그렇다고 해서 포인터가 가리키던 리소스도 스레드에 안전하다는 뜻은 아니다.
+
+> **주로 `unique_ptr`를 사용한다. `shared_ptr`는 리소스를 공유할 때만 사용한다.**
+
+### unique_ptr
+
+동적으로 할당한 리소스는 항상 `unique_ptr`와 인스턴스에 저장하는 것이 바람직하다.
+
+#### 1. unique_ptr 생성 방법
+
+```c++
+void couldLeaky(){	Simple* mySimplePtr = new Simple();	mySimplePtr -> go();	delete mySimplePtr;}
+```
+
+이렇게 해도 메모리 누수가 발생할 가능성은 남아 있다. `go()` 메서드에 익셉션이 발생하면 `delete`가 실행 되지 않기 때문이다. `unique.ptr`로 구현해야 한다. 그러면 객체에 대해 `delete`를 직접 호출하지 않아도 된다. `unique_ptr` 인스턴스가 스코프를 벗어나면 (함수가 끝나거나 익셉션이 발생해서) 소멸자가 호출될 때 `Simple` 객체가 자동으로 해제된다.
+
+```c++
+void notLeaky(){	auto mySimpleSmartPtr = make_unique<Simple>();}
+```
+
+이 코드는 C++14부터 제공하는 `make_unique()`와 `auto` 키워드를 동시에 적용했다. 그래서 `Simple`이라는 포인터 타입만 지정했다. `Simple` 생성자에 매개변수를 받는다면 `make_unique<Simple>(1, 2);`와 같이 생성자 인수를 전달할 수 있다.
+
+`make_unique()`를 지원하지 않는 컴파일러를 사용한다면 다음과 같이 `unique_ptr`로 생성한다.
+
+```c++
+unique_ptr<Simple> mySimpleSmartPtr(new Simple());
+```
+
+C++17 이전에는 타입을 단 한 번만 지정하기 위해서 뿐만 아니라 안전을 위해 반드시 `make_unique()`를 사용해야 했다. 예를 들어 다음과 같이 `foo()`함수를 호출하는 예를 살펴보자.
+
+```c++
+foo(unique_str<Simple>(new Simple()), unique_ptr<Bar>(new Bar(data())));
+```
+
+`Simple`이나 `Bar`의 생성자 또는 `data()` 함수에서 익셉션이 발생하면 `Simple`이나 `Bar` 객체에 메모리 누수가 발생할 가능성이 매우 높다. 물론 현재 사용하는 컴파일러의 최적화 기법에 따라 차이가 있을 수 는 있다. 하지만 `make_unique()`를 사용하면 누수가 발생하지 않는다.
+
+```c++
+foo(make_unique<Simple>( ), make_unique<Bar>(data( )))
+```
+
+C++17부터는 앞에 나온 두 코드 중 어느 방식으로 작성해도 안전하게 처리된다. 그래도 가독성을 감안하면 `make_unique()`를 사용하는 것이 낫다.
+
+#### 2. unique_ptr 사용 방법
+
+스마트 포인터는 일반 포인터와 똑같이 `*`나 `->`로 역참조한다.
+
+```c++
+mySimpleSmartPtr->go();(*mySimpleSmartPtr).go();
+```
+
+`get()` 메서드를 이용하면 내부 포인터에 직접 접근할 수 있다. 일반 포인터만 전달할 수 있는 함수에 스마트 포인터를 전달할 때 유용하다.
+
+```c++
+void processData(Simple* simple) { /* 스마트 포인터를 사용하는 코드 */ }auto mySimpleSmartPtr = make_unique<Simple>();processData(mySimpleSmartPtr.get());
+```
+
+`reset()`을 사용하면 `unique_ptr`의 내부 포인터를 해제하고, 필요하다면 이를 다른 포인터로 변경할 수 있다.
+
+```c++
+mySimpleSmartPtr.reset();	// 리소스 해제 후 nullptr로 초기화mySimpleSmartPtr.reset(new Simple()); // 리소스 해제 후 새로운 Simple 인스턴스로 설정
+```
+
+`release()`를 이용하면 `unique_ptr`와 내부 포인터의 관계를 끊을 수 있다. `release()` 메서드는 리소스에 대한 내부 포인터를 리턴한 뒤 스마트 포인터를 `nullptr`로 설정한다. 그러면 스마트 포인터는 그 리소스에 대한 소유권을 잃으며, 리소스를 다 쓴 뒤 반드시 직접 해제하여 한다.
+
+```c++
+Simple* simple = mySimpleSmartPtr.release(); // 소유권을 해제한다.// simple 포인터를 사용하는 코드delete simple;simple = nullptr;
+```
+
+`unique_ptr`는 단독 소유권을 표현하기 때문에 **복사**할 수 없다. `std::move()` 유틸리티를 사용하면 하나의 `unique_ptr`를 다른 곳으로 **이동**할 수 있는데, 복사라기보다는 이동의 개념이다. 다음 코드와 같이 소유권을 명시적으로 이전하는 용도로 많이 사용한다.
+
+```c++
+class Foo{	public:		Foo(unique_ptr<int> data) : mData(move(data)) { }	private:		unique_ptr<int> mData;};auto myIntsmartPtr = make_unique<int>(42);Foo f(move(myIntsmartPtr));
+```
+
+#### 3. unique_ptr와 C 스타일 배열
+
+`unique_ptr`는 기존 C 스타일의 동적 할당 배열을 저장하는 데 적합하다. 예를 들어 정수 10개를 가진 C 스타일의 동적 할당 배열을 다음과 같이 표현할 수 있다.
+
+```c++
+auto myVariableSizedArray = make_unique<int[]>(10);
+```
+
+이렇게 `unique_ptr`로 C 스타일의 동적 할당 배열을 저장할 수는 있지만, 이보다는 `std::array`나 `std::vector`와 같은 표준 라이브러리 컨테이너를 사용하는 것이 바람직하다.
+
+#### 4. 커스텀 제거자
+
+기본적으로 `unique_ptr`는 `new`와 `delete`로 메모리를 할당하거나 해제한다. 하지만 다음과 같이 방식을 변경할 수 있다.
+
+```c++
+int* malloc_int(int value){	int* p = (int*)malloc(sizeof(int));	*p = value;	return p;}int main(){    unique_ptr<int, decltype(free)*> myIntSmartPtr(malloc_int(42), free);    return 0;}
+```
+
+이 코드는 `malloc_int()`로 정수에 대한 메모리를 할당한다. `unique_ptr`는 메모리를 표준 `free()` 함수로 해제한다. 앞에서 C++에서는 `malloc()`을 절대 사용하지 말고 `new`를 사용해야 한다고 설명한 적이 있다. 그런데도 `unique_ptr`에서 이 기능을 제공하는 이유는 메모리가 아닌 다른 리소스를 관리하기에 편하기 때문이다. 예를 들어 파일이나 네트워크 소켓 등을 가리키던 `unique_ptr`가 스코프를 벗어날 때 이러한 리소스를 자동으로 닫는데 활용할 수 있다.
+아쉽게도 `unique_ptr`로 커스텀 제거자(custom deleter)를 작성하는 문법은 좀 지저분하다. 작성하는 커스텀 제거자의 타입을 템플릿 타입 매개변수로 지정하기 때문이다. 앞의 예에서 `free()`의 타입을 알아내기 위해 `decltype(free)`를 사용했다. 템플릿 타입 매개변수는 반드시 함수에 대한 포인터 타입이어야 한다. 그래서 `decltype(free)*`와 같이 `*`를 더 붙였다. `shared_ptr`로 커스텀 제거자를 작성하는 문장은 이보다 간단하다. `shared_ptr`를 설명하는 다음 절에서 파일을 가리키던 `shared_ptr`가 스코프를 벗어날 때 자동으로 파일을 닫게 만드는 방법을 소개한다.
+
+### shared_ptr
+
+`shared_ptr`의 사용법은 `unique_ptr`와 비슷하다. `shared_ptr`는 `make_shared()`로 생성한다. 이렇게 하는 것이 `shared_ptr`를 직접 생성하는 것보다 훨씬 효율적이다. 예를 들면 다음과 같다.
+
+```c++
+auto mySimpleSmartPtr = make_shared<Simple>();
+```
+
+C++17부터 `shared_ptr`도 unique_ptr'와 마찬가지로 기존 C 스타일 동적 할당 배열에 대한 포인터를 저장할 수 있다. C++17 이전에는 이렇게 할 수 없었다. 하지만 C++17에서 지원하더라도 여전히 C 스타일 배열보다는 표준 라이브러리 컨테이너를 사용하는 것이 바람직하다.
+`shared_ptr`도 `unique_ptr`처럼 `get()`과 `reset()` 메서드를 제공한다. 다른 점은 `reset()`을 호출하면 레퍼런스 카운팅 메커니즘에 따라 마지막 `shared_ptr`가 제거되거나 리셋될 때 리소스가 해제된다. 참고로 `shared_ptr`는 `release()`를 지원하지 않는다. 현재 동일한 리소스를 공유하는 `shared_ptr`의 개수는 `use_count()`로 알아낼 수 있다.
+`shared_ptr`도 `unique_ptr`처럼 메모리 할당 및 해제는 `new`와 `delete` 연산자를, C++17에저 C 스타일 배열을 저장할 때는 `new[]`나 `delete[]`를 기본으로 사용한다. 이러한 동작도 다음과 같이 변경할 수 있다.
+
+```c++
+// 앞에서 구현한 malloc_int() 활용shared_ptr<int> myIntSmartPtr(malloc_int(42), free);
+```
+
+커스텀 제거자의 타입을 템플릿 타입 매개변수로 지정하지 않아도 된다. 그래서 `unique_ptr`에 대해 커스텀 제거자를 작성할 때보다 훨씬 간편하다.
+다음 코드는 `shared_ptr`로 파일 포인터를 저장하는 예를 리셋되면(스코프를 벗어나면) `CloseFile()`이 호출되면서 클래스도 파일을 자동으로 닫아준다. 이 예제는 `shared_ptr`를 메모리가 아닌 다른 리소스에도 사용할 수 있다는 것만 보여주기 위해 기본 C 함수인 `fopen()`과 `fclose()`를 사용했다.
+
+```c++
+void CloseFile(FILE* fileptr){	if (filePtr == nullptr)		return;	fclose(filePtr);	cout << "File closed." << endl;}int main(){	FILE* f = fopen("data.txt", "w");    shared_ptr<FILE> filePtr(f, CloseFile);    if (filePtr == nullptr) {		cer << "Error opening file." << endl;	} else {		cout << "File opened." << endl;		// filePtr를 사용하는 코드	}	return 0;}
+```
+
+#### 1. shared_ptr 캐스팅하기
+
+`shared_ptr`를 캐스팅 하는 함수로 'const_pointer_cast()', 'dynamic_pointer_cast()三 'static_pointer_cast()'가 제공된다. C++17부터는 'reinterpret_pointer_cast(j'도 추가됐다.
+
+#### 2. 레퍼런스 카운팅이 필요한 이유
+
+**레퍼런스 카운팅**은 어떤 클래스의 인스턴스 수나 현재 사용 중인 특정한 객체를 추적하는 메커니즘이다. 레퍼런스 카운팅을 지원하는 스마트 포인터는 실제 포인터를 참조하는 스마트 포인터 수를 추적한다. 그래서 스마트 포인터가 중복 삭제되는 것을 방지한다.
+다음과 같이 표준 `shared_ptr` 두 개를 만들고 각각 하나의 `Simple` 객체를 가리키도록 작성하면 두 포인터가 제거될 때 서로 `Simple` 객체를 삭제하려 시도한다.
+
+```c++
+void doubleDelete(){	Simple* mySimple = new Simple();	shared_ptr<Simple> smartPtr1(mySimple);	shared_ptr<Simple> smartPtr2(mySimple);}
+```
+
+사용하는 컴파일러에 따라 프로그램이 죽어버릴 수 있다. 혹시 제대로 실행된다면 다음과 같은 결과가 출력된다.
+
+```c++
+Simple constructor called!Simple destructor called!Simple destructor called!
+```
+
+생성자는 한 번 호출되고 소멸자는 두 번 호출되는 이상한 현상이 발생한다. `unique_ptr`로 작성할 때도 똑같은 문제가 발생한다. 레퍼런스 카운팅을 지원하는 `shared.ptr` 클래스로도 이런 일이 발생해서 의아할 수 있지만 C++ 표준에 따른 정상적인 동작이다. 이렇게 `shared_ptr`를 앞에 나온 `doubleDelete()` 함수처럼 객체 하나를 `shared_ptr` 두 개로 가리키지 말고 다음과 같은 복사본을 만들어 사용해야 한다.
+
+```c++
+void noDoubleDelete(){	auto smartPtr1 = make_shared<Simple>();	shared_ptr<Simple> smartPtr2(smartPtr1);}
+```
+
+`shared_ptr` 두 개가 한 `Simple` 객체를 동시에 가리키더라도 `Simple` 객체는 딱 한 번만 삭제된다. 참고로 `unique_ptr`는 레퍼런스 카운팅을 지원하지 않는다. 정확히 말하면 `unique_ptr`는 원래 복제 생성자(copy constructor)를 지원하지 않기 때문에 `noDoubieDelete()`함수처럼 사용할 수 없다.
+
+#### 3. 앨리어싱
+
+`shared_ptr`는 **앨리어싱**(aliasing)을 지원한다. 그래서 한 포인터(**소유한
+포인터,** owned pointer)를 다른 `shared_ptr`와 공유하면서 다른 객체(**저장된 포인터**, stored pointer)를 가리킬 수 있다. 예를 들어 `shared_ptr`가 객체를 가리키는 동시에 그 객체의 멤버도 가리키게 할 수 있다.
+
+```c++
+class Foo{	public:	Foo(int value) : mData(value) {}	int mData;};auto foo = make_shared<Foo>(42);auto aliasing = shared_ptr<int>(foo, &foo->mData);
+```
+
+여기서 두 `shared_ptr`가 모두 삭제될 때만 `Foo` 객체가 삭제된다.
+소유한 포인터는 레퍼런스 카운팅에 사용하는 반면, 저장된 포인터는 포인터를 역참조하거나 그 포인터에 대해 `get()`을 호출할 때 리턴된다. 저장된 포인터는 비교 연산을 비롯한 대부분의 연산에 적용할 수 있다.
+
+### week_ptr
+
+`shared_ptr`와 관련하여 C++에서 제공하는 또 다른 클래스로 `weak_ptr`가 있다. `weak_ptr`는 `shared_ptr`가 가리키는 리소스의 레퍼런스를 관리하는 데 사용된다. `weak_ptr`는 리소스를 직접 소유하지 않기 때문에 `shared_ptr`가 해당 리소스를 해제하는 데 아무런 영향을 미치지 않는다. `weak_ptr`는 삭제될 때 가리키던 리소스를 삭제하지 않고, `shared_ptr`나 다른 `weak_ptr`를 인수로 맏는다. `weak_ptr`에 저장된 포인터에 접근하려면 `shared_ptr`로 변환해야 한다. 변환 방법은 다음 두 가지가 있다.
+
+- `shared_ptr`의 생성자에 `weak_ptr`를 인수로 전달해서 `shared_ptr`를 새로 생성한다. 이때 `shared_ptr`에 연결된 `weak_ptr`가 해제되면 `std::bad_weak_ptr` 익셉션이 발생한다.
+
+```c++
+void useResource(weak_ptr<Simple>& weakSimple){	auto resource = weakSimple.lock();	if (resource) {		cout << "Resource still alive." << endl;	} else {		cout << "Resource has been freed!" << endl;	}}int main(){	auto sharedSimple = make_shared<Simple>();	weak_ptr<Simple> weakSimple(sharedSimple);    	// weak_ptr를 사용한다.	useResource(weakSimple);    	// shared_ptr를 리셋한다.	// Simple 리소스에 대한 shared_ptr는 하나뿐이므로	// weak_ptr가 살아 있더라도 리소스가 해제된다.	sharedSimple.reset();    	// weak_ptr를 한 번 더 사용한다.	useResource(weakSimple);    	return 0;}
+```
+
+```c++
+Simple constructor called!Resource still alive.Simple destructor called!Resource has been freed!
+```
+
+### 이동 의미론
+
+표준 스마트 포인터인 `shared_ptr`와 `unique_ptr`, `weak_ptr`는 모두 성능 향상을 위해 이동 의미론을 지원한다. 이동 의미론을 이용하면 함수에서 스마트 포인터를 리턴하는 과정이 굉장히 효율적으로 처리할 수 있다는 점만 알아두자.
+
+### enable_shared_from_this
+
+믹스인 클래스인 `std::enable_shared_from_this`를 이용하면 객체의 메서드에서
+` shared_ptr`나 `weak_ptr`를 한전하게 리터할 수 있다. `enable_shared_from_this` 믹스인 클래스는 다음 두 개의 메서드를 클래스에 제공한다.
+⦁ `shared_from_this()` : 객체의 소유권을 공유하는 `shared_ptr`를 리턴한다.
+⦁ `weak_from_this()` : 객체의 소유권을 추적하는 `weak_ptr`를 리턴한다.
+
+## 현재는 폐기된 auto_ptr
+
+C++11 이전에는 표준 라이브러리에서 스마트 포인터를 간단히 구현한 `auto_ptr`를 제공했는데, 아쉽게도 몇 가지 심각한 단점이 있었다. 그중 하나는 `vector`와 같은 표준라이브러리 컨테이너 안에서는 제대로 동작하지 않는다는 점이다. C++11과 C++14부터는 `auto_ptr`를 공식적으로 지원하지 않는다고 선언했고, C++17에서 완전히 삭제되면서 그 빈자리를 `unique_ptr`와 `shared_ptr`가 대체했다. 여기서 `auto_ptr`를 소개하는 이유는 이를 절대. 사용하면 안된다는 것을 강조하기 위해서다.
+
+## 흔히 발생하는 메모리 문제
+
+### 스트링 과소 할당 문제
+
+C 스타일 스트링에서 가장 흔히 발생하는 문제는 **과소 할당**(underallocation)이다. 이 문제는 주로 프로그래머가 스트링의 끝을 나타내는 널문자(`\0`)가 들어갈 공간을 빼먹고 할당할때 발생한다. 해결하는 가장 바람직한 방법순이다.
+
+1. C++ 스타일 스트링을 사용한다. 그러면 스트링을 연결하는 작업에 필요한 메모리를 알아서 관리해준다.
+2. 버퍼를 전역 변수나 스택 변수로 만들지 말고 힙 공간에 할당한다. 공간이 부족하면 현재 스트링을 저장하는 데 부족한 만큼만 추가로 할당하고, 원본 버퍼를 새 버퍼로 복사한 뒤, 스트링을 연결하고 나서 원본 버퍼를 삭제한다.
+3. 최대 문자 수(`\0` 포함)를 입력받아서 그 길이를 넘어선 부분은 리턴하지 않고, 현재 버퍼에 남은 공간과 현재 위치를 항상 추적한다.
+
+### 메모리 경계 침범
+
+포인터는 단지 메모리 주소일 뿐이며 메모리에서 아무 곳이나 가리킬 수 있다고 설명했다. 실제로 이렇게 아무 곳이나 가리키는 상황이 종종 발생한다. 이러한 문제가 스트링이 아닌 배열에 발생하는 것을 흔히 **버퍼 오버플로 에러**(buffer overflow error)라 부른다. 현재 나와 있는 메모리 검사 도구는 버퍼 오버플로 문제를 찾아준다. 또한 `string`이나 `vector`와 같은 두수의 고급 기능을 활용하면 C 스타일의 스트링이나 배열을 사용할 때 흔히 발생하던 여러 버그를 방지할 수 있다.
+
+### 메모리 누수
+
+원하는 결과를 내도록 힘들여 만든 프로그램이 실행될수록 메모리 공간을 잡아먹는다면 메모리 누수 현상이 발생한 것이다. 이럴 때는 가장 먼저 스마트 포인터를 도입하는 것이 좋다.
+
+메모리 누수 현상은 할당했던 메모리를 제대로 해제하지 않을 때 발생한다. `new`에 대응되는 `delete`를 빠짐없이 작성하더라도 누수 현상이 발생하는 경우가 있다.
+
+`doSomething()`을 보면 `outSimplePtr` 포인터가 다른 `Simple` 객체를 가리키도록 변경했는데, 이때 기존에 가리키던 객체를 삭제하지 않아서 메모리 누수가 발생했다. 객체를 가리키고 있던 포인터를 높치면 그 객체를 삭제할 방법이 없다.
+
+```c++
+class Simple{	public:		Simple() {mIntPtr = new Int();}		~Simple() {delete mIntPtr();}		void setValue(int value) {*mIntPtr = value;}	private:		int* mIntPtr;};    void doSometing(Simple*& outSimplePtr){    outSimplePtr = new Simple(); // 버그! 원본 객체를 삭제하지 않았다.}int main(){	Simple* simplePtr = new Simple(); // Simple 객체 하나를 할당한다.	doSomething(simplePtr);	delete simplePtr; // 두 번째 객체만 해제한다.	return 0;}
+```
+
+> **`mIntPtr`와 `simplePtr`를 `unique_ptr`로 만들고, `outSimplePtr`를 `unique_ptr`에 대한 레퍼런스로 만들어야 한다.**
+
+#### 1. 비주얼 C++를 이용한 윈도우 얘플리케이션의 메모리 누수 탐지 및 수정 방법
+
+마이크로소프트 비주얼 C++를 사용하고 있다면 디버그 라이브러리에서 기본으로 제공하는 메모리 누수 감지 기능을 활용할 수 있다. 기본 설정에 따르면 이 기능을 사용하지 않게 돼 있지만 MFC 프로젝트를 생성할 때는 자동으로 활성화된다.
+
+애플리케이션이 종료할 때 비주얼 C++의 CRT(C RunTime)라이브러리는 현재 감지된 모든 메모리 누수 현상을 디버그 콘솔에 출력한다.
+
+#### 2. 밸그라인드를 이용한 리눅스 애플리케이션의 메모리 누수 탐지 및 해결 방법
+
+벨그라인드(Valgrind)는 무료로 제공되는 리눅스용 오픈소스 도구로, 할당된 객체를 해제하지 않는 지점을 줄 단위로 정확히 찾아주는 점이 특징이다.
+
+### 중복 삭제와 잘못된 포인터
+
+`delete`로 포인터를 할당된 메모리를 해제하면 그 메모리를 프로그램의 다른 부분에서 사용할 수 있다. 하지만 그 포인터를 계속 쓰는 것을 막을 수는 없다. 이를 **댕글러 포인터**(dangling pointer)라 부른다. 중복 삭제하면 문제가 발생한다. 한 포인터에 `delete`를 두 번 적용하면 이미 다른 객체를 할당한 메모리를 해제해버리기 때문이다.
+
+중복 삭제 문제와 해제한 메모리를 다시 사용하는 문제를 사전에 찾아내기란 굉장히 힘들다. 짧은 시간 동안 메모리를 삭제하는 연산이 두 번 실행되면 그 사이에 같은 메모리를 재사용할 가능성이 적기 때문에 프로그램이 계속해서 정상적으로 실행될 수 있다. 마찬가지로 객체를 삭제한 직후에 곧바로 다시 사용하더라도 그 영역이 삭제 전 상태로 계속 남아 있을 가능성이 많기 때문에 문제가 생기지 않을 수 있다.
+
+그렇다 하더라도 문제가 발생하지 않는다고 장담할 수는 없다. 메모리를 할당할 때 삭제된 객체를 보존하지 않기 때문이다. 설령 제대로 작동하더라도 삭제된 객체를 이용하는 것은 바람직한 코드 작성 방식이 아니다. 스마트 포인터가 아닌 일반 포인터를 사용하려면 메모리를 해제한 후 포인터값을 `nullptr`로 초기화하는 작업만이라도 반드시 해야 한다. 그러면 실수로 같은 포인터를 두 번 삭제하거나 해제한 포인터를 계속 사용하는 문제를 막을 수 있다.
