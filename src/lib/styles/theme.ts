@@ -24,11 +24,13 @@ const theme: DefaultTheme = {
     background: '#fafafa',
     white: '#ffffff',
     disabledbg: '#f5f5f5',
+    tableBg: '#f6f8fa',
 
     // Border Colors
     quotedBorder: '#cad1d9',
     bgDivider: '#f0f0f0',
     disabledborder: '#d9d9d9',
+    tableBorder: '#d1d7dd',
 
     // Primary Colors
     primary100: '#064420',

@@ -7,6 +7,7 @@ import { MarkdownStyle } from './MarkdownRenderer.style';
 import READMEMarkdown from '@contents/posts/README.md';
 import CodeBlock from '@components/atoms/CodeBlock';
 import QuoteBlock from '@components/atoms/QuoteBlock';
+import TableBlock from '@components/atoms/TableBlock';
 
 const MarkdownRenderer: React.FC = () => {
   const [markdown, setMarkdown] = useState('');
@@ -20,7 +21,6 @@ const MarkdownRenderer: React.FC = () => {
   }, []);
 
   const emojiSupport = (text: string) => {
-    console.log(text);
     text.replaceAll(/:\w+:/gi, (name: string) => emoji.getUnicode(name));
   };
 
@@ -31,13 +31,13 @@ const MarkdownRenderer: React.FC = () => {
         components={{
           code: (props) => <CodeBlock {...props} />,
           blockquote: (props) => <QuoteBlock {...props} />,
+          table: (props) => <TableBlock {...props} />,
           em: ({ ...props }) => {
             if (
               props.children[0] &&
               typeof props.children[0] === 'string' &&
               props.children[0].startsWith('^')
             ) {
-              console.log(props.children[0]);
               return (
                 <sup>
                   {props.children[0].substring(1, props.children[0].length - 1)}
@@ -49,7 +49,11 @@ const MarkdownRenderer: React.FC = () => {
               typeof props.children[0] === 'string' &&
               props.children[0].startsWith('~')
             ) {
-              return <sub>{props.children[0].substring(1)}</sub>;
+              return (
+                <sub>
+                  {props.children[0].substring(1, props.children[0].length - 1)}
+                </sub>
+              );
             }
             if (
               props.children[0] &&
@@ -68,9 +72,6 @@ const MarkdownRenderer: React.FC = () => {
                 return <p>`${emojiSupport(string)}`</p>;
               }
             });
-            // if (typeof props.children[0] === 'string') {
-            //   emojiSupport(props.children[0]);
-            // }
             return <p {...props} />;
           },
         }}
