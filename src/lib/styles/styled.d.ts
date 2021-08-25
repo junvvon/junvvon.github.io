@@ -23,11 +23,13 @@ declare module 'styled-components' {
       background: string;
       white: string;
       disabledbg: string;
+      tableBg: string;
 
       // Border Colors
       quotedBorder: string;
       bgDivider: string;
       disabledborder: string;
+      tableBorder: string;
 
       // Primary Colors
       primary100: string;
