@@ -8,27 +8,34 @@ declare module 'styled-components' {
       body: string;
     };
 
+    fontFamily: {
+      code: string;
+      codeLigature: string;
+      text: string;
+    };
+
     colors: {
       // Font Colors
       bold: string;
-      main: string;
-      sub: string;
-      placeholder: string;
       inlineCodeColor: string;
+      main: string;
+      placeholder: string;
       quotedColor: string;
+      sub: string;
 
       // Background Colors
-      inlinebg: string;
-      codebg: string;
       background: string;
-      white: string;
-      disabledbg: string;
+      basicBg: string;
+      codeBg: string;
+      disabledBg: string;
+      inlineBg: string;
       tableBg: string;
+      transparent: string;
 
       // Border Colors
-      quotedBorder: string;
       bgDivider: string;
-      disabledborder: string;
+      disabledBorder: string;
+      quotedBorder: string;
       tableBorder: string;
 
       // Primary Colors

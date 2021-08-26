@@ -3,7 +3,7 @@ import styled from 'styled-components';
 export const Wrapper = styled.div`
   height: 100%;
   width: 100%;
-  background-color: ${({ theme }) => theme.colors.white};
+  background-color: ${({ theme }) => theme.colors.basicBg};
 `;
 
 export const MenuBarSpace = styled.div`
@@ -27,5 +27,5 @@ export const Content = styled.div`
   }
   padding: 1rem;
 
-  background-color: ${({ theme }) => theme.colors.white};
+  background-color: ${({ theme }) => theme.colors.basicBg};
 `;

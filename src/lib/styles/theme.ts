@@ -9,43 +9,50 @@ const theme: DefaultTheme = {
     body: calcRem(13),
   },
 
+  fontFamily: {
+    code: 'D2Coding',
+    codeLigature: 'D2Coding ligature',
+    text: 'Pretendard',
+  },
+
   colors: {
     // Font Colors
     bold: '#000000',
-    main: '#333333',
-    sub: '#666666',
-    placeholder: '#999999',
     inlineCodeColor: '#212529',
-    quotedColor: '#4d555f',
+    main: '#333333',
+    placeholder: '#999999',
+    quotedColor: '#4D555F',
+    sub: '#666666',
 
     // Background Colors
-    inlinebg: '#dbdfe3',
-    codebg: '#f5f7f9',
-    background: '#fafafa',
-    white: '#ffffff',
-    disabledbg: '#f5f5f5',
-    tableBg: '#f6f8fa',
+    background: '#FAFAFA',
+    basicBg: '#FFFFFF',
+    codeBg: '#F5F7F9',
+    disabledBg: '#F5F5F5',
+    inlineBg: '#DBDFE3',
+    tableBg: '#F6F8FA',
+    transparent: 'rgba(255, 255, 255, 0)',
 
     // Border Colors
-    quotedBorder: '#cad1d9',
-    bgDivider: '#f0f0f0',
-    disabledborder: '#d9d9d9',
-    tableBorder: '#d1d7dd',
+    bgDivider: '#F0F0F0',
+    disabledBorder: '#D9D9D9',
+    quotedBorder: '#CAD1D9',
+    tableBorder: '#D1D7DD',
 
     // Primary Colors
     primary100: '#064420',
     primary80: '#006241',
     primary60: '#006644',
-    primary40: '#e4efe7',
-    primary20: '#f2f7f4',
+    primary40: '#E4EFE7',
+    primary20: '#F2F7F4',
 
     // Secondary Colors
-    secondary100: '#062a44',
-    secondary80: '#06556a',
+    secondary100: '#062A44',
+    secondary80: '#06556A',
 
     // Danger Colors
-    danger1: '#ff4d4f',
-    danger2: '#ff7875',
+    danger1: '#FF4D4F',
+    danger2: '#FF7875',
 
     // Warning Colors
     warning: '#ff9400',

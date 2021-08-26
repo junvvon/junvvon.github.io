@@ -10,7 +10,7 @@ export const StyledBar = styled.div<StyledBarProp>`
   left: 0;
   width: 100%;
   height: 64px;
-  background: white;
+  background: basicBg;
   display: flex;
   justify-content: center;
   transition: top 0.2s ease-in-out;

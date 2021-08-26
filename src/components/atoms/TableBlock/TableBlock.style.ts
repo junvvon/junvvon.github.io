@@ -38,7 +38,7 @@ export const StyledTable = styled.table`
       display: table-row;
       vertical-align: inherit;
       border-color: inherit;
-      background-color: white;
+      background-color: ${({ theme }) => theme.colors.basicBg};
       border-top: 1px solid ${({ theme }) => theme.colors.tableBorder};
       &:nth-child(even) {
         background-color: ${({ theme }) => theme.colors.tableBg};

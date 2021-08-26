@@ -3,7 +3,7 @@ import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 
 export const InlineCode = styled.code`
   color: ${({ theme }) => theme.colors.inlineCodeColor};
-  background-color: ${({ theme }) => theme.colors.inlinebg};
+  background-color: ${({ theme }) => theme.colors.inlineBg};
   border-radius: 6px;
   font-size: 85%;
   margin: 0;
@@ -20,10 +20,10 @@ export const Pre = styled.pre`
 `;
 
 export const StyledSyntaxHighlighter = styled(SyntaxHighlighter)`
-  background: ${({ theme }) => theme.colors.codebg} !important;
+  background: ${({ theme }) => theme.colors.codeBg} !important;
 
   code > span {
-    font-family: 'D2Coding ligature';
-    background: rgba(255, 255, 255, 0) !important;
+    font-family: ${({ theme }) => theme.fontFamily.codeLigature};
+    background: ${({ theme }) => theme.colors.transparent} !important;
   }
 `;
