@@ -30,6 +30,7 @@ const theme: DefaultTheme = {
     codeBg: '#F5F7F9',
     disabledBg: '#F5F5F5',
     inlineBg: '#DBDFE3',
+    shadow: 'rgba(0, 0, 0, 0.16)',
     tableBg: '#F6F8FA',
     transparent: 'rgba(255, 255, 255, 0)',
 

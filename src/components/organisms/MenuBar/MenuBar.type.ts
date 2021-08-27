@@ -1,3 +1,4 @@
 export interface MenuBarProps {
-  scrolled?: boolean;
+  isScroll?: boolean;
+  isDown?: boolean;
 }

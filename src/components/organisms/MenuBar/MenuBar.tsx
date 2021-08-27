@@ -1,27 +1,44 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { MenuBarProps } from './MenuBar.type';
 import { StyledBar, MenuList, MenuItem, Title } from './MenuBar.style';
 
 const MenuBar: React.FC<MenuBarProps> = ({}) => {
-  // const [scrolled, setScrolled] = useState(false);
-  const [scrolled, setScrolled] = useState(0);
+  const [isScroll, setIsScroll] = useState(false);
+  const [isDown, setIsDown] = useState(false);
+
+  const prevScrollTop = useRef(0);
+
+  const handleIsScrollEvent = useCallback(() => {
+    const scrollTop =
+      (document.documentElement && document.documentElement.scrollTop) ||
+      document.body.scrollTop;
+    const nextDirection = prevScrollTop.current > scrollTop ? 'UP' : 'DOWN';
+
+    if (nextDirection === 'UP') {
+      setIsDown(false);
+    } else if (nextDirection === 'DOWN') {
+      setIsDown(true);
+    }
+
+    prevScrollTop.current = scrollTop;
+
+    if (window.scrollY > 40) {
+      setIsScroll(true);
+    } else {
+      setIsScroll(false);
+    }
+  }, [isScroll]);
+
   useEffect(() => {
-    // TODO: 스크롤시 그림자 적용 및 위치에 따른 표시
-    const handleScroll = () => {
-      // if (!scrolled && window.scrollY > 20) {
-      //   setScrolled(true);
-      // } else if (scrolled && window.scrollY <= 20) {
-      //   setScrolled(false);
-      // }
-      setScrolled(window.scrollY || document.documentElement.scrollTop);
-    };
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleIsScrollEvent);
+
     return () => {
-      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('scroll', handleIsScrollEvent);
     };
-  }, [scrolled]);
+  }, [handleIsScrollEvent]);
+
   return (
-    <StyledBar scrolled={scrolled < 64}>
+    <StyledBar isScroll={isScroll} isDown={isDown}>
       <MenuList>
         <Title>
           <MenuItem to="/">Develog</MenuItem>

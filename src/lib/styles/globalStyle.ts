@@ -9,7 +9,6 @@ const GlobalStyle = createGlobalStyle`
 		height: 100%;
 		padding: 0;
  		margin: 0;
-		/* padding-top: 64px; */
 		box-sizing: border-box;
  		font-family: ${({ theme }) =>
       theme.fontFamily
