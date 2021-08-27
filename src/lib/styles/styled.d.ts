@@ -29,6 +29,7 @@ declare module 'styled-components' {
       codeBg: string;
       disabledBg: string;
       inlineBg: string;
+      shadow: string;
       tableBg: string;
       transparent: string;
 

@@ -2,7 +2,7 @@ import styled, { css } from 'styled-components';
 import { Link } from 'react-router-dom';
 import { MenuBarProps } from './MenuBar.type';
 
-type StyledBarProp = Pick<MenuBarProps, 'scrolled'>;
+type StyledBarProp = Pick<MenuBarProps, 'isScroll' | 'isDown'>;
 
 export const StyledBar = styled.div<StyledBarProp>`
   position: fixed;
@@ -10,17 +10,25 @@ export const StyledBar = styled.div<StyledBarProp>`
   left: 0;
   width: 100%;
   height: 64px;
-  background: basicBg;
+  background: ${({ theme }) => theme.colors.basicBg};
   display: flex;
   justify-content: center;
-  transition: top 0.2s ease-in-out;
-
-  /* box-shadow: 0px 2px 0px gray; */
+  transition: 0.3s ease-in-out;
 
   ${(props) =>
-    props.scrolled &&
+    props.isScroll &&
     css`
-      /* background-color: red; */
+      z-index: 100;
+      background-color: ${({ theme }) => theme.colors.basicBg};
+      box-shadow: 0 2px 6px 0 ${({ theme }) => theme.colors.shadow};
+    `}
+
+  ${(props) =>
+    props.isDown &&
+    props.isScroll &&
+    css`
+      position: absolute;
+      top: -100px;
     `}
 `;
 
