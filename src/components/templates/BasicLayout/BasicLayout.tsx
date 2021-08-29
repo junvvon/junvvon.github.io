@@ -9,15 +9,17 @@ import {
   ContentWrapper,
   MenuBarSpace,
 } from './BasicLayout.style';
+import About from '@pages/About';
 
-const BasicLayout: React.FC<RouteComponentProps<MatchParams>> = ({ match }) => {
+const BasicLayout: React.FC<RouteComponentProps<MatchParams>> = ({}) => {
   return (
     <Wrapper>
       <MenuBar />
       <MenuBarSpace />
       <ContentWrapper>
         <Content>
-          <Route exact path={match.url} component={Home} />
+          <Route exact path="/" component={Home} />
+          <Route path="/about" component={About} />
         </Content>
       </ContentWrapper>
     </Wrapper>
