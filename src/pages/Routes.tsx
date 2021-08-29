@@ -5,7 +5,7 @@ import BasicLayout from '@components/templates/BasicLayout';
 const Routes: React.FC = () => {
   return (
     <BrowserRouter>
-      <Route path="/" exact component={BasicLayout} />
+      <Route path="/" component={BasicLayout} />
     </BrowserRouter>
   );
 };

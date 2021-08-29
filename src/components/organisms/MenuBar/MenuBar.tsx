@@ -43,8 +43,7 @@ const MenuBar: React.FC<MenuBarProps> = ({}) => {
         <Title>
           <MenuItem to="/">Develog</MenuItem>
         </Title>
-
-        <MenuItem to="about">About</MenuItem>
+        <MenuItem to="/about">About</MenuItem>
       </MenuList>
     </StyledBar>
   );
