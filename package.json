@@ -26,7 +26,7 @@
     "react-markdown": "^7.1.0",
     "react-router-dom": "^6.0.2",
     "react-scripts": "4.0.3",
-    "react-syntax-highlighter": "^15.4.4",
+    "react-syntax-highlighter": "^15.4.5",
     "remark-gfm": "^3.0.1",
     "styled-components": "^5.3.3",
     "styled-normalize": "^8.0.7",
