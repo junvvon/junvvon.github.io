@@ -1,25 +1,27 @@
 import React from 'react';
-import { Route, RouteComponentProps } from 'react-router-dom';
-import { MatchParams } from '@common/router.type';
+import { Route, Routes } from 'react-router-dom';
+
 import MenuBar from '@components/organisms/MenuBar';
 import Home from '@pages/Home';
+import About from '@pages/About';
 import {
   Wrapper,
   Content,
   ContentWrapper,
   MenuBarSpace,
 } from './BasicLayout.style';
-import About from '@pages/About';
 
-const BasicLayout: React.FC<RouteComponentProps<MatchParams>> = ({}) => {
+const BasicLayout: React.FC = ({}) => {
   return (
     <Wrapper>
       <MenuBar />
       <MenuBarSpace />
       <ContentWrapper>
         <Content>
-          <Route exact path="/" component={Home} />
-          <Route path="/about" component={About} />
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/about" element={<About />} />
+          </Routes>
         </Content>
       </ContentWrapper>
     </Wrapper>
