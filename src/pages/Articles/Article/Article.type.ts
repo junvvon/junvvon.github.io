@@ -1,3 +1,3 @@
-import { RouterProps } from '@common/router.type';
+// import { RouterProps } from '@common/router.type';
 
-export interface ArticleProps extends RouterProps {}
+export interface ArticleProps {}

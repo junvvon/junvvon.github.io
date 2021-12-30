@@ -1,13 +1,6 @@
 import React from 'react';
-// import qs from 'qs';
-import { AboutProps } from './About.type';
 
-// eslint-disable-next-line
-const About: React.FC<AboutProps> = ({ location }) => {
-  // const query = qs.parse(location.search, {
-  //   ignoreQueryPrefix: true,
-  // });
-  // const showDetail = query.detail === 'true';
+const About: React.FC = () => {
   return (
     <div>
       <h1>소개</h1>
@@ -30,9 +23,6 @@ const About: React.FC<AboutProps> = ({ location }) => {
           <a href="https://www.linkedin.com/in/julrum/">Linkedin</a>
         </li>
       </ul>
-
-      {/* {showDetail && <p>deatil 값을 true로 설정하셨군요!</p>} */}
-      <div>추후에 내용 추가에 예정</div>
     </div>
   );
 };

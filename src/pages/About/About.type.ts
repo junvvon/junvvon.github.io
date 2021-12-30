@@ -1,3 +1,1 @@
-import { RouterProps } from '@common/router.type';
-
-export interface AboutProps extends RouterProps {}
+export interface AboutProps {}
