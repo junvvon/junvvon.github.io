@@ -1,4 +1,3 @@
-// import { prism } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { CodeBlockProps } from "./CodeBlock.type";
 import { InlineCode, StyledSyntaxHighlighter } from "./CodeBlock.style";
 
@@ -10,12 +9,7 @@ const CodeBlock = ({
 }: CodeBlockProps) => {
   const match = /language-(\w+)/.exec(className || "");
   return !inline && match ? (
-    <StyledSyntaxHighlighter
-      // style={prism}
-      language={match[1]}
-      showLineNumbers
-      {...rest}
-    >
+    <StyledSyntaxHighlighter language={match[1]} showLineNumbers {...rest}>
       {String(children).replace(/\n$/, "")}
     </StyledSyntaxHighlighter>
   ) : (
