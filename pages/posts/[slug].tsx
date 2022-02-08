@@ -5,14 +5,12 @@ import { GetStaticPaths, GetStaticProps } from "next";
 import { serialize } from "next-mdx-remote/serialize";
 import { MDXRemote, MDXRemoteSerializeResult } from "next-mdx-remote";
 import Head from "next/head";
-import Image from "next/image";
 import Link from "next/link";
 import path from "path";
 import React from "react";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
 import rehypeSlug from "rehype-slug";
 import emoji from "remark-emoji";
-
 import Layout from "components/templates/Layout";
 import { MetaProps } from "types/layout";
 import { PostType } from "types/post";
@@ -27,7 +25,6 @@ import TableBlock from "@components/atoms/TableBlock";
 // here.
 const components = {
   Head,
-  Image,
   Link,
   code: (props: any) => <CodeBlock {...props} />,
   blockquote: (props: any) => <QuoteBlock {...props} />,
