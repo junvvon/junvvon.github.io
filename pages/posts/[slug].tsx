@@ -66,7 +66,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
         require("remark-sub-super"),
         emoji,
       ],
-      rehypePlugins: [rehypeSlug, rehypeAutolinkHeadings],
+      rehypePlugins: [],
     },
     scope: data,
   });
