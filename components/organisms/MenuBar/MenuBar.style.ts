@@ -2,11 +2,9 @@ import styled, { css } from "styled-components";
 
 import { MenuBarProps } from "./MenuBar.type";
 
-type StyledBarProp = Pick<MenuBarProps, "isScroll" | "isDown">;
-
 type MenuItemProp = { pathName: boolean };
 
-export const StyledBar = styled.div<StyledBarProp>`
+export const StyledBar = styled.div<MenuBarProps>`
   background: ${({ theme }) => theme.colors.background};
   display: flex;
   height: 64px;
@@ -16,21 +14,28 @@ export const StyledBar = styled.div<StyledBarProp>`
   top: 0;
   transition: 0.3s ease-in-out;
   width: 100%;
+  z-index: 100;
 
   ${(props) =>
     props.isScroll &&
     css`
-      background-color: ${({ theme }) => theme.colors.background};
       box-shadow: 0 2px 6px 0 ${({ theme }) => theme.colors.shadow};
-      z-index: 100;
+      position: fixed;
+      top: -64px;
     `}
 
   ${(props) =>
     props.isDown &&
     props.isScroll &&
     css`
-      position: absolute;
-      top: -100px;
+      top: -64px;
+    `}
+
+  ${(props) =>
+    !props.isDown &&
+    props.isScroll &&
+    css`
+      top: 0px;
     `}
 `;
 

@@ -25,7 +25,7 @@ const MenuBar: React.FC<MenuBarProps> = ({}) => {
 
     prevScrollTop.current = scrollTop;
 
-    if (window.scrollY > 40) {
+    if (window.scrollY > 30) {
       setIsScroll(true);
     } else {
       setIsScroll(false);
