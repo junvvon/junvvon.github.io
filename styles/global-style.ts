@@ -20,6 +20,7 @@ export const GlobalStyle = createGlobalStyle`
   	background: ${({ theme }) => theme.colors.basicBg};
 		color: ${({ theme }) => theme.colors.main};
 		font-size: ${({ theme }) => theme.fontSizes.body};
+    line-height: 1.8rem;
     -webkit-text-size-adjust: none;
     ${media.tablet}{
       font-size: 10px;

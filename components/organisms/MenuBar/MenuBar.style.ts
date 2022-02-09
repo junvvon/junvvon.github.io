@@ -7,7 +7,7 @@ type StyledBarProp = Pick<MenuBarProps, "isScroll" | "isDown">;
 type MenuItemProp = { pathName: boolean };
 
 export const StyledBar = styled.div<StyledBarProp>`
-  background: ${({ theme }) => theme.colors.basicBg};
+  background: ${({ theme }) => theme.colors.background};
   display: flex;
   height: 64px;
   justify-content: center;
