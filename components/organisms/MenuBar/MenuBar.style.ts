@@ -20,7 +20,7 @@ export const StyledBar = styled.div<StyledBarProp>`
   ${(props) =>
     props.isScroll &&
     css`
-      background-color: ${({ theme }) => theme.colors.basicBg};
+      background-color: ${({ theme }) => theme.colors.background};
       box-shadow: 0 2px 6px 0 ${({ theme }) => theme.colors.shadow};
       z-index: 100;
     `}

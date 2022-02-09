@@ -39,6 +39,24 @@ export const GlobalStyle = createGlobalStyle`
 	* {
  		box-sizing: border-box;
  	}
+  ::-webkit-scrollbar {
+    width: 12px;
+    border: solid 1px ${({ theme }) => theme.colors.scrollBorder};
+    background-color: ${({ theme }) => theme.colors.scrollTrackBg};
+    margin: 1px;
+  }
+  ::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 10px 10px ${({ theme }) =>
+      theme.colors.scrollTrackBg};
+    border: solid 3px transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    box-shadow: inset 0 0 10px 10px ${({ theme }) =>
+      theme.colors.scrollThumbBg};
+    border-radius: 10px;
+    border: solid 3px transparent;
+  }
 
   .pc-tablet-only {
     display: block;
