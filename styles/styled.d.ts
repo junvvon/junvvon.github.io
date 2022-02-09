@@ -29,6 +29,8 @@ declare module "styled-components" {
       codeBg: string;
       disabledBg: string;
       inlineBg: string;
+      scrollThumbBg: string;
+      scrollTrackBg: string;
       shadow: string;
       tableBg: string;
       transparent: string;
@@ -37,6 +39,7 @@ declare module "styled-components" {
       bgDivider: string;
       disabledBorder: string;
       quotedBorder: string;
+      scrollBorder: string;
       tableBorder: string;
 
       // Primary Colors

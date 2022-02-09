@@ -32,6 +32,8 @@ const light = {
     codeBg: "#F5F7F9",
     disabledBg: "#F5F5F5",
     inlineBg: "#DBDFE3",
+    scrollThumbBg: "#7d7d7d",
+    scrollTrackBg: "#fafafa",
     shadow: "rgba(0, 0, 0, 0.16)",
     tableBg: "#F6F8FA",
     transparent: "rgba(255, 255, 255, 0)",
@@ -40,6 +42,7 @@ const light = {
     bgDivider: "#F0F0F0",
     disabledBorder: "#D9D9D9",
     quotedBorder: "#CAD1D9",
+    scrollBorder: "#e8e8e8",
     tableBorder: "#D1D7DD",
 
     // Primary Colors
@@ -78,6 +81,8 @@ const dark = {
     codeBg: "#161b22",
     disabledBg: "#21262d",
     inlineBg: "#343941",
+    scrollThumbBg: "#6b6b6b",
+    scrollTrackBg: "#2c2c2c",
     shadow: "rgba(0, 0, 0, 0.16)",
     tableBg: "#0d1116",
     transparent: "rgba(255, 255, 255, 0)",
@@ -86,6 +91,7 @@ const dark = {
     bgDivider: "#21262d",
     disabledBorder: "#2d3239",
     quotedBorder: "#30363d",
+    scrollBorder: "#3d3d3d",
     tableBorder: "#1e242a",
 
     // Primary Colors
