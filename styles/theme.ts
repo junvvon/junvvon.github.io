@@ -2,7 +2,7 @@ import { DefaultTheme } from "styled-components";
 
 const calcRem = (size: number) => `${size / 13}rem`;
 
-export const theme: DefaultTheme = {
+const defaultTheme = {
   fontSizes: {
     header1: calcRem(34),
     header2: calcRem(20),
@@ -14,7 +14,9 @@ export const theme: DefaultTheme = {
     codeLigature: "D2Coding ligature",
     text: "Pretendard",
   },
+};
 
+const light = {
   colors: {
     // Font Colors
     bold: "#000000",
@@ -60,6 +62,52 @@ export const theme: DefaultTheme = {
   },
 };
 
+const dark = {
+  colors: {
+    // Font Colors
+    bold: "#c9d1d9",
+    inlineCodeColor: "#bcc4cc",
+    main: "#c9d1d9",
+    placeholder: "#c2c3c4",
+    quotedColor: "#8b939d",
+    sub: "#7d858e",
+
+    // Background Colors
+    background: "#161b22",
+    basicBg: "#0d1116",
+    codeBg: "#161b22",
+    disabledBg: "#21262d",
+    inlineBg: "#343941",
+    shadow: "rgba(0, 0, 0, 0.16)",
+    tableBg: "#0d1116",
+    transparent: "rgba(255, 255, 255, 0)",
+
+    // Border Colors
+    bgDivider: "#21262d",
+    disabledBorder: "#2d3239",
+    quotedBorder: "#30363d",
+    tableBorder: "#1e242a",
+
+    // Primary Colors
+    primary100: "#064420",
+    primary80: "#006241",
+    primary60: "#006644",
+    primary40: "#E4EFE7",
+    primary20: "#F2F7F4",
+
+    // Secondary Colors
+    secondary100: "#062A44",
+    secondary80: "#06556A",
+
+    // Danger Colors
+    danger1: "#FF4D4F",
+    danger2: "#FF7875",
+
+    // Warning Colors
+    warning: "#ff9400",
+  },
+};
+
 const customMediaQuery = (maxWidth: number): string =>
   `@media (max-width: ${maxWidth}px)`;
 
@@ -69,3 +117,6 @@ export const media = {
   tablet: customMediaQuery(768),
   mobile: customMediaQuery(576),
 };
+
+export const lightTheme: DefaultTheme = { ...defaultTheme, ...light };
+export const darkTheme: DefaultTheme = { ...defaultTheme, ...dark };
