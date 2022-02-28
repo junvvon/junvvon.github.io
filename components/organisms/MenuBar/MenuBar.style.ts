@@ -1,10 +1,9 @@
-import styled, { css } from "styled-components";
+import styled, { css } from 'styled-components';
 
-import { MenuBarProps } from "./MenuBar.type";
-
-type MenuItemProp = { pathName: boolean };
-
-export const StyledBar = styled.div<MenuBarProps>`
+export const StyledBar = styled.div<{
+  isScroll?: boolean;
+  isDown?: boolean;
+}>`
   background: ${({ theme }) => theme.colors.background};
   display: flex;
   height: 64px;
@@ -55,7 +54,7 @@ export const MenuList = styled.div`
   }
 `;
 
-export const MenuItem = styled.a<MenuItemProp>`
+export const MenuItem = styled.a<{ pathName: boolean }>`
   color: ${({ theme }) => theme.colors.main};
   cursor: pointer;
   padding: 10px;
