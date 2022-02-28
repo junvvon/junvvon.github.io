@@ -1,15 +1,11 @@
-import { format, parseISO } from "date-fns";
-import { GetStaticProps } from "next";
-import Link from "next/link";
-import Layout from "components/templates/Layout";
-import { getAllPosts } from "../lib/api";
-import { PostType } from "../types/post";
+import { format, parseISO } from 'date-fns';
+import { GetStaticProps } from 'next';
+import Link from 'next/link';
+import Layout from 'components/templates/Layout';
+import { getAllPosts } from '../lib/api';
+import { PostType } from '../types/post';
 
-type IndexProps = {
-  posts: PostType[];
-};
-
-export const Index = ({ posts }: IndexProps): JSX.Element => {
+const Index = ({ posts }: { posts: PostType[] }): JSX.Element => {
   return (
     <Layout>
       <h1>Home Page</h1>
@@ -17,7 +13,7 @@ export const Index = ({ posts }: IndexProps): JSX.Element => {
 
       {posts?.map((post) => (
         <article key={post.slug}>
-          <p>{format(parseISO(String(post.date)), "MMMM dd, yyyy")}</p>
+          <p>{format(parseISO(String(post.date)), 'MMMM dd, yyyy')}</p>
           <h1>
             <Link as={`/posts/${post.slug}`} href={`/posts/[slug]`}>
               <a>{post.title}</a>
@@ -39,7 +35,7 @@ export const Index = ({ posts }: IndexProps): JSX.Element => {
 };
 
 export const getStaticProps: GetStaticProps = async () => {
-  const posts = getAllPosts(["date", "description", "slug", "title"]);
+  const posts = getAllPosts(['date', 'description', 'slug', 'title']);
   return {
     props: { posts },
   };

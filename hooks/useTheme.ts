@@ -1,15 +1,18 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect } from 'react';
 
 export const useTheme = () => {
-  const [theme, setTheme] = useState("");
+  const [theme, setTheme] = useState('');
 
   useEffect(() => {
-    const isBrowserDarkMode =
-      window.matchMedia &&
-      window.matchMedia("(prefers-color-scheme: dark)").matches;
-    setTheme(isBrowserDarkMode ? "dark" : "light");
+    window.matchMedia &&
+      window
+        .matchMedia('(prefers-color-scheme: dark)')
+        .addEventListener('change', (e) =>
+          e.matches ? setTheme('dark') : setTheme('light'),
+        );
   }, []);
-  const toggleTheme = () => setTheme(theme === "light" ? "dark" : "light");
+
+  const toggleTheme = () => setTheme(theme === 'light' ? 'dark' : 'light');
 
   return [theme, toggleTheme];
 };
