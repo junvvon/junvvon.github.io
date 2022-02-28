@@ -1,17 +1,16 @@
-import NextHead from "next/head";
-import { useRouter } from "next/router";
-import React from "react";
-import { MetaProps } from "types/layout";
+import NextHead from 'next/head';
+import { useRouter } from 'next/router';
+import { MetaProps } from 'types/layout';
 
-export const WEBSITE_HOST_URL = "https://julrum.github.io/";
+export const WEBSITE_HOST_URL = 'https://julrum.github.io/';
 
 const Head = ({ customMeta }: { customMeta?: MetaProps }) => {
   const router = useRouter();
   const meta: MetaProps = {
-    title: "Develog",
-    description: "Develog.",
+    title: 'Develog',
+    description: 'Develog.',
     image: ``,
-    type: "website",
+    type: 'website',
     ...customMeta,
   };
 

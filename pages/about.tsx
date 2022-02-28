@@ -1,18 +1,18 @@
-import Layout from "components/templates/Layout";
+import Layout from 'components/templates/Layout';
 
-const About: React.FC = () => {
+const About = () => {
   return (
-    <Layout customMeta={{ title: "About - Junwon Park" }}>
+    <Layout customMeta={{ title: 'About - Junwon Park' }}>
       <div>
         <h1>소개</h1>
         <p>
-          I&rsquo;m <strong>Junwon Park(박준원)</strong>, a{" "}
+          I&rsquo;m <strong>Junwon Park(박준원)</strong>, a{' '}
           <strong>junior software engineer</strong> located in Republic of
           Korea.
         </p>
         <p>I use julrum as my primary username in various sites.</p>
         <p>
-          I often program using <strong>C/C++(C++17)</strong>,{" "}
+          I often program using <strong>C/C++(C++17)</strong>,{' '}
           <strong>Python</strong> and <strong>React</strong>. I am currently a
           college student. I&rsquo;m writing what I learned on this blog.
         </p>

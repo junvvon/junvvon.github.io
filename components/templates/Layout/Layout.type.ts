@@ -1,4 +1,5 @@
-import { MetaProps } from "types/layout";
+import React from 'react';
+import { MetaProps } from 'types/layout';
 
 export interface LayoutProps {
   children: React.ReactNode;

@@ -1,7 +1,7 @@
-import MenuBar from "components/organisms/MenuBar";
-import Head from "components/atoms/Head";
-import { Wrapper, Content, ContentWrapper, MenuBarSpace } from "./Layout.style";
-import { LayoutProps } from "./Layout.type";
+import MenuBar from 'components/organisms/MenuBar';
+import Head from 'components/atoms/Head';
+import { Wrapper, Content, ContentWrapper, MenuBarSpace } from './Layout.style';
+import { LayoutProps } from './Layout.type';
 
 const Layout = ({ children, customMeta }: LayoutProps) => {
   return (
