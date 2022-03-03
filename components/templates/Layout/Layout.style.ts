@@ -17,14 +17,18 @@ export const ContentWrapper = styled.div`
 `;
 
 export const Content = styled.div`
-  width: 768px;
+  width: 1200px;
   height: 100%;
-  @media (max-width: 1024px) {
+  @media (max-width: 1200px) {
+    width: 1000px;
+  }
+  @media (max-width: 1000px) {
     width: 736px;
   }
   @media (max-width: 736px) {
     width: 100%;
   }
+
   padding: 1rem;
 
   background-color: ${({ theme }) => theme.colors.basicBg};

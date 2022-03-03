@@ -15,6 +15,7 @@ import { postFilePaths, POSTS_PATH } from 'utils/mdxUtils';
 import CodeBlock from 'components/atoms/CodeBlock';
 import QuoteBlock from 'components/atoms/QuoteBlock';
 import TableBlock from 'components/atoms/TableBlock';
+import ImageDescription from 'components/molecules/ImageDescription';
 
 const components = {
   Head,
@@ -22,6 +23,11 @@ const components = {
   code: (props: any) => <CodeBlock {...props} />,
   blockquote: (props: any) => <QuoteBlock {...props} />,
   table: (props: any) => <TableBlock {...props} />,
+  img: (props: any) => (
+    <ImageDescription src={props.src} alt={props.alt}>
+      {props.children}
+    </ImageDescription>
+  ),
 };
 
 const PostPage = ({

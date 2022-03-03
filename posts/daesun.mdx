@@ -1,0 +1,115 @@
+---
+title: Daesun
+description: 2022 소프트웨어 스튜디오 2 프로젝트
+date: '2021-12-30'
+image: 'https://user-images.githubusercontent.com/26790365/156141867-d0c3a4fd-8d54-4846-9db2-4f447a9e1237.png'
+---
+
+2022 소프트웨어 스튜디오 2 프로젝트
+
+## 프로젝트 소개
+
+대선이 얼마 안남은 시점에 대선 관련 뉴스 및 정보를 한 곳에서 모아 보여주면 좋겠다는 생각에 시작한 프로젝트입니다.
+선거 일정 및 선거 정보, 후보 정보, 선거 뉴스, 여론 조사 정보가 제공이 됩니다.
+선거 뉴스의 경우 네이버 뉴스 API를 이용하여 가져오며 후보자별 필터링 기능이 제공됩니다.
+또한 로그인 기능을 통해 마음에 드는 기사를 북마크하여 한 곳에 모아볼 수 있게 만들었습니다.
+
+### 사용한 기술 스택
+
+ReactJS, AWS Amplify, GraphQL
+
+## 프로젝트 스크린샷
+
+### 메인 화면
+
+<img src="https://user-images.githubusercontent.com/26790365/156141867-d0c3a4fd-8d54-4846-9db2-4f447a9e1237.png">
+  대선까지 남은 기간이 표시가 되며 운영자가 선정한 오늘의 뉴스가 나옵니다.
+  아래에는 선거의 주요 일정을 순서대로 나타내었습니다.
+</img>
+
+#### 로그인 모달
+
+<img src="https://user-images.githubusercontent.com/26790365/156141944-7e389561-7b23-46eb-9c93-c4d3a6b3568a.png">
+  직접 제작한 모달 컴포넌트에 AWS SignIn API를 연결하여 로그인을 지원합니다.
+  모달 바깥을 클릭하여 모달을 닫을 수 있습니다.
+</img>
+
+#### 회원가입 모달
+
+<img src="https://user-images.githubusercontent.com/26790365/156142020-ed2d41f3-2e71-450c-9de9-cdf979781655.png">
+  로그인 모달 위에 회원가입 모달을 띄워 회원가입을 안내합니다. 역시 AWS SignUp
+  API를 연결하여 정상적으로 회원가입을 할 수 있습니다.
+</img>
+
+### 로그인 시
+
+<img src="https://user-images.githubusercontent.com/26790365/156145301-2d5de2a2-6ab5-4b30-b80d-90cfb52f28fa.png">
+  상단바에 읽기 목록을 볼 수 있는 버튼과 로그아웃 버튼이 생성됩니다.
+</img>
+
+### 읽기목록 페이지
+
+<img src="https://user-images.githubusercontent.com/26790365/156145451-3e3d8248-43a3-45e7-9583-6465198245fd.png">
+  하트를 눌러 북마크한 기사를 모아 볼 수 있습니다. 다시 하트를 누르면 북마크에서
+  지울 수 있습니다.
+</img>
+
+### 선거정보 페이지
+
+<img src="https://user-images.githubusercontent.com/26790365/156144470-d4fee0f2-14b1-47b4-872e-a80d2231e917.png">
+  이번 대선에 대한 소개 글과 참고하면 좋을 자료를 보여줍니다.
+</img>
+
+### 후보정보 페이지
+
+<img src="https://user-images.githubusercontent.com/26790365/156144638-4d14183a-babf-4f92-a8a8-42d95d4a60e2.png">
+  주요 후보의 리스트를 표시합니다.
+</img>
+
+<img src="https://user-images.githubusercontent.com/26790365/156144704-082f0b21-c3d7-43ed-8592-e273fa03f530.png">
+  마우스 호버시 애니메이션과 함께 후보의 사진이 강조됩니다. 클릭 시 후보의
+  상세정보 페이지로 넘어가게 됩니다.
+</img>
+
+### 후보 상세정보 페이지
+
+<img src="https://user-images.githubusercontent.com/26790365/156146025-b7d6de78-f691-4fdc-b3c2-0c8ed476c7be.png">
+  후보의 약력 및 대표 공약 등 후보의 상세 정보를 적어놓았으며 대표 공약을 보기
+  쉽게 분류하여 나타내었습니다.
+</img>
+
+<img src="https://user-images.githubusercontent.com/26790365/156144854-bb055482-28f4-4d36-bd22-4f974b78a996.png">
+  후보의 약력 및에 상세 정보 버튼을 누르면 후보의 상세한 정보가 나옵니다.
+</img>
+
+### 선거뉴스 페이지
+
+<img src="https://user-images.githubusercontent.com/26790365/156145155-8c19a62c-ec58-4030-b743-fa31d0e60928.png">
+  네이버 뉴스 API를 이용하여 뉴스를 가져오고 있으며 뉴스의 링크에 있는 opengraph
+  메타데이터를 통해 해당 기사의 썸네일, 제목, 요약, 신문사 등 정보를 가져와
+  컴포넌트에 알맞게 나타내어 줍니다.
+</img>
+
+<img src="https://user-images.githubusercontent.com/26790365/156145185-40cf045f-c6db-465d-80f7-1857f359e96c.png">
+  왼쪽 사이드바에 있는 키워드를 클릭하면 해당 키워드와 연관된 뉴스 기사가 필터링
+  되어 나타납니다. 또한 뉴스 컴포넌트 우하단의 하트 아이콘을 클릭하면 북마크가
+  되어 읽기 목록에서 모아 다시 볼 수 있습니다.
+</img>
+
+### 여론조사 페이지
+
+<img src="https://user-images.githubusercontent.com/26790365/156145379-18f813f8-7e4d-4b29-9463-3822f76bb1cd.png">
+  react chart 라이브러리를 이용하여 다양한 여론 조사 정보를 보기 쉽게 나타내어
+  줍니다.
+</img>
+
+## 배운 점
+
+이번 프로젝트에서 처음으로 Amplify, Lambda 등 AWS 주요 서비스를 적용해 보았습니다.
+북마크한 기사를 저장하는 기능을 GraphQL을 이용하여 개발하는 경험을 해보았습니다.
+또한 처음으로 팀장을 맡아 프로젝트 초반 세팅, 커밋 컨벤션 등 규칙을 정하고 일정을 조율하고 종합하는 소중한 경험을 해볼 수 있었습니다.
+
+## 아쉬운 점
+
+학교 수업과 과제와 병행하여 진행한 프로젝트인 만큼 프로젝트에 대한 애정에 비해 적은 시간을 들일 수 밖에 없어 계획대로 다 구현하였지만
+깔끔하게 코딩을 하지 못하였고 다른 팀원의 코드 리뷰를 제대로 해주지 않아 처음에 정했던 컨벤션들이 잘 지켜지지 않아 아쉬웠습니다.
