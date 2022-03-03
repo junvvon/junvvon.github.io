@@ -1,15 +1,14 @@
 import styled from 'styled-components';
 
 export const Wrapper = styled.div`
-  width: 100%;
-  margin: 10px;
   display: flex;
+  margin: 10px;
+  width: 100%;
 `;
 
-export const ImageWrapper = styled.div`
+export const Image = styled.img`
+  object-fit: scale-down;
   width: 50%;
-  height: 500px;
-  position: relative;
 `;
 
 export const Description = styled.p`

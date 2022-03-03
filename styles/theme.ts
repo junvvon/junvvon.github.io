@@ -1,12 +1,12 @@
 import { DefaultTheme } from 'styled-components';
 
-const calcRem = (size: number) => `${size / 13}rem`;
+const calcRem = (size: number) => `${size / 16}rem`;
 
 const defaultTheme = {
   fontSizes: {
     header1: calcRem(34),
     header2: calcRem(20),
-    body: calcRem(13),
+    body: calcRem(16),
   },
 
   fontFamily: {
