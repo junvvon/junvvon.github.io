@@ -1,5 +1,6 @@
 import MenuBar from 'components/organisms/MenuBar';
 import Head from 'components/atoms/Head';
+import Footer from 'components/organisms/Footer';
 import { Wrapper, Content, ContentWrapper, MenuBarSpace } from './Layout.style';
 import { LayoutProps } from './Layout.type';
 
@@ -13,6 +14,7 @@ const Layout = ({ children, customMeta }: LayoutProps) => {
         <ContentWrapper>
           <Content>{children}</Content>
         </ContentWrapper>
+        <Footer />
       </Wrapper>
     </>
   );
