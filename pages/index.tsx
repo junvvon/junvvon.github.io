@@ -10,9 +10,6 @@ const Index = ({ posts }: { posts: PostType[] }): JSX.Element => {
       {posts?.map((post) => (
         <PostPreview post={post} key={post.slug} />
       ))}
-      <a href="https://github.com/ChangoMan/nextjs-typescript-mdx-blog">
-        Get the source code!
-      </a>
     </Layout>
   );
 };
