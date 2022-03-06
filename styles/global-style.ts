@@ -1,79 +1,89 @@
-import { createGlobalStyle } from 'styled-components';
+import * as styled from 'styled-components';
 import { normalize } from 'styled-normalize';
 import { media } from './theme';
 
-export const GlobalStyle = createGlobalStyle`
+export const GlobalStyle = styled.createGlobalStyle`
   ${normalize}
   html,
 	body {
-		height: 100%;
-		padding: 0;
- 		margin: 0;
-		box-sizing: border-box;
- 		font-family: ${({ theme }) =>
-      theme.fontFamily
-        .text}, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  	-webkit-font-smoothing: antialiased;
-  	-moz-osx-font-smoothing: grayscale;
-  	background: ${({ theme }) => theme.colors.basicBg};
-		color: ${({ theme }) => theme.colors.main};
-		font-size: ${({ theme }) => theme.fontSizes.body};
-    line-height: 1.8rem;
+    -moz-osx-font-smoothing: grayscale;
+    -ms-overflow-style: none;
+    -webkit-font-smoothing: antialiased;
     -webkit-text-size-adjust: none;
-    ${media.tablet}{
+    background: ${({ theme }) => theme.colors.basicBg};
+    box-sizing: border-box;
+    color: ${({ theme }) => theme.colors.main};
+    font-family: ${({ theme }) => theme.fontFamily.text}, -apple-system,
+      BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell',
+      'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+    font-size: ${({ theme }) => theme.fontSizes.body};
+    height: 100%;
+    line-height: 1.8rem;
+    margin: 0;
+    padding: 0;
+    scrollbar-width: none;
+    ${media.tablet} {
       font-size: 10px;
     }
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-	}
-	#root {
-		height: 100%;
-	}
-	code {
-	  font-family: ${({ theme }) =>
-      theme.fontFamily
-        .codeLigature}, source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
-	}
-	* {
- 		box-sizing: border-box;
- 	}
-  ::-webkit-scrollbar {
-    width: 12px;
-    border: solid 1px ${({ theme }) => theme.colors.scrollBorder};
-    background-color: ${({ theme }) => theme.colors.scrollTrackBg};
-    margin: 1px;
   }
+
+  #root {
+    height: 100%;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  a {
+    color: ${({ theme }) => theme.colors.main};
+    text-decoration: none;
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  code {
+    font-family: ${({ theme }) => theme.fontFamily.codeLigature},
+      source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+  }
+
+  ::-webkit-scrollbar {
+    background-color: ${({ theme }) => theme.colors.scrollTrackBg};
+    border: solid 1px ${({ theme }) => theme.colors.scrollBorder};
+    margin: 1px;
+    width: 12px;
+  }
+
   ::-webkit-scrollbar-track {
-    box-shadow: inset 0 0 10px 10px ${({ theme }) =>
-      theme.colors.scrollTrackBg};
     border: solid 3px transparent;
+    box-shadow: inset 0 0 10px 10px ${({ theme }) => theme.colors.scrollTrackBg};
   }
 
   ::-webkit-scrollbar-thumb {
-    box-shadow: inset 0 0 10px 10px ${({ theme }) =>
-      theme.colors.scrollThumbBg};
     border-radius: 10px;
     border: solid 3px transparent;
+    box-shadow: inset 0 0 10px 10px ${({ theme }) => theme.colors.scrollThumbBg};
   }
 
   .pc-tablet-only {
     display: block;
     ${media.mobile} {
-        display: none;
+      display: none;
     }
   }
-  .tablet-mobile-only{
+
+  .tablet-mobile-only {
     display: none;
-    ${media.tablet}{
-        display:block;
+    ${media.tablet} {
+      display: block;
     }
   }
+
   .mobile-only {
     display: none;
     ${media.mobile} {
-        display: block;
+      display: block;
     }
   }
 `;

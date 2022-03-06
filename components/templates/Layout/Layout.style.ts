@@ -29,7 +29,7 @@ export const Content = styled.div`
     width: 100%;
   }
 
-  padding: 1rem;
+  padding: 2rem;
 
   background-color: ${({ theme }) => theme.colors.basicBg};
 `;
