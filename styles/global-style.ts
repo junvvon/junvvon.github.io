@@ -22,9 +22,6 @@ export const GlobalStyle = styled.createGlobalStyle`
     margin: 0;
     padding: 0;
     scrollbar-width: none;
-    ${media.tablet} {
-      font-size: 10px;
-    }
   }
 
   #root {
