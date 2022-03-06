@@ -7,7 +7,11 @@ import { format, parseISO } from 'date-fns';
 import fs from 'fs';
 import matter from 'gray-matter';
 import path from 'path';
+import remarkGfm from 'remark-gfm';
+import supersub from 'remark-supersub';
 import emoji from 'remark-emoji';
+import rehypeSlug from 'rehype-slug';
+import rehypeAutolinkHeadings from 'rehype-autolink-headings';
 import Layout from 'components/templates/Layout';
 import { MetaProps } from 'types/layout';
 import { PostType } from 'types/post';
@@ -19,15 +23,11 @@ import ImageDescription from 'components/molecules/ImageDescription';
 
 const components = {
   Head,
+  ImageDescription,
   Link,
   code: (props: any) => <CodeBlock {...props} />,
   blockquote: (props: any) => <QuoteBlock {...props} />,
   table: (props: any) => <TableBlock {...props} />,
-  img: (props: any) => (
-    <ImageDescription src={props.src} alt={props.alt}>
-      {props.children}
-    </ImageDescription>
-  ),
 };
 
 const PostPage = ({
@@ -50,7 +50,7 @@ const PostPage = ({
         <h1>{frontMatter.title}</h1>
         <p>{format(parseISO(String(frontMatter.date)), 'MMMM dd, yyyy')}</p>
         <div>
-          <MDXRemote {...source} components={components} />
+          <MDXRemote {...source} components={components} lazy />
         </div>
       </article>
     </Layout>
@@ -65,12 +65,8 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
 
   const mdxSource = await serialize(content, {
     mdxOptions: {
-      remarkPlugins: [
-        require('remark-code-titles'),
-        require('remark-sub-super'),
-        emoji,
-      ],
-      rehypePlugins: [],
+      remarkPlugins: [emoji, remarkGfm, supersub],
+      rehypePlugins: [rehypeSlug, rehypeAutolinkHeadings],
     },
     scope: data,
   });

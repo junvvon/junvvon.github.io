@@ -11,7 +11,7 @@ export const Image = styled.img`
   width: 50%;
 `;
 
-export const Description = styled.p`
+export const Description = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
