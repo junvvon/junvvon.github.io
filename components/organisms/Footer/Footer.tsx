@@ -8,7 +8,7 @@ const Footer = () => {
       <Link href="https://github.com/Julrum/julrum.github.io" passHref>
         <LinkWrapper>
           <Github />
-          <LinkText>julrum.github.io</LinkText>
+          <LinkText>@julrum</LinkText>
         </LinkWrapper>
       </Link>
     </Wrapper>
