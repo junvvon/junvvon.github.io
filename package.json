@@ -14,7 +14,7 @@
   },
   "dependencies": {
     "@mdx-js/react": "^2.1.1",
-    "@next/bundle-analyzer": "^12.1.2",
+    "@next/bundle-analyzer": "^12.1.4",
     "@next/mdx": "^12.1.4",
     "@types/react-syntax-highlighter": "^13.5.2",
     "@types/styled-components": "^5.1.23",
