@@ -38,7 +38,7 @@
     "styled-normalize": "^8.0.7"
   },
   "devDependencies": {
-    "@types/node": "17.0.29",
+    "@types/node": "17.0.30",
     "@types/react": "18.0.8",
     "eslint": "8.14.0",
     "eslint-config-next": "12.1.5",
