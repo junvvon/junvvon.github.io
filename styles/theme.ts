@@ -39,7 +39,7 @@ const light = {
     transparent: 'rgba(255, 255, 255, 0)',
 
     // Border Colors
-    bgDivider: '#F0F0F0',
+    bgDivider: '#D0D7DE',
     disabledBorder: '#D9D9D9',
     quotedBorder: '#CAD1D9',
     scrollBorder: '#e8e8e8',
@@ -88,7 +88,7 @@ const dark = {
     transparent: 'rgba(255, 255, 255, 0)',
 
     // Border Colors
-    bgDivider: '#21262d',
+    bgDivider: '#30363d',
     disabledBorder: '#2d3239',
     quotedBorder: '#30363d',
     scrollBorder: '#3d3d3d',

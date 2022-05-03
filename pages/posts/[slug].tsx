@@ -3,23 +3,23 @@ import Head from 'next/head';
 import Link from 'next/link';
 import { MDXRemote, MDXRemoteSerializeResult } from 'next-mdx-remote';
 import { serialize } from 'next-mdx-remote/serialize';
-import { format, parseISO } from 'date-fns';
 import fs from 'fs';
 import matter from 'gray-matter';
 import path from 'path';
 import remarkGfm from 'remark-gfm';
 import supersub from 'remark-supersub';
 import emoji from 'remark-emoji';
-import rehypeSlug from 'rehype-slug';
 import rehypeAutolinkHeadings from 'rehype-autolink-headings';
-import Layout from 'components/templates/Layout';
-import { MetaProps } from 'types/layout';
-import { PostType } from 'types/post';
-import { postFilePaths, POSTS_PATH } from 'utils/mdxUtils';
+import rehypeSlug from 'rehype-slug';
 import CodeBlock from 'components/atoms/CodeBlock';
 import QuoteBlock from 'components/atoms/QuoteBlock';
 import TableBlock from 'components/atoms/TableBlock';
 import ImageDescription from 'components/molecules/ImageDescription';
+import Title from 'components/molecules/Title';
+import Layout from 'components/templates/Layout';
+import { MetaProps } from 'types/layout';
+import { PostType } from 'types/post';
+import { postFilePaths, POSTS_PATH } from 'utils/mdxUtils';
 
 const components = {
   Head,
@@ -38,17 +38,20 @@ const PostPage = ({
   frontMatter: PostType;
 }) => {
   const customMeta: MetaProps = {
-    title: `${frontMatter.title} - Junwon Park`,
+    date: frontMatter.date,
     description: frontMatter.description,
     image: `${frontMatter.image}`,
-    date: frontMatter.date,
+    title: `${frontMatter.title} - Junwon Park`,
     type: 'article',
   };
   return (
     <Layout customMeta={customMeta}>
       <article>
-        <h1>{frontMatter.title}</h1>
-        <p>{format(parseISO(String(frontMatter.date)), 'MMMM dd, yyyy')}</p>
+        <Title
+          date={frontMatter.date}
+          link={frontMatter.originalLink}
+          title={frontMatter.title}
+        />
         <div>
           <MDXRemote {...source} components={components} lazy />
         </div>
