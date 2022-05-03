@@ -1,5 +1,7 @@
 export interface Titleprops {
   date?: string;
-  link?: string;
+  githubLink?: string;
+  linkedinLink?: string;
+  mailLink?: string;
   title: string;
 }

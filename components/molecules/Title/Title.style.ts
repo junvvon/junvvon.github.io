@@ -14,3 +14,11 @@ export const Divider = styled.div`
   width: 100%;
   border-bottom: 1px solid ${({ theme }) => theme.colors.bgDivider};
 `;
+
+export const Icons = styled.div`
+  display: flex;
+`;
+
+export const Icon = styled.div`
+  padding: 10px;
+`;

@@ -49,7 +49,7 @@ const PostPage = ({
       <article>
         <Title
           date={frontMatter.date}
-          link={frontMatter.originalLink}
+          githubLink={frontMatter.originalLink}
           title={frontMatter.title}
         />
         <div>
