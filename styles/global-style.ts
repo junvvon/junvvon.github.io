@@ -22,6 +22,7 @@ export const GlobalStyle = styled.createGlobalStyle`
     margin: 0;
     padding: 0;
     scrollbar-width: none;
+    word-break: keep-all;
   }
 
   #root {
@@ -43,6 +44,12 @@ export const GlobalStyle = styled.createGlobalStyle`
   code {
     font-family: ${({ theme }) => theme.fontFamily.codeLigature},
       source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+  }
+
+  li {
+    list-style-position: inside;
+    text-indent: -20px;
+    padding-left: 20px;
   }
 
   ::-webkit-scrollbar {

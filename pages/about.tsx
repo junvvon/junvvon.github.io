@@ -3,6 +3,7 @@ import SideList from 'components/atoms/SideList';
 import Title from 'components/molecules/Title';
 import AboutContentLayout from 'components/templates/AboutContentLayout';
 import Layout from 'components/templates/Layout';
+import SideListLayout from 'components/templates/SideListLayout';
 
 const About = () => (
   <Layout customMeta={{ title: 'About | Develog' }}>
@@ -360,65 +361,72 @@ const About = () => (
         </div>
         <div>
           <h2>스킬 셋</h2>
-          <SideList
-            title="4단계"
-            list={['React', 'JavaScript', 'TypeScript', 'HTML', 'CSS']}
-          />
-          <SideList
-            title="3단계"
-            list={[
-              'C',
-              'C++',
-              'Firebase',
-              'Git',
-              'Github',
-              'GitLab',
-              'Ubuntu',
-              'Mac',
-              'Bash',
-            ]}
-          />
-          <SideList
-            title="2단계"
-            list={[
-              'React Native',
-              'Java',
-              'Python',
-              'GraphQL',
-              'Figma',
-              'GCP',
-              'AWS',
-              'Confluence',
-              'JIRA',
-            ]}
-          />
-          <SideList title="1단계" list={['UML']} />
-          <SideList title="외국어" list={['한국어-원어민', '영어-일상회화']} />
-          <SideList
-            title="전공 과목"
-            list={[
-              'Algorithms',
-              'Architecture',
-              'Artificial Intelligence',
-              'Calculus',
-              'Compilers',
-              'Computer',
-              'Computer Graphics',
-              'Computer Networks',
-              'Computer Security',
-              'Data Structures',
-              'Database Systems',
-              'Digital Logic',
-              'Discrete Mathematics',
-              'Linear Algebra',
-              'Microprocessors',
-              'Operating Systems',
-              'Software Engineering',
-              'Software Studio',
-              'Statistics',
-              'System Programming',
-            ]}
-          />
+          <SideListLayout>
+            <SideList
+              title="4단계"
+              list={['React', 'JavaScript', 'TypeScript', 'HTML', 'CSS']}
+            />
+            <SideList
+              title="3단계"
+              list={[
+                'C',
+                'C++',
+                'Firebase',
+                'Git',
+                'Github',
+                'GitLab',
+                'Ubuntu',
+                'Mac',
+                'Bash',
+              ]}
+            />
+            <SideList
+              title="2단계"
+              list={[
+                'React Native',
+                'Java',
+                'Python',
+                'GraphQL',
+                'Figma',
+                'GCP',
+                'AWS',
+                'Confluence',
+                'JIRA',
+              ]}
+            />
+            <SideList title="1단계" list={['UML']} />
+          </SideListLayout>
+          <SideListLayout>
+            <SideList
+              title="외국어"
+              list={['한국어-원어민', '영어-일상회화']}
+            />
+            <SideList
+              title="전공 과목"
+              list={[
+                'Algorithms',
+                'Architecture',
+                'Artificial Intelligence',
+                'Calculus',
+                'Compilers',
+                'Computer',
+                'Computer Graphics',
+                'Computer Networks',
+                'Computer Security',
+                'Data Structures',
+                'Database Systems',
+                'Digital Logic',
+                'Discrete Mathematics',
+                'Linear Algebra',
+                'Microprocessors',
+                'Operating Systems',
+                'Software Engineering',
+                'Software Studio',
+                'Statistics',
+                'System Programming',
+              ]}
+            />
+          </SideListLayout>
         </div>
       </AboutContentLayout>
     </article>
