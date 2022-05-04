@@ -5,7 +5,7 @@ import AboutContentLayout from 'components/templates/AboutContentLayout';
 import Layout from 'components/templates/Layout';
 
 const About = () => (
-  <Layout customMeta={{ title: 'About | Junwon Park' }}>
+  <Layout customMeta={{ title: 'About | Develog' }}>
     <article>
       <Title
         title="새로운 것을 끊임없이 탐구하는 개발자 박준원입니다."
@@ -25,7 +25,6 @@ const About = () => (
             <p>주석 없이도 알아 볼 수 있는 코드</p>
             <h3> 저는 좋아합니다.</h3>
             <p>
-              {' '}
               새로운 기술에 관심을 보이며 기회가 될때마다 프로젝트 진행을 통해
               학습하기를 즐겨 합니다.
             </p>
@@ -72,8 +71,10 @@ const About = () => (
               방송하면서 앱에서 사용할 수 있는 여러 에셋을 제어하고 관리할 수
               있는 에셋 페이지
             </li>
-            계정 정보 및 구독 상태를 볼 수 있는 계정 페이지 프로젝트 설계부터
-            디자인, 개발을 맡았습니다.
+            <p>
+              계정 정보 및 구독 상태를 볼 수 있는 계정 페이지 프로젝트 설계부터
+              디자인, 개발을 맡았습니다.
+            </p>
             <li>Next.JS, typescript를 이용하여 대시보드 페이지 제작</li>
             <li>미디어 쿼리를 이용한 반응형 웹 제작</li>
             <li>Mui와 styled-components를 결합하여 커스텀 글로벌 테마 제작</li>
@@ -261,7 +262,7 @@ const About = () => (
             title="워드, 엑셀 웹 뷰어"
             subTitle="2020-08 ~ 2020-12"
             projectType="company"
-            companyName="국방부"
+            companyName="대한민국 국방부"
             skill="React, Typescript, React-tables"
           >
             <p>
@@ -308,7 +309,7 @@ const About = () => (
             title="대시보드 페이지"
             subTitle="2019-06 ~ 2019-09"
             projectType="company"
-            companyName="국방부"
+            companyName="대한민국 국방부"
             skill="React.Js, Ant-design"
           >
             <p>
@@ -339,7 +340,7 @@ const About = () => (
               대시보드 페이지 제작
             </p>
           </HistoryBlock>
-          <HistoryBlock title="국방부" subTitle="2019-05 ~ 2020-12">
+          <HistoryBlock title="대한민국 국방부" subTitle="2019-05 ~ 2020-12">
             <p>
               국방부 내부망에서 사용하는 자산 관리 페이지 제작 및 상황 분석
               페이지 기획, 디자인, 제작
