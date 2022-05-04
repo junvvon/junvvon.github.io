@@ -41,7 +41,7 @@ const PostPage = ({
     date: frontMatter.date,
     description: frontMatter.description,
     image: `${frontMatter.image}`,
-    title: `${frontMatter.title} - Junwon Park`,
+    title: `${frontMatter.title} | Develog`,
     type: 'article',
   };
   return (

@@ -5,7 +5,7 @@ import AboutContentLayout from 'components/templates/AboutContentLayout';
 import Layout from 'components/templates/Layout';
 
 const About = () => (
-  <Layout customMeta={{ title: 'About <li>Junwon Park' }}>
+  <Layout customMeta={{ title: 'About | Junwon Park' }}>
     <article>
       <Title
         title="새로운 것을 끊임없이 탐구하는 개발자 박준원입니다."
@@ -17,8 +17,8 @@ const About = () => (
         <div>
           <div>
             <p>
-              안녕하세요, 저는 볼트 마이크로에서 일하고 있는 Frontend Developer
-              입니다.
+              안녕하세요, 저는 볼트 마이크로에서 일하고 있는 Frontend
+              개발자입니다.
             </p>
             <h3> 저는 추구합니다.</h3>
             <p>같은 기능을 하는 코드도 알아보기 쉽게 간단한 코드</p>

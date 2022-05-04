@@ -4,7 +4,7 @@ import { Wrapper, LinkWrapper, LinkText } from './Footer.style';
 const Footer = () => {
   return (
     <Wrapper>
-      <Link href="https://github.com/Julrum/julrum.github.io" passHref>
+      <Link href="https://github.com/Julrum" passHref>
         <LinkWrapper>
           <LinkText>@julrum</LinkText>
         </LinkWrapper>
