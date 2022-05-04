@@ -16,7 +16,7 @@ export const ContentWrapper = styled.div`
   justify-content: center;
 `;
 
-export const Content = styled.div`
+export const Content = styled.main`
   width: 1200px;
   height: 100%;
   @media (max-width: 1200px) {
