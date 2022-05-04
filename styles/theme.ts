@@ -40,28 +40,10 @@ const light = {
 
     // Border Colors
     bgDivider: '#D0D7DE',
-    disabledBorder: '#D9D9D9',
+    bgSubDivider: '#ebeef1',
     quotedBorder: '#CAD1D9',
     scrollBorder: '#e8e8e8',
     tableBorder: '#D1D7DD',
-
-    // Primary Colors
-    primary100: '#064420',
-    primary80: '#006241',
-    primary60: '#006644',
-    primary40: '#E4EFE7',
-    primary20: '#F2F7F4',
-
-    // Secondary Colors
-    secondary100: '#062A44',
-    secondary80: '#06556A',
-
-    // Danger Colors
-    danger1: '#FF4D4F',
-    danger2: '#FF7875',
-
-    // Warning Colors
-    warning: '#ff9400',
   },
 };
 
@@ -89,28 +71,10 @@ const dark = {
 
     // Border Colors
     bgDivider: '#30363d',
-    disabledBorder: '#2d3239',
+    bgSubDivider: '#2d3239',
     quotedBorder: '#30363d',
     scrollBorder: '#3d3d3d',
     tableBorder: '#1e242a',
-
-    // Primary Colors
-    primary100: '#064420',
-    primary80: '#006241',
-    primary60: '#006644',
-    primary40: '#E4EFE7',
-    primary20: '#F2F7F4',
-
-    // Secondary Colors
-    secondary100: '#062A44',
-    secondary80: '#06556A',
-
-    // Danger Colors
-    danger1: '#FF4D4F',
-    danger2: '#FF7875',
-
-    // Warning Colors
-    warning: '#ff9400',
   },
 };
 

@@ -37,28 +37,10 @@ declare module 'styled-components' {
 
       // Border Colors
       bgDivider: string;
-      disabledBorder: string;
+      bgSubDivider: string;
       quotedBorder: string;
       scrollBorder: string;
       tableBorder: string;
-
-      // Primary Colors
-      primary100: string;
-      primary80: string;
-      primary60: string;
-      primary40: string;
-      primary20: string;
-
-      // Secondary Colors
-      secondary100: string;
-      secondary80: string;
-
-      // Danger Colors
-      danger1: string;
-      danger2: string;
-
-      // Warning Colors
-      warning: string;
     };
   }
 }

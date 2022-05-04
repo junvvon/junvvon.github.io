@@ -16,7 +16,7 @@ export const Header = styled.div<{ hasChildren: boolean }>`
     css`
       margin-bottom: 10px;
       padding-bottom: 10px;
-      border-bottom: 1px solid ${({ theme }) => theme.colors.disabledBorder};
+      border-bottom: 1px solid ${({ theme }) => theme.colors.bgSubDivider};
     `}
 `;
 
@@ -30,13 +30,13 @@ export const Extratitle = styled.div`
 
 export const ExtratitleContent = styled.p`
   margin: 0px;
-  border-left: 1px solid ${({ theme }) => theme.colors.disabledBorder};
+  border-left: 1px solid ${({ theme }) => theme.colors.bgSubDivider};
   margin-left: 10px;
   padding-left: 10px;
 `;
 
 export const SubTitle = styled.div`
-  border-bottom: 1px solid ${({ theme }) => theme.colors.disabledBorder};
+  border-bottom: 1px solid ${({ theme }) => theme.colors.bgSubDivider};
   margin-bottom: 10px;
   padding-bottom: 10px;
 `;
@@ -44,7 +44,7 @@ export const SubTitle = styled.div`
 export const SubTitleContent = styled.p`
   margin: 0px;
   strong {
-    border-right: 1px solid ${({ theme }) => theme.colors.disabledBorder};
+    border-right: 1px solid ${({ theme }) => theme.colors.bgSubDivider};
     margin-right: 10px;
     padding-right: 10px;
   }
