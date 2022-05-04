@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { media } from 'styles/theme';
 
 export const Wrapper = styled.div`
   height: 100%;
@@ -19,13 +20,14 @@ export const ContentWrapper = styled.div`
 export const Content = styled.main`
   width: 1200px;
   height: 100%;
-  @media (max-width: 1200px) {
+
+  ${media.pc} {
     width: 1000px;
   }
-  @media (max-width: 1000px) {
-    width: 736px;
+  ${media.tablet} {
+    width: 600px;
   }
-  @media (max-width: 736px) {
+  ${media.mobile} {
     width: 100%;
   }
 

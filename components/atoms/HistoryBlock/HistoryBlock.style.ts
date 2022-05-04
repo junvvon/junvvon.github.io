@@ -1,4 +1,5 @@
 import styled, { css } from 'styled-components';
+import { media } from 'styles/theme';
 
 export const Block = styled.div`
   margin: 20px;
@@ -18,6 +19,10 @@ export const Header = styled.div<{ hasChildren: boolean }>`
       padding-bottom: 10px;
       border-bottom: 1px solid ${({ theme }) => theme.colors.bgSubDivider};
     `}
+
+  ${media.mobile} {
+    flex-direction: column;
+  }
 `;
 
 export const Title = styled.h3`
@@ -26,6 +31,10 @@ export const Title = styled.h3`
 
 export const Extratitle = styled.div`
   display: flex;
+
+  ${media.mobile} {
+    flex-direction: column;
+  }
 `;
 
 export const ExtratitleContent = styled.p`
@@ -33,6 +42,15 @@ export const ExtratitleContent = styled.p`
   border-left: 1px solid ${({ theme }) => theme.colors.bgSubDivider};
   margin-left: 10px;
   padding-left: 10px;
+
+  ${media.mobile} {
+    border-left: none;
+    border-top: 1px solid ${({ theme }) => theme.colors.bgSubDivider};
+    margin-top: 10px;
+    margin-left: 0px;
+    padding-top: 10px;
+    padding-left: 0px;
+  }
 `;
 
 export const SubTitle = styled.div`
