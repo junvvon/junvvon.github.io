@@ -10,7 +10,6 @@ export const Block = styled.div`
 
 export const Header = styled.div<{ hasChildren: boolean }>`
   display: flex;
-  justify-content: space-between;
 
   ${(props) =>
     props.hasChildren &&
@@ -25,7 +24,13 @@ export const Header = styled.div<{ hasChildren: boolean }>`
   }
 `;
 
-export const Title = styled.h3`
+export const Title = styled.div`
+  display: flex;
+  flex: 1;
+  justify-content: space-between;
+`;
+
+export const TitleContent = styled.h3`
   margin: 0px;
 `;
 

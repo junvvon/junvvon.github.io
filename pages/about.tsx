@@ -1,4 +1,4 @@
-import HistoryBlock from 'components/atoms/HistoryBlock';
+import HistoryBlock from 'components/molecules/HistoryBlock';
 import SideList from 'components/atoms/SideList';
 import Title from 'components/molecules/Title';
 import AboutContentLayout from 'components/templates/AboutContentLayout';
@@ -130,10 +130,11 @@ const About = () => (
             <li>localstorage를 이용하여 설정 값 저장</li>
           </HistoryBlock>
           <HistoryBlock
-            title="Daesun"
-            subTitle="2021-11 ~ 2021-12"
+            githubLink="https://github.com/Julrum/ITE3068_team8"
             projectType="private"
             skill="React.Js, AWS Amplify, React-charts, styled-components"
+            subTitle="2021-11 ~ 2021-12"
+            title="Daesun"
           >
             <p>
               대선 관련 정보를 모아 볼 수 있는 웹페이지를 제작 프로젝트 입니다.
@@ -177,10 +178,12 @@ const About = () => (
             <li>로그인, 로그아웃, 회원가입 기능 제작 및 모달 제작</li>
           </HistoryBlock>
           <HistoryBlock
-            title="Oneline Bank"
-            subTitle="2021-04 ~ 2021-06"
+            githubLink="https://github.com/Julrum/OnelineBank"
+            originalLink="https://github.com/Julrum/OnelineBank/releases/tag/v1.0"
             projectType="contest"
             skill="React Native, Firebase, Expo"
+            subTitle="2021-04 ~ 2021-06"
+            title="Oneline Bank"
           >
             <p>
               복잡해진 은행 앱의 사용 편의성을 위하여 채팅 보내듯이 송금 기능
@@ -237,10 +240,12 @@ const About = () => (
             </p>
           </HistoryBlock>
           <HistoryBlock
-            title="개인 블로그"
-            subTitle="2021-02"
+            githubLink="https://github.com/Julrum/julrum.github.io"
+            originalLink="https://julrum.github.io"
             projectType="private"
             skill="Next.Js, Typescript, mdx"
+            subTitle="2021-02"
+            title="개인 블로그"
           >
             <p>Next.Js로 제작한 개인 블로그 프로젝트 입니다.</p>
             <li>지금까지 진행한 프로젝트 목록을 표시하는 메인 페이지</li>
@@ -346,18 +351,34 @@ const About = () => (
               국방부 내부망에서 사용하는 자산 관리 페이지 제작 및 상황 분석
               페이지 기획, 디자인, 제작
             </p>
+            <a
+              href="https://drive.google.com/file/d/16fqD52QfKeZN4-QQokJx-mFzAiulpEZu/view?usp=sharing"
+              target="_blank"
+              rel="noreferrer"
+            >
+              추천서 보기
+            </a>
           </HistoryBlock>
           <h2>수상 및 기타</h2>
           <HistoryBlock
-            title="AWS training and certification"
+            originalLink="https://drive.google.com/file/d/1LzNVPiGx2hFrqHJdnqedG1TrOatShHK-/view?usp=sharing"
             subTitle="2021-11-10"
+            title="AWS training and certification"
           >
             <p>AWS Technical Essentials</p>
           </HistoryBlock>
-          <HistoryBlock title="TOPCIT" subTitle="2021-10-30">
+          <HistoryBlock
+            originalLink="https://drive.google.com/file/d/1Pl_UzJ8mkrCNYbl3HPsu9gbzctfQlPK1/view?usp=sharing"
+            subTitle="2021-10-30"
+            title="TOPCIT"
+          >
             <p>Level 3 (Score 431)</p>
           </HistoryBlock>
-          <HistoryBlock title="리눅스 마스터 2급" subTitle="2019-12-14" />
+          <HistoryBlock
+            originalLink="https://drive.google.com/file/d/1vzBdsUZke4CE7rVAzCgNvlEOEmpQWgm7/view?usp=sharing"
+            subTitle="2019-12-14"
+            title="리눅스 마스터 2급"
+          />
         </div>
         <div>
           <h2>스킬 셋</h2>

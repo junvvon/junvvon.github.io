@@ -1,3 +1,5 @@
+import Link from 'next/link';
+import Github from 'components/atoms/Icons/Github';
 import { HistoryBlockProps } from './HistoryBlock.type';
 import {
   Block,
@@ -8,11 +10,14 @@ import {
   SubTitle,
   SubTitleContent,
   Title,
+  TitleContent,
 } from './HistoryBlock.style';
 
 const HistoryBlock = ({
+  githubLink,
   children,
   companyName,
+  originalLink,
   projectType,
   skill,
   subTitle,
@@ -36,7 +41,24 @@ const HistoryBlock = ({
   return (
     <Block>
       <Header hasChildren={!!children}>
-        <Title>{title}</Title>
+        <Title>
+          {originalLink ? (
+            <Link href={originalLink} passHref>
+              <a target="_blank">
+                <TitleContent>{title}</TitleContent>
+              </a>
+            </Link>
+          ) : (
+            <TitleContent>{title}</TitleContent>
+          )}
+          {githubLink && (
+            <Link href={githubLink} passHref>
+              <a target="_blank">
+                <Github />
+              </a>
+            </Link>
+          )}
+        </Title>
         <Extratitle>
           <ExtratitleContent>{subTitle}</ExtratitleContent>
           {projectType && (
