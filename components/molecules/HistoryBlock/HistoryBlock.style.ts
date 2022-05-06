@@ -74,3 +74,10 @@ export const SubTitleContent = styled.p`
 `;
 
 export const ChildrenContent = styled.div``;
+
+export const ExternalLink = styled.a`
+  display: flex;
+  svg {
+    fill: ${({ theme }) => theme.colors.sub};
+  }
+`;

@@ -1,9 +1,11 @@
 import Link from 'next/link';
 import Github from 'components/atoms/Icons/Github';
+import OpenInNewTab from 'components/atoms/Icons/OpenInNewTab';
 import { HistoryBlockProps } from './HistoryBlock.type';
 import {
   Block,
   ChildrenContent,
+  ExternalLink,
   Extratitle,
   ExtratitleContent,
   Header,
@@ -44,9 +46,10 @@ const HistoryBlock = ({
         <Title>
           {originalLink ? (
             <Link href={originalLink} passHref>
-              <a target="_blank">
+              <ExternalLink target="_blank">
                 <TitleContent>{title}</TitleContent>
-              </a>
+                <OpenInNewTab />
+              </ExternalLink>
             </Link>
           ) : (
             <TitleContent>{title}</TitleContent>
