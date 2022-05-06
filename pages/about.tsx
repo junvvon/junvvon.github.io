@@ -134,7 +134,7 @@ const About = () => (
             projectType="private"
             skill="React.Js, AWS Amplify, React-charts, styled-components"
             subTitle="2021-11 ~ 2021-12"
-            title="Daesun"
+            title="대선 뉴스 모아보기 페이지"
           >
             <p>
               대선 관련 정보를 모아 볼 수 있는 웹페이지를 제작 프로젝트 입니다.
@@ -183,7 +183,7 @@ const About = () => (
             projectType="contest"
             skill="React Native, Firebase, Expo"
             subTitle="2021-04 ~ 2021-06"
-            title="Oneline Bank"
+            title="한줄 은행"
           >
             <p>
               복잡해진 은행 앱의 사용 편의성을 위하여 채팅 보내듯이 송금 기능
