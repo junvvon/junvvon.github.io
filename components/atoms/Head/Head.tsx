@@ -18,9 +18,22 @@ const Head = ({ customMeta }: { customMeta?: MetaProps }) => {
   return (
     <NextHead>
       <title>{meta.title}</title>
-      <meta content={meta.description} name="description" />
-      <meta property="og:url" content={`${WEBSITE_HOST_URL}${router.asPath}`} />
+      <meta charSet="utf-8" />
+      <meta name="description" content={meta.description} />
+      <meta
+        name="theme-color"
+        media="(prefers-color-scheme: light)"
+        content="#FAFAFA"
+      />
+      <meta
+        name="theme-color"
+        media="(prefers-color-scheme: dark)"
+        content="#161b22"
+      />
+      <meta name="author" content="junwon" />
+      <meta name="robots" content="noindex, nofollow" />
       <link rel="canonical" href={`${WEBSITE_HOST_URL}${router.asPath}`} />
+      <meta property="og:url" content={`${WEBSITE_HOST_URL}${router.asPath}`} />
       <meta property="og:type" content={meta.type} />
       <meta property="og:site_name" content="Junwon Park | Portfolio" />
       <meta property="og:description" content={meta.description} />

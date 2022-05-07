@@ -6,6 +6,10 @@ export const Block = styled.div`
   padding: 20px;
   border: 1px solid ${({ theme }) => theme.colors.bgDivider};
   border-radius: 15px;
+  ${media.mobile} {
+    padding: 10px;
+    margin: 5px;
+  }
 `;
 
 export const Header = styled.div<{ hasChildren: boolean }>`
