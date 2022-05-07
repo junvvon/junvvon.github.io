@@ -20,6 +20,7 @@ export const ContentWrapper = styled.div`
 export const Content = styled.main`
   width: 1200px;
   height: 100%;
+  padding: 2rem;
 
   ${media.pc} {
     width: 1000px;
@@ -28,10 +29,9 @@ export const Content = styled.main`
     width: 600px;
   }
   ${media.mobile} {
+    padding: 1rem;
     width: 100%;
   }
-
-  padding: 2rem;
 
   background-color: ${({ theme }) => theme.colors.basicBg};
 `;
