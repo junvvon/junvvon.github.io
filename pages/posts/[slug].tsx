@@ -1,6 +1,5 @@
 import { GetStaticPaths, GetStaticProps } from 'next';
 import Head from 'next/head';
-import Link from 'next/link';
 import { MDXRemote, MDXRemoteSerializeResult } from 'next-mdx-remote';
 import { serialize } from 'next-mdx-remote/serialize';
 import fs from 'fs';
@@ -21,20 +20,11 @@ import { MetaProps } from 'types/layout';
 import { PostType } from 'types/post';
 import { postFilePaths, POSTS_PATH } from 'utils/mdxUtils';
 
-const components = {
-  Head,
-  ImageDescription,
-  Link,
-  code: (props: any) => <CodeBlock {...props} />,
-  blockquote: (props: any) => <QuoteBlock {...props} />,
-  table: (props: any) => <TableBlock {...props} />,
-};
-
 const PostPage = ({
-  source,
+  mdxSource,
   frontMatter,
 }: {
-  source: MDXRemoteSerializeResult;
+  mdxSource: MDXRemoteSerializeResult;
   frontMatter: PostType;
 }) => {
   const customMeta: MetaProps = {
@@ -53,7 +43,17 @@ const PostPage = ({
           title={frontMatter.title}
         />
         <div>
-          <MDXRemote {...source} components={components} lazy />
+          <MDXRemote
+            {...mdxSource}
+            components={{
+              Head,
+              ImageDescription,
+              CodeBlock,
+              QuoteBlock,
+              TableBlock,
+            }}
+            lazy
+          />
         </div>
       </article>
     </Layout>
@@ -76,7 +76,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
 
   return {
     props: {
-      source: mdxSource,
+      mdxSource,
       frontMatter: data,
     },
   };
