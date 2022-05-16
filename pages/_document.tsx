@@ -1,4 +1,5 @@
 import { Fragment } from 'react';
+import Script from 'next/script';
 import Document, {
   Html,
   Head,
@@ -12,8 +13,9 @@ export default class MyDocument extends Document {
   render() {
     return (
       <Html lang="en">
-        <Head></Head>
+        <Head />
         <body>
+          <Script src="noflash.js" />
           <Main />
           <NextScript />
         </body>
