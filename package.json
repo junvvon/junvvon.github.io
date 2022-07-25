@@ -18,7 +18,7 @@
     "@next/mdx": "^12.2.3",
     "@types/react-syntax-highlighter": "^15.5.3",
     "@types/styled-components": "^5.1.25",
-    "date-fns": "^2.29.0",
+    "date-fns": "^2.29.1",
     "gh-pages": "^4.0.0",
     "gray-matter": "^4.0.3",
     "next": "12.2.3",
