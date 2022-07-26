@@ -417,6 +417,7 @@ const About = () => {
                 href="https://drive.google.com/file/d/16fqD52QfKeZN4-QQokJx-mFzAiulpEZu/view?usp=sharing"
                 target="_blank"
                 rel="noreferrer"
+                aria-label="Letter of recommendation"
               >
                 추천서 보기
               </a>

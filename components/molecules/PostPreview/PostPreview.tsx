@@ -17,7 +17,7 @@ const PostPreview = ({ post }: { post: PostType }) => {
         <TextArea>
           <h1>
             <Link as={`/posts/${post.slug}`} href={`/posts/[slug]`}>
-              <a>{post.title}</a>
+              <a aria-label="Go to Post">{post.title}</a>
             </Link>
           </h1>
           <Description>{post.description}</Description>

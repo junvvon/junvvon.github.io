@@ -56,7 +56,7 @@ const HistoryBlock = ({
           )}
           {githubLink && (
             <Link href={githubLink} passHref>
-              <a target="_blank">
+              <a target="_blank" aria-label="Go to Github link">
                 <Github />
               </a>
             </Link>
