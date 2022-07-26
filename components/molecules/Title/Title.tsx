@@ -1,9 +1,11 @@
 import Link from 'next/link';
 import { format, parseISO } from 'date-fns';
 import { ko } from 'date-fns/locale';
+
 import Github from 'components/atoms/Icons/Github';
 import Linkedin from 'components/atoms/Icons/Linkedin';
 import Mail from 'components/atoms/Icons/Mail';
+
 import { Titleprops } from './Title.type';
 import { Header, StyledTitle, Divider, Icons, Icon } from './Title.style';
 
@@ -22,7 +24,7 @@ const Title = ({
           {githubLink && (
             <Icon>
               <Link href={githubLink} passHref>
-                <a target="_blank">
+                <a target="_blank" aria-label="Go to Github link">
                   <Github />
                 </a>
               </Link>
@@ -31,7 +33,7 @@ const Title = ({
           {linkedinLink && (
             <Icon>
               <Link href={linkedinLink} passHref>
-                <a target="_blank">
+                <a target="_blank" aria-label="Go to Linkedin link">
                   <Linkedin />
                 </a>
               </Link>
@@ -40,7 +42,7 @@ const Title = ({
           {mailLink && (
             <Icon>
               <Link href={mailLink} passHref>
-                <a>
+                <a aria-label={mailLink}>
                   <Mail />
                 </a>
               </Link>
