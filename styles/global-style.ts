@@ -52,6 +52,10 @@ export const GlobalStyle = styled.createGlobalStyle`
     padding-left: 20px;
   }
 
+  ul {
+    padding: 0px;
+  }
+
   ::-webkit-scrollbar {
     background-color: ${({ theme }) => theme.colors.scrollTrackBg};
     border: solid 1px ${({ theme }) => theme.colors.scrollBorder};
