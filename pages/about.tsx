@@ -1,12 +1,16 @@
 import { useState, useEffect, useCallback } from 'react';
+import dynamic from 'next/dynamic';
 
 import ScrollableTitle from 'components/atoms/ScrollableTitle';
-import SideList from 'components/atoms/SideList';
-import HistoryBlock from 'components/molecules/HistoryBlock';
 import Title from 'components/molecules/Title';
 import AboutContentLayout from 'components/templates/AboutContentLayout';
 import Layout from 'components/templates/Layout';
-import SideListLayout from 'components/templates/SideListLayout';
+
+const SideList = dynamic(() => import('components/atoms/SideList'));
+const HistoryBlock = dynamic(() => import('components/molecules/HistoryBlock'));
+const SideListLayout = dynamic(
+  () => import('components/templates/SideListLayout'),
+);
 
 const About = () => {
   const [scrollStep, setScrollStep] = useState(0);
@@ -15,9 +19,7 @@ const About = () => {
     const scrollTop =
       (document.documentElement && document.documentElement.scrollTop) ||
       document.body.scrollTop;
-    console.log(scrollTop);
     setScrollStep(parseInt(`${(scrollTop + 10) / 20}`));
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [scrollStep]);
 
