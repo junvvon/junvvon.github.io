@@ -2,8 +2,10 @@ import { useState, useEffect } from 'react';
 import type { AppProps } from 'next/app';
 import { ThemeProvider } from 'styled-components';
 import useDarkMode from 'use-dark-mode';
+
 import { GlobalStyle } from 'styles/global-style';
 import { lightTheme, darkTheme } from 'styles/theme';
+import 'styles/fonts.css';
 
 const MyApp = ({ Component, pageProps }: AppProps) => {
   const [mounted, setMounted] = useState(false);
