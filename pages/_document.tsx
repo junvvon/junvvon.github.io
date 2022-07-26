@@ -1,4 +1,3 @@
-import { Fragment } from 'react';
 import Script from 'next/script';
 import Document, {
   Html,
@@ -22,29 +21,29 @@ export default class MyDocument extends Document {
       </Html>
     );
   }
-  static async getInitialProps(ctx: DocumentContext) {
-    const sheet = new ServerStyleSheet();
-    const originalRenderPage = ctx.renderPage;
-
-    try {
-      ctx.renderPage = () =>
-        originalRenderPage({
-          enhanceApp: (App) => (props) =>
-            sheet.collectStyles(<App {...props} />),
-        });
-
-      const initialProps = await Document.getInitialProps(ctx);
-      return {
-        ...initialProps,
-        styles: [
-          <Fragment key="1">
-            {initialProps.styles}
-            {sheet.getStyleElement()}
-          </Fragment>,
-        ],
-      };
-    } finally {
-      sheet.seal();
-    }
-  }
 }
+
+MyDocument.getInitialProps = async (ctx: DocumentContext) => {
+  const sheet = new ServerStyleSheet();
+  const originalRenderPage = ctx.renderPage;
+
+  try {
+    ctx.renderPage = () =>
+      originalRenderPage({
+        enhanceApp: (App) => (props) => sheet.collectStyles(<App {...props} />),
+      });
+
+    const initialProps = await Document.getInitialProps(ctx);
+    return {
+      ...initialProps,
+      styles: (
+        <>
+          {initialProps.styles}
+          {sheet.getStyleElement()}
+        </>
+      ),
+    };
+  } finally {
+    sheet.seal();
+  }
+};
