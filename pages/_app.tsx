@@ -4,7 +4,6 @@ import { ThemeProvider } from 'styled-components';
 import useDarkMode from 'use-dark-mode';
 import { GlobalStyle } from 'styles/global-style';
 import { lightTheme, darkTheme } from 'styles/theme';
-import FontStyles from 'public/fonts/fonts';
 
 const MyApp = ({ Component, pageProps }: AppProps) => {
   const [mounted, setMounted] = useState(false);
@@ -22,7 +21,6 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
   return (
     <>
       <ThemeProvider theme={theme}>
-        <FontStyles />
         <GlobalStyle />
         <Component {...pageProps} />
       </ThemeProvider>
