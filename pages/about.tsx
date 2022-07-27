@@ -33,7 +33,7 @@ const About = () => {
   }, [handleIsScrollEvent]);
 
   return (
-    <Layout customMeta={{ title: 'About | Develog' }}>
+    <Layout customMeta={{ title: 'Junwon Park | Resume' }}>
       <article>
         <Title
           title="새로운 것을 끊임없이 탐구하는 개발자 박준원입니다."

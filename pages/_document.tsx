@@ -8,11 +8,41 @@ import Document, {
 } from 'next/document';
 import { ServerStyleSheet } from 'styled-components';
 
+const APP_NAME = 'Junwon Park | Portfolio';
+const APP_DESCRIPTION = "Junwon's portfolio";
+const APP_URL = 'https://studio.camerafi.com';
+const APP_IMAGE = '/images/blog/blog01.webp';
+
 export default class MyDocument extends Document {
   render() {
     return (
       <Html lang="en">
-        <Head />
+        <Head>
+          <meta name="author" content="junwon" />
+          <meta name="description" content={APP_DESCRIPTION} />
+          <meta name="robots" content="noindex, nofollow" />
+          <meta property="og:description" content={APP_DESCRIPTION} />
+          <meta property="og:image" content={APP_IMAGE} />
+          <meta property="og:site_name" content={APP_NAME} />
+          <meta property="og:title" content={APP_NAME} />
+          <meta property="og:type" content="website" />
+          <meta
+            name="theme-color"
+            media="(prefers-color-scheme: light)"
+            content="#FAFAFA"
+          />
+          <meta
+            name="theme-color"
+            media="(prefers-color-scheme: dark)"
+            content="#161b22"
+          />
+          <meta name="twitter:card" content="summary_large_image" />
+          <meta name="twitter:url" content={APP_URL} />
+          <meta name="twitter:title" content={APP_NAME} />
+          <meta name="twitter:description" content={APP_DESCRIPTION} />
+          <meta name="twitter:image" content={APP_IMAGE} />
+          <meta name="twitter:site" content="@julrum" />
+        </Head>
         <body>
           <Script src="noflash.js" />
           <Main />

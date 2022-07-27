@@ -32,7 +32,7 @@ const PostPage = ({
     date: frontMatter.date,
     description: frontMatter.description,
     image: `${frontMatter.image}`,
-    title: `${frontMatter.title} | Develog`,
+    title: `${frontMatter.title} | Junwon Park`,
     type: 'article',
   };
   return (
