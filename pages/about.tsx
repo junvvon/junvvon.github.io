@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import dynamic from 'next/dynamic';
 
+import H3 from 'components/atoms/H3';
 import ScrollableTitle from 'components/atoms/ScrollableTitle';
 import Title from 'components/molecules/Title';
 import AboutContentLayout from 'components/templates/AboutContentLayout';
@@ -52,9 +53,9 @@ const About = () => {
                 scroll={scrollStep}
                 titleId="title1"
               >
-                <h3>같은 기능을 해도 알아보기 쉬운 코드를</h3>
-                <h3>주석 없이도 알아 볼 수 있는 코드를</h3>
-                <h3>재활용성이 높은 코드를</h3>
+                <H3>같은 기능을 해도 알아보기 쉬운 코드를</H3>
+                <H3>주석 없이도 알아 볼 수 있는 코드를</H3>
+                <H3>재활용성이 높은 코드를</H3>
               </ScrollableTitle>
               <ScrollableTitle
                 back="좋아합니다."
@@ -62,10 +63,10 @@ const About = () => {
                 scroll={scrollStep}
                 titleId="title2"
               >
-                <h3>새로운 기술에 관심을 가지며 학습하기를</h3>
-                <h3>컨벤션을 설정하여 일관성을 유지하기를</h3>
-                <h3>과거에 작성한 코드들도 리팩터링하기를</h3>
-                <h3>혼자보다는 동료들과 협업하는 것을</h3>
+                <H3>새로운 기술에 관심을 가지며 학습하기를</H3>
+                <H3>컨벤션을 설정하여 일관성을 유지하기를</H3>
+                <H3>과거에 작성한 코드들도 리팩터링하기를</H3>
+                <H3>혼자보다는 동료들과 협업하는 것을</H3>
               </ScrollableTitle>
             </div>
             <h2>학력</h2>

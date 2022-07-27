@@ -1,3 +1,5 @@
+import H3 from 'components/atoms/H3';
+
 import { ScrollableTitleProps } from './ScrollableTitle.type';
 import { Title, Scrollable } from './ScrollableTitle.style';
 
@@ -12,9 +14,9 @@ const ScrollableTitle = ({
 
   return (
     <Title>
-      <h3>{front}</h3>
+      <H3>{front}</H3>
       <Scrollable id={titleId}>{children}</Scrollable>
-      <h3>{back}</h3>
+      <H3>{back}</H3>
     </Title>
   );
 };
