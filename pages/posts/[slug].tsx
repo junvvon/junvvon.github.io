@@ -10,8 +10,8 @@ import supersub from 'remark-supersub';
 import emoji from 'remark-emoji';
 import rehypeHighlight from 'rehype-highlight';
 import rehypeCodeTitles from 'rehype-code-titles';
-import rehypeAutolinkHeadings from 'rehype-autolink-headings';
 import rehypeSlug from 'rehype-slug';
+
 import QuoteBlock from 'components/atoms/QuoteBlock';
 import TableBlock from 'components/atoms/TableBlock';
 import ImageDescription from 'components/molecules/ImageDescription';
@@ -69,18 +69,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
   const mdxSource = await serialize(content, {
     mdxOptions: {
       remarkPlugins: [emoji, remarkGfm, supersub],
-      rehypePlugins: [
-        rehypeSlug,
-        [
-          rehypeAutolinkHeadings,
-          {
-            properties: { className: ['anchor'] },
-          },
-          { behaviour: 'wrap' },
-        ],
-        rehypeHighlight,
-        rehypeCodeTitles,
-      ],
+      rehypePlugins: [rehypeSlug, rehypeHighlight, rehypeCodeTitles],
     },
     scope: data,
   });
