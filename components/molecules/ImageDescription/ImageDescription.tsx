@@ -1,5 +1,5 @@
 import { ImageDescriptionProps } from './ImageDescription.type';
-import { Wrapper, Image, Description } from './ImageDescription.style';
+import { Description, Image, Wrapper } from './ImageDescription.style';
 
 const ImageDescription = ({ src, alt, children }: ImageDescriptionProps) => {
   return (
