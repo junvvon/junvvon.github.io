@@ -19,7 +19,7 @@ const About = () => {
     const scrollTop =
       (document.documentElement && document.documentElement.scrollTop) ||
       document.body.scrollTop;
-    setScrollStep(parseInt(`${(scrollTop + 10) / 20}`));
+    setScrollStep(parseInt(`${(scrollTop + 10) / 50}`));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [scrollStep]);
 
