@@ -49,7 +49,20 @@ const About = () => {
           <div>
             <div>
               <p>
-                안녕하세요, 볼트 마이크로에서 일하고 있는 Frontend 개발자입니다.
+                &nbsp;2년 차 개발자로 스타트업에서 웹 서비스를
+                기획/개발/배포/운영하였습니다. 주로 웹 서비스 개발을
+                담당하였으며 PO(Product Owner) 역할을 겸하였습니다.
+                <br />
+                <br />
+                &nbsp;코드 컨벤션을 설정하여 일관성을 유지하는 것을 좋아하며
+                같은 기능을 하는 코드도 알아보기 쉽게 간단한 코드로 작성하고
+                있습니다. 레거시 코드를 리팩터링하고 개선하는 것을 즐겨합니다.
+                <br />
+                <br />
+                &nbsp;혼자서의 개발보다는 동료들과의 끊임없는 커뮤니케이션을
+                통해 협업하는 것을 더 선호합니다. 국방부에서 진행한
+                프로젝트에서도 동료들과의 계속된 소통으로 서로의 생각을 정리하고
+                공유하여 성공적으로 프로젝트를 끝마친 경험이 있습니다.
               </p>
               <ScrollableTitle
                 back="추구합니다."
@@ -73,16 +86,8 @@ const About = () => {
                 <H3>혼자보다는 동료들과 협업하는 것을</H3>
               </ScrollableTitle>
             </div>
-            <h2>학력</h2>
-            <HistoryBlock title="한양대학교" subTitle="2017-03 ~ ">
-              <p>컴퓨터소프트웨어학부 전공</p>
-            </HistoryBlock>
-            <HistoryBlock
-              title="세종과학고등학교"
-              subTitle="2014-03 ~ 2017-02"
-            />
 
-            <h2>프로젝트</h2>
+            <h2>Project</h2>
             <HistoryBlock
               title="B2B 대시보드 페이지"
               subTitle="2022-02 ~ "
@@ -408,18 +413,19 @@ const About = () => {
                 </li>
               </ul>
             </HistoryBlock>
-            <h2>경력</h2>
+            <h2>Work Experience</h2>
             <HistoryBlock title="볼트마이크로" subTitle="2022-01 ~ ">
-              <p>
-                앱 내의 웹뷰에서 사용될 각종 종목의 스코어보드 및 타이머 제작,
-                B2B 대시보드 페이지 제작
-              </p>
+              <ul>
+                <li>CameraFi Live Admin 웹사이트 개발</li>
+                <li>CameraFi Live Studio 웹사이트 개발</li>
+                <li>CameraFi Live 앱 내의 스코어보드 및 타이머 에셋 개발</li>
+              </ul>
             </HistoryBlock>
             <HistoryBlock title="대한민국 국방부" subTitle="2019-05 ~ 2020-12">
-              <p>
-                국방부 내부망에서 사용하는 자산 관리 페이지 제작 및 상황 분석
-                페이지 기획, 디자인, 제작
-              </p>
+              <ul>
+                <li>OO 체계 대시보드 페이지 개발</li>
+                <li>OO 체계 웹사이트 </li>
+              </ul>
               <a
                 href="https://drive.google.com/file/d/16fqD52QfKeZN4-QQokJx-mFzAiulpEZu/view?usp=sharing"
                 target="_blank"
@@ -429,7 +435,17 @@ const About = () => {
                 추천서 보기
               </a>
             </HistoryBlock>
-            <h2>수상 및 기타</h2>
+
+            <h2>Education</h2>
+            <HistoryBlock title="한양대학교" subTitle="2017-03 ~ ">
+              <p>컴퓨터소프트웨어학부 전공</p>
+            </HistoryBlock>
+            <HistoryBlock
+              title="세종과학고등학교"
+              subTitle="2014-03 ~ 2017-02"
+            />
+
+            <h2>Certificates</h2>
             <HistoryBlock
               originalLink="https://drive.google.com/file/d/1LzNVPiGx2hFrqHJdnqedG1TrOatShHK-/view?usp=sharing"
               subTitle="2021-11-10"
@@ -451,69 +467,48 @@ const About = () => {
             />
           </div>
           <div>
-            <h2>스킬 셋</h2>
+            <h2>SKILLS</h2>
             <SideListLayout>
               <SideList
-                title="4단계"
-                list={['React', 'JavaScript', 'TypeScript', 'HTML', 'CSS']}
-              />
-              <SideList
-                title="3단계"
+                title="Front-End"
                 list={[
-                  'C',
-                  'C++',
-                  'Firebase',
-                  'Git',
-                  'Github',
-                  'GitLab',
-                  'Ubuntu',
-                  'Mac',
-                  'Bash',
+                  'React',
+                  'Next.js',
+                  'JavaScript',
+                  'TypeScript',
+                  'HTML5',
+                  'CSS',
                 ]}
               />
               <SideList
-                title="2단계"
+                title="Back-End"
+                list={['Firebase', 'GCP', 'AWS', 'GraphQL', 'Java', 'Python']}
+              />
+              <SideList title="Application" list={['React Native']} />
+              <SideList
+                title="etc"
                 list={[
-                  'React Native',
-                  'Java',
-                  'Python',
-                  'GraphQL',
-                  'Figma',
-                  'GCP',
-                  'AWS',
+                  'Ubuntu',
+                  'Git/Github/Gitlab',
                   'Confluence',
                   'JIRA',
+                  'Figma',
                 ]}
               />
-              <SideList title="1단계" list={['UML']} />
             </SideListLayout>
             <SideListLayout>
-              <SideList
-                title="Languages"
-                list={['Korean-native', 'English-intermediate']}
-              />
+              <SideList title="Languages" list={['English-intermediate']} />
               <SideList
                 title="Courseworks"
                 list={[
                   'Algorithms',
-                  'Architecture',
-                  'Artificial Intelligence',
-                  'Calculus',
-                  'Compilers',
-                  'Computer',
                   'Computer Graphics',
                   'Computer Networks',
                   'Computer Security',
                   'Data Structures',
                   'Database Systems',
-                  'Digital Logic',
-                  'Discrete Mathematics',
-                  'Linear Algebra',
-                  'Microprocessors',
                   'Operating Systems',
                   'Software Engineering',
-                  'Software Studio',
-                  'Statistics',
                   'System Programming',
                 ]}
               />
