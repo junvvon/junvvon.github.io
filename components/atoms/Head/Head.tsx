@@ -7,7 +7,7 @@ export const WEBSITE_HOST_URL = 'https://julrum.github.io';
 const Head = ({ customMeta }: { customMeta?: MetaProps }) => {
   const router = useRouter();
   const meta: MetaProps = {
-    title: 'Junwon Park | Portfolio',
+    title: 'Portfolio | Junwon Park',
     description: "Junwon's portfolio.",
     image: '/images/blog/blog01.webp',
     type: 'website',
@@ -21,7 +21,7 @@ const Head = ({ customMeta }: { customMeta?: MetaProps }) => {
       <link rel="canonical" href={`${WEBSITE_HOST_URL}${router.asPath}`} />
       <meta property="og:url" content={`${WEBSITE_HOST_URL}${router.asPath}`} />
       <meta property="og:type" content={meta.type} />
-      <meta property="og:site_name" content="Junwon Park | Portfolio" />
+      <meta property="og:site_name" content={meta.title} />
       <meta property="og:description" content={meta.description} />
       <meta property="og:title" content={meta.title} />
       <meta property="og:image" content={meta.image} />
