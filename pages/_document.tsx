@@ -20,7 +20,6 @@ export default class MyDocument extends Document {
         <Head>
           <meta name="author" content="junwon" />
           <meta name="description" content={APP_DESCRIPTION} />
-          <meta name="robots" content="noindex, nofollow" />
           <meta property="og:description" content={APP_DESCRIPTION} />
           <meta property="og:image" content={APP_IMAGE} />
           <meta property="og:site_name" content={APP_NAME} />

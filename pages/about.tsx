@@ -6,6 +6,7 @@ import ScrollableTitle from 'components/atoms/ScrollableTitle';
 import Title from 'components/molecules/Title';
 import AboutContentLayout from 'components/templates/AboutContentLayout';
 import Layout from 'components/templates/Layout';
+import Head from 'next/head';
 
 const SideList = dynamic(() => import('components/atoms/SideList'));
 const HistoryBlock = dynamic(() => import('components/molecules/HistoryBlock'));
@@ -34,6 +35,9 @@ const About = () => {
 
   return (
     <Layout customMeta={{ title: 'Junwon Park | Resume' }}>
+      <Head>
+        <meta name="robots" content="noindex, nofollow" />
+      </Head>
       <article>
         <Title
           title="새로운 것을 끊임없이 탐구하는 개발자 박준원입니다."
