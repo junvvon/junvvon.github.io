@@ -11,15 +11,7 @@ export const Header = styled.div`
 `;
 
 export const StyledTitle = styled.h1`
-  font-size: ${({ theme }) => theme.fontSizes.header1};
-  font-weight: normal;
-  line-height: 35px;
   word-break: keep-all;
-`;
-
-export const Divider = styled.div`
-  width: 100%;
-  border-bottom: 1px solid ${({ theme }) => theme.colors.bgDivider};
 `;
 
 export const Icons = styled.div`

@@ -7,7 +7,7 @@ import Linkedin from 'components/atoms/Icons/Linkedin';
 import Mail from 'components/atoms/Icons/Mail';
 
 import { Titleprops } from './Title.type';
-import { Header, StyledTitle, Divider, Icons, Icon } from './Title.style';
+import { Header, StyledTitle, Icons, Icon } from './Title.style';
 
 const Title = ({
   date,
@@ -53,7 +53,6 @@ const Title = ({
       {date && (
         <p>{format(parseISO(String(date)), 'MMMM do, yyyy', { locale: ko })}</p>
       )}
-      <Divider />
     </>
   );
 };

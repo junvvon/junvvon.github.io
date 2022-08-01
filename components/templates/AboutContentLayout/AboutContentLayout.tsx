@@ -1,8 +1,9 @@
-import { Content } from './AboutContentLayout.style';
-import { AboutContentLayoutProps } from './AboutContentLayout.type';
+import { ReactNode } from 'react';
 
-const AboutContentLayout = ({ children }: AboutContentLayoutProps) => {
-  return <Content>{children}</Content>;
-};
+import { Content } from './AboutContentLayout.style';
+
+const AboutContentLayout = ({ children }: { children: ReactNode }) => (
+  <Content>{children}</Content>
+);
 
 export default AboutContentLayout;

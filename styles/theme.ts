@@ -44,6 +44,8 @@ const light = {
     quotedBorder: '#CAD1D9',
     scrollBorder: '#e8e8e8',
     tableBorder: '#D1D7DD',
+
+    primary: '#F34C55',
   },
 };
 
@@ -75,6 +77,8 @@ const dark = {
     quotedBorder: '#30363d',
     scrollBorder: '#3d3d3d',
     tableBorder: '#1e242a',
+
+    primary: '#F34C55',
   },
 };
 
@@ -84,7 +88,7 @@ const customMediaQuery = (maxWidth: number): string =>
 export const media = {
   custom: customMediaQuery,
   pc: customMediaQuery(1440),
-  tablet: customMediaQuery(834),
+  tablet: customMediaQuery(960),
   mobile: customMediaQuery(576),
 };
 

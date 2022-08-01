@@ -41,6 +41,8 @@ declare module 'styled-components' {
       quotedBorder: string;
       scrollBorder: string;
       tableBorder: string;
+
+      primary: string;
     };
   }
 }

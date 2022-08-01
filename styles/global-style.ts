@@ -1,5 +1,6 @@
 import * as styled from 'styled-components';
 import { normalize } from 'styled-normalize';
+
 import { media } from './theme';
 
 export const GlobalStyle = styled.createGlobalStyle`
@@ -18,11 +19,15 @@ export const GlobalStyle = styled.createGlobalStyle`
       'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
     font-size: ${({ theme }) => theme.fontSizes.body};
     height: 100%;
-    line-height: 1.8rem;
+    line-height: 1.15;
     margin: 0;
     padding: 0;
     scrollbar-width: none;
     word-break: keep-all;
+
+    ${media.tablet} {
+      font-size: 14px;
+    }
   }
 
   #root {
@@ -31,14 +36,13 @@ export const GlobalStyle = styled.createGlobalStyle`
 
   * {
     box-sizing: border-box;
+    font-size: 1.1rem;
   }
 
   a {
-    color: ${({ theme }) => theme.colors.main};
-    text-decoration: none;
-    &:hover {
-      text-decoration: underline;
-    }
+    background-color: transparent;
+    color: ${({ theme }) => theme.colors.primary};
+    transition: color 0.3s ease;
   }
 
   code {
@@ -46,14 +50,64 @@ export const GlobalStyle = styled.createGlobalStyle`
       source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
   }
 
-  li {
-    list-style-position: inside;
-    text-indent: -20px;
-    padding-left: 20px;
+  ul {
+    font-size: 1.1rem;
+    list-style: none;
+    margin: 0 0 1rem;
+    padding: 0;
   }
 
-  ul {
-    padding: 0px;
+  ul > li {
+    padding: 0.2rem 0 0.2rem 1rem;
+    position: relative;
+  }
+
+  ul > li:before {
+    color: ${({ theme }) => theme.colors.primary};
+    content: '•';
+    display: inline-block;
+    left: 0;
+    position: absolute;
+  }
+
+  h1 {
+    font-size: 5rem;
+    line-height: 1.1;
+    margin: 0.67em 0;
+
+    ${media.tablet} {
+      font-size: 3rem;
+    }
+  }
+
+  h2 {
+    font-size: 3rem;
+    margin: 4rem 0 2rem;
+  }
+
+  h3 {
+    font-size: 2rem;
+    margin: 0 0 1rem;
+  }
+
+  h4 {
+    font-size: 2rem;
+    margin: 0 0 1rem;
+
+    ${media.tablet} {
+      font-size: 1.5rem;
+    }
+  }
+
+  h5 {
+    font-size: 1.3rem;
+    margin: 0 0 0.5rem;
+  }
+
+  p {
+    margin: 0 0 1rem;
+    font-size: 1.1rem;
+    line-height: 1.4;
   }
 
   ::-webkit-scrollbar {
@@ -76,6 +130,7 @@ export const GlobalStyle = styled.createGlobalStyle`
 
   .pc-tablet-only {
     display: block;
+
     ${media.mobile} {
       display: none;
     }
@@ -83,6 +138,7 @@ export const GlobalStyle = styled.createGlobalStyle`
 
   .tablet-mobile-only {
     display: none;
+
     ${media.tablet} {
       display: block;
     }
@@ -90,6 +146,7 @@ export const GlobalStyle = styled.createGlobalStyle`
 
   .mobile-only {
     display: none;
+
     ${media.mobile} {
       display: block;
     }
