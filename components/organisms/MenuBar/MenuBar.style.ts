@@ -36,6 +36,10 @@ export const StyledBar = styled.div<{
     css`
       top: 0px;
     `}
+
+	@media print {
+    display: none;
+  }
 `;
 
 export const MenuList = styled.div`

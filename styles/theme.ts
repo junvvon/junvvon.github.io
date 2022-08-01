@@ -43,6 +43,7 @@ const light = {
     bgSubDivider: '#ebeef1',
     quotedBorder: '#CAD1D9',
     scrollBorder: '#e8e8e8',
+    selection: '#feccd4',
     tableBorder: '#D1D7DD',
 
     primary: '#F34C55',
@@ -76,6 +77,7 @@ const dark = {
     bgSubDivider: '#2d3239',
     quotedBorder: '#30363d',
     scrollBorder: '#3d3d3d',
+    selection: '#e77076',
     tableBorder: '#1e242a',
 
     primary: '#F34C55',

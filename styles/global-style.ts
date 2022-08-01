@@ -5,19 +5,28 @@ import { media } from './theme';
 
 export const GlobalStyle = styled.createGlobalStyle`
   ${normalize}
+
+  * {
+    box-sizing: border-box;
+    font-size: 1.1rem;
+  }
+
+  ::selection {
+    background: ${({ theme }) => theme.colors.selection};
+  }
+
   html,
-	body {
+  body {
     -moz-osx-font-smoothing: grayscale;
     -ms-overflow-style: none;
     -webkit-font-smoothing: antialiased;
     -webkit-text-size-adjust: none;
     background: ${({ theme }) => theme.colors.basicBg};
-    box-sizing: border-box;
     color: ${({ theme }) => theme.colors.main};
     font-family: ${({ theme }) => theme.fontFamily.text}, -apple-system,
       BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell',
       'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
-    font-size: ${({ theme }) => theme.fontSizes.body};
+    font-size: 16px;
     height: 100%;
     line-height: 1.15;
     margin: 0;
@@ -34,15 +43,13 @@ export const GlobalStyle = styled.createGlobalStyle`
     height: 100%;
   }
 
-  * {
-    box-sizing: border-box;
-    font-size: 1.1rem;
-  }
-
   a {
-    background-color: transparent;
     color: ${({ theme }) => theme.colors.primary};
     transition: color 0.3s ease;
+
+    &:hover {
+      color: ${({ theme }) => theme.colors.selection};
+    }
   }
 
   code {
@@ -53,21 +60,21 @@ export const GlobalStyle = styled.createGlobalStyle`
   ul {
     font-size: 1.1rem;
     list-style: none;
-    margin: 0 0 1rem;
+    margin: 0 0 1rem 0;
     padding: 0;
-  }
 
-  ul > li {
-    padding: 0.2rem 0 0.2rem 1rem;
-    position: relative;
-  }
+    li {
+      padding: 0.2rem 0 0.2rem 1rem;
+      position: relative;
 
-  ul > li:before {
-    color: ${({ theme }) => theme.colors.primary};
-    content: '•';
-    display: inline-block;
-    left: 0;
-    position: absolute;
+      &:before {
+        color: ${({ theme }) => theme.colors.primary};
+        content: '•';
+        display: inline-block;
+        left: 0;
+        position: absolute;
+      }
+    }
   }
 
   h1 {

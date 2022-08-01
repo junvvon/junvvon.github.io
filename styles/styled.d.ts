@@ -31,6 +31,7 @@ declare module 'styled-components' {
       inlineBg: string;
       scrollThumbBg: string;
       scrollTrackBg: string;
+      selection: string;
       shadow: string;
       tableBg: string;
       transparent: string;
