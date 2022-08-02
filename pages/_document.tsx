@@ -41,6 +41,16 @@ export default class MyDocument extends Document {
           <meta name="twitter:description" content={APP_DESCRIPTION} />
           <meta name="twitter:image" content={APP_IMAGE} />
           <meta name="twitter:site" content="@julrum" />
+          <link
+            href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css"
+            rel="stylesheet"
+            type="text/css"
+          />
+          <link
+            href="http://cdn.jsdelivr.net/gh/joungkyun/font-d2coding/d2coding.css"
+            rel="stylesheet"
+            type="text/css"
+          />
         </Head>
         <body>
           <Script src="noflash.js" />
