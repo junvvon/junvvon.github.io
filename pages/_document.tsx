@@ -28,12 +28,12 @@ export default class MyDocument extends Document {
           <meta
             name="theme-color"
             media="(prefers-color-scheme: light)"
-            content="#FAFAFA"
+            content="#FFFFFF"
           />
           <meta
             name="theme-color"
             media="(prefers-color-scheme: dark)"
-            content="#161b22"
+            content="#0d1116"
           />
           <meta name="twitter:card" content="summary_large_image" />
           <meta name="twitter:url" content={APP_URL} />

@@ -1,45 +1,11 @@
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 
-export const StyledBar = styled.div<{
-  isScroll?: boolean;
-  isDown?: boolean;
-}>`
-  background: ${({ theme }) => theme.colors.background};
+export const StyledBar = styled.header`
+  background: ${({ theme }) => theme.colors.basicBg};
   display: flex;
-  height: 64px;
+  height: 112px;
   justify-content: center;
-  left: 0;
-  position: fixed;
-  top: 0;
-  transition: 0.3s ease-in-out;
   width: 100%;
-  z-index: 100;
-
-  ${(props) =>
-    props.isScroll &&
-    css`
-      box-shadow: 0 2px 6px 0 ${({ theme }) => theme.colors.shadow};
-      position: fixed;
-      top: -64px;
-    `}
-
-  ${(props) =>
-    props.isDown &&
-    props.isScroll &&
-    css`
-      top: -64px;
-    `}
-
-  ${(props) =>
-    !props.isDown &&
-    props.isScroll &&
-    css`
-      top: 0px;
-    `}
-
-	@media print {
-    display: none;
-  }
 `;
 
 export const MenuList = styled.div`
@@ -49,35 +15,12 @@ export const MenuList = styled.div`
   display: flex;
   height: 100%;
   justify-content: space-between;
-  width: 1728px;
-  @media (max-width: 1920px) {
-    width: 1376px;
-  }
-  @media (max-width: 1440px) {
-    width: 1024px;
-  }
+  width: calc(800px - 4rem);
 `;
 
-export const MenuItem = styled.a<{ pathName: boolean }>`
+export const MenuItem = styled.a`
   color: ${({ theme }) => theme.colors.main};
   cursor: pointer;
   padding: 10px;
   text-decoration: none;
-  &:hover {
-    color: ${({ theme }) => theme.colors.bold};
-    cursor: pointer;
-  }
-
-  ${(props) =>
-    props.pathName
-      ? css`
-          color: ${({ theme }) => theme.colors.bold};
-        `
-      : css`
-          color: ${({ theme }) => theme.colors.main};
-        `}
-`;
-
-export const Title = styled.div`
-  font-size: ${({ theme }) => theme.fontSizes.header1};
 `;
