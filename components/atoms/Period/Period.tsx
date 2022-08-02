@@ -1,18 +1,18 @@
 const Period = ({
-  timeFrom,
-  timeTo,
+  dateFrom,
+  dateTo,
 }: {
-  timeFrom: string;
-  timeTo?: string;
+  dateFrom: string;
+  dateTo?: string;
 }) => {
   const timeFormatter = (time?: string) =>
     time ? `${time.split('-')[0]}. ${time.split('-')[1]}` : '';
 
   return (
     <span>
-      <time dateTime={timeFrom}>{timeFormatter(timeFrom)}</time>
+      <time dateTime={dateFrom}>{timeFormatter(dateFrom)}</time>
       {' ~ '}
-      <time dateTime={timeTo}>{timeFormatter(timeTo)}</time>
+      <time dateTime={dateTo}>{timeFormatter(dateTo)}</time>
     </span>
   );
 };

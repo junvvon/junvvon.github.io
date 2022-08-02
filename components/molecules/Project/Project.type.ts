@@ -6,7 +6,7 @@ export interface ProjectProps {
   githubLink?: string;
   other?: boolean;
   skill?: string;
-  timeFrom: string;
-  timeTo?: string;
+  dateFrom: string;
+  dateTo?: string;
   title: string;
 }

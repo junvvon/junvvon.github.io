@@ -12,8 +12,8 @@ const HistoryBlock = ({
   githubLink,
   other = false,
   skill,
-  timeFrom,
-  timeTo,
+  dateFrom,
+  dateTo,
   title,
 }: ProjectProps) => (
   <Block other={other}>
@@ -28,7 +28,7 @@ const HistoryBlock = ({
           </Link>
         )}
       </Title>
-      <Period timeFrom={timeFrom} timeTo={timeTo} />
+      <Period dateFrom={dateFrom} dateTo={dateTo} />
     </Header>
 
     <h5>Description</h5>

@@ -9,21 +9,21 @@ const Row = ({
   children,
   companyName,
   role,
-  timeFrom,
-  timeTo,
+  dateFrom,
+  dateTo,
 }: {
   additional?: JSX.Element;
   children: ReactNode;
   companyName: string;
   role: string;
-  timeFrom: string;
-  timeTo?: string;
+  dateFrom: string;
+  dateTo?: string;
 }) => (
   <Wrapper>
     <RowLeft>
       <h3>{companyName}</h3>
       <span>{role}</span>
-      <Period timeFrom={timeFrom} timeTo={timeTo} />
+      <Period dateFrom={dateFrom} dateTo={dateTo} />
       {additional}
     </RowLeft>
     <RowRight>{children}</RowRight>

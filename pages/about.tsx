@@ -49,7 +49,7 @@ const About = () => (
         <Row
           companyName="볼트마이크로"
           role="Frontend Developer"
-          timeFrom="2022-01"
+          dateFrom="2022-01"
         >
           <Project
             description={
@@ -60,7 +60,7 @@ const About = () => (
               </p>
             }
             skill="Typescript, Next.Js, Mui, Styled-components, firebase, Storybook"
-            timeFrom="2022-02"
+            dateFrom="2022-02"
             title="B2B 대시보드 페이지"
           >
             <ul>
@@ -81,8 +81,8 @@ const About = () => (
               </p>
             }
             skill="Javascript, CSS, HTML5"
-            timeFrom="2022-01"
-            timeTo="2022-02"
+            dateFrom="2022-01"
+            dateTo="2022-02"
             title="스코어보드 및 타이머 제작"
           >
             <ul>
@@ -104,8 +104,8 @@ const About = () => (
           }
           companyName="대한민국 국방부"
           role="SW 개발병"
-          timeFrom="2019-05"
-          timeTo="2020-12"
+          dateFrom="2019-05"
+          dateTo="2020-12"
         >
           <Project
             description={
@@ -117,8 +117,8 @@ const About = () => (
               </p>
             }
             skill="Typescript, React, Redux, styled-components, React Router"
-            timeFrom="2020-08"
-            timeTo="2020-12"
+            dateFrom="2020-08"
+            dateTo="2020-12"
             title="워드, 엑셀 웹 뷰어"
           >
             <ul>
@@ -138,8 +138,8 @@ const About = () => (
               </p>
             }
             skill="Javascript, React, Antd, Redux, styled-components, React Router"
-            timeFrom="2019-06"
-            timeTo="2019-09"
+            dateFrom="2019-06"
+            dateTo="2019-09"
             title="대시보드 페이지"
           >
             <ul>
@@ -154,7 +154,7 @@ const About = () => (
         <h2>Other Experiences</h2>
         <Row
           companyName="한양대학교"
-          timeFrom="2017-03"
+          dateFrom="2017-03"
           role="컴퓨터소프트웨어학부 전공"
         >
           <Project
@@ -168,8 +168,8 @@ const About = () => (
             }
             githubLink="https://github.com/Julrum/ITE3068_team8"
             skill="Javascript, React, AWS Amplify, GraphQL, styled-components"
-            timeFrom="2021-11"
-            timeTo="2021-12"
+            dateFrom="2021-11"
+            dateTo="2021-12"
             title="대선 뉴스 모아보기 페이지"
           >
             <ul>
@@ -202,8 +202,8 @@ const About = () => (
           githubLink="https://github.com/Julrum/OnelineBank"
           other
           skill="Javascript, React Native, Firebase, Expo"
-          timeFrom="2021-04"
-          timeTo="2021-06"
+          dateFrom="2021-04"
+          dateTo="2021-06"
           title="한줄 은행"
         >
           <ul>
@@ -225,7 +225,7 @@ const About = () => (
           githubLink="https://github.com/Julrum/julrum.github.io"
           other
           skill="Typescript, Next.Js, styled-components, MDX"
-          timeFrom="2021-02"
+          dateFrom="2021-02"
           title="개인 블로그"
         >
           <ul>
