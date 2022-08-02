@@ -44,77 +44,16 @@ export const GlobalStyle = styled.createGlobalStyle`
   }
 
   a {
-    color: ${({ theme }) => theme.colors.primary};
-    transition: color 0.3s ease;
-
+    color: ${({ theme }) => theme.colors.main};
+    text-decoration: none;
     &:hover {
-      color: ${({ theme }) => theme.colors.selection};
+      text-decoration: underline;
     }
   }
 
   code {
     font-family: ${({ theme }) => theme.fontFamily.codeLigature},
       source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
-  }
-
-  ul {
-    font-size: 1.1rem;
-    list-style: none;
-    margin: 0 0 1rem 0;
-    padding: 0;
-
-    li {
-      padding: 0.2rem 0 0.2rem 1rem;
-      position: relative;
-
-      &:before {
-        color: ${({ theme }) => theme.colors.primary};
-        content: '•';
-        display: inline-block;
-        left: 0;
-        position: absolute;
-      }
-    }
-  }
-
-  h1 {
-    font-size: 5rem;
-    line-height: 1.1;
-    margin: 0.67em 0;
-
-    ${media.tablet} {
-      font-size: 3rem;
-    }
-  }
-
-  h2 {
-    font-size: 3rem;
-    margin: 4rem 0 2rem;
-  }
-
-  h3 {
-    font-size: 2rem;
-    margin: 0 0 1rem;
-  }
-
-  h4 {
-    font-size: 2rem;
-    margin: 0 0 1rem;
-
-    ${media.tablet} {
-      font-size: 1.5rem;
-    }
-  }
-
-  h5 {
-    font-size: 1.3rem;
-    margin: 0 0 0.5rem;
-  }
-
-  p {
-    margin: 0 0 1rem;
-    font-size: 1.1rem;
-    line-height: 1.4;
   }
 
   ::-webkit-scrollbar {
