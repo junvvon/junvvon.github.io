@@ -15,7 +15,7 @@
   "dependencies": {
     "@mdx-js/react": "^2.1.2",
     "@next/bundle-analyzer": "^12.2.5",
-    "@next/mdx": "^12.2.4",
+    "@next/mdx": "^12.2.5",
     "@types/react-syntax-highlighter": "^15.5.4",
     "@types/styled-components": "^5.1.26",
     "cross-env": "^7.0.3",
