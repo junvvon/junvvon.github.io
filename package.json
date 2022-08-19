@@ -19,7 +19,7 @@
     "@types/react-syntax-highlighter": "^15.5.4",
     "@types/styled-components": "^5.1.26",
     "cross-env": "^7.0.3",
-    "date-fns": "^2.29.1",
+    "date-fns": "^2.29.2",
     "gray-matter": "^4.0.3",
     "next": "12.2.5",
     "next-mdx-remote": "^4.1.0",
