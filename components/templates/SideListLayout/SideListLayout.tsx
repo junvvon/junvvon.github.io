@@ -1,8 +1,9 @@
-import { Content } from './SideListLayout.style';
-import { SideListLayoutProps } from './SideListLayout.type';
+import type { ReactNode } from 'react';
 
-const SideListLayout = ({ children }: SideListLayoutProps) => {
-  return <Content>{children}</Content>;
-};
+import { Content } from './SideListLayout.style';
+
+const SideListLayout = ({ children }: { children: ReactNode }) => (
+  <Content>{children}</Content>
+);
 
 export default SideListLayout;

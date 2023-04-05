@@ -1,6 +1,6 @@
 import Link from 'next/link';
 
-import Github from 'components/atoms/Icons/Github';
+import { Github } from 'components/atoms/Icons';
 import Period from 'components/atoms/Period';
 
 import { ProjectProps } from './Project.type';

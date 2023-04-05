@@ -2,9 +2,7 @@ import Link from 'next/link';
 import { format, parseISO } from 'date-fns';
 import { ko } from 'date-fns/locale';
 
-import Github from 'components/atoms/Icons/Github';
-import Linkedin from 'components/atoms/Icons/Linkedin';
-import Mail from 'components/atoms/Icons/Mail';
+import { Github, Linkedin, Mail } from 'components/atoms/Icons';
 
 import { Titleprops } from './Title.type';
 import { Header, StyledTitle, Icons, Icon } from './Title.style';

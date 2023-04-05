@@ -1,5 +1,6 @@
 import { GetStaticPaths, GetStaticProps } from 'next';
 import Head from 'next/head';
+import Image from 'next/image';
 import { MDXRemote, MDXRemoteSerializeResult } from 'next-mdx-remote';
 import { serialize } from 'next-mdx-remote/serialize';
 import fs from 'fs';
@@ -48,6 +49,7 @@ const PostPage = ({
             {...mdxSource}
             components={{
               Head,
+              Image,
               ImageDescription,
               QuoteBlock,
               TableBlock,

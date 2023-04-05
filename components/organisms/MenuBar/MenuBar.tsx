@@ -1,6 +1,6 @@
 import Link from 'next/link';
 
-import Logo from 'components/atoms/Icons/Logo';
+import { Logo } from 'components/atoms/Icons';
 
 import { StyledBar, MenuList, MenuItem } from './MenuBar.style';
 

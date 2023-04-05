@@ -2,10 +2,8 @@ import Head from 'next/head';
 import Link from 'next/link';
 import dynamic from 'next/dynamic';
 
-import BigParagraph from 'components/atoms/BigParagraph';
 import OutLink from 'components/atoms/OutLink';
 import Title from 'components/molecules/Title';
-import AboutContentLayout from 'components/templates/AboutContentLayout';
 import Layout from 'components/templates/Layout';
 import Row from 'components/templates/Row';
 
@@ -27,8 +25,8 @@ const About = () => (
         mailLink="mailto:junwon@duck.com"
         title="새로운 것을 끊임없이 탐구하는 개발자 박준원입니다."
       />
-      <AboutContentLayout>
-        <BigParagraph>
+      <div style={{ display: 'flex', flexDirection: 'column' }}>
+        <div>
           <p>
             &nbsp;2년 차 개발자로 스타트업에서 웹 서비스를
             기획/개발/배포/운영하였습니다. 주로 웹 서비스 개발을 담당하였으며
@@ -46,7 +44,7 @@ const About = () => (
             자원으로 주어진 짧은 기간 안에 성공적으로 프로젝트를 끝마친 경험이
             있습니다.
           </p>
-        </BigParagraph>
+        </div>
         <h2>Work Experience</h2>
         <Row
           companyName="볼트마이크로"
@@ -167,10 +165,7 @@ const About = () => (
                 한양대학교 소프트웨어스튜디오2 수업 과제로 대선 관련 정보를 모아
                 볼 수 있는 웹페이지를 제작 프로젝트 입니다. 팀원 4명이서
                 진행하였으며 팀장을 맡아 기획, 디자인 개발 등 전 과정을
-                담당하였습니다.{' '}
-                <Link href="/posts/daesun" target="_blank">
-                  자세히 보기
-                </Link>
+                담당하였습니다. <Link href="/posts/daesun">자세히 보기</Link>
               </p>
             }
             githubLink="https://github.com/Julrum/ITE3068_team8"
@@ -203,9 +198,7 @@ const About = () => (
               을 개발하였습니다. 대회에는 팀원과 같이 나갔으나 개발은 100%
               혼자서 진행하였습니다. React와 달리 React Native는 경험이 없어
               책으로 학습 후 개발 완료까지 5일이 소요되었습니다.{' '}
-              <Link href="/posts/onelinebank" target="_blank">
-                자세히 보기
-              </Link>
+              <Link href="/posts/onelinebank">자세히 보기</Link>
             </p>
           }
           githubLink="https://github.com/Julrum/OnelineBank"
@@ -229,9 +222,6 @@ const About = () => (
               <OutLink label="이력서" link="https://julrum.github.io" />를
               제작하는 프로젝트입니다. 처음엔 React로 개발하였으나 pre-rendered
               정적 페이지 구현을 위해 Next.js로 변경하였습니다.{' '}
-              <Link href="/posts/next-blog" target="_blank">
-                자세히 보기
-              </Link>
             </p>
           }
           githubLink="https://github.com/Julrum/julrum.github.io"
@@ -299,7 +289,7 @@ const About = () => (
             ]}
           />
         </SideListLayout>
-      </AboutContentLayout>
+      </div>
     </article>
   </Layout>
 );
