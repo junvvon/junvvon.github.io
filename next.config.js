@@ -5,6 +5,7 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
 const nextConfig = {
   images: {
     domains: ['user-images.githubusercontent.com'],
+    unoptimized: true,
   },
   reactStrictMode: true,
 };
