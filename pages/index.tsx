@@ -1,5 +1,6 @@
-import dynamic from 'next/dynamic';
 import Head from 'next/head';
+import Link from 'next/link';
+import dynamic from 'next/dynamic';
 
 import BigParagraph from 'components/atoms/BigParagraph';
 import OutLink from 'components/atoms/OutLink';
@@ -7,7 +8,6 @@ import Title from 'components/molecules/Title';
 import AboutContentLayout from 'components/templates/AboutContentLayout';
 import Layout from 'components/templates/Layout';
 import Row from 'components/templates/Row';
-import Link from 'next/link';
 
 const SideList = dynamic(() => import('components/atoms/SideList'));
 const Project = dynamic(() => import('components/molecules/Project'));
@@ -42,8 +42,9 @@ const About = () => (
           <p>
             &nbsp;혼자서의 개발보다는 동료들과의 끊임없는 커뮤니케이션을 통해
             협업하는 것을 더 선호합니다. 국방부에서 진행한 프로젝트에서도
-            동료들과의 계속된 소통으로 서로의 생각을 정리하고 공유하여
-            성공적으로 프로젝트를 끝마친 경험이 있습니다.
+            동료들과의 계속된 소통으로 서로의 생각을 정리하고 공유하여 제한된
+            자원으로 주어진 짧은 기간 안에 성공적으로 프로젝트를 끝마친 경험이
+            있습니다.
           </p>
         </BigParagraph>
         <h2>Work Experience</h2>
@@ -55,14 +56,14 @@ const About = () => (
           <Project
             description={
               <p>
-                프로젝트 수행 역할 서비스 중인 앱의 구독과 부가기능을 위한{' '}
+                웹오버레이 스코어보드 및 자막 서비스를 제공하는{' '}
                 <OutLink
-                  label="CameraFi Studio 페이지"
+                  label="CameraFi Studio 서비스"
                   link="https://studio.camerafi.com"
-                />
-                를 제작 프로젝트입니다. 커뮤니티 페이지, 스코어보드 관리 페이지
-                및 계정 정보 및 구독 상태를 볼 수 있는 계정 페이지 프로젝트
-                설계부터 디자인, 개발을 맡았습니다.
+                />{' '}
+                제작 프로젝트입니다. 커뮤니티 페이지, 스코어보드 관리 페이지 및
+                계정 정보, 구독 상태를 볼 수 있는 계정 페이지의 설계부터 디자인,
+                개발을 맡았습니다.
               </p>
             }
             skill="Typescript, Next.js, Mui, Firebase, Storybook, PWA"
@@ -199,10 +200,9 @@ const About = () => (
                 label="어플리케이션"
                 link="https://github.com/Julrum/OnelineBank/releases/tag/v1.0"
               />
-              을 개발하였습니다. 대회에는 팀원과 같이 나갔으나 개발은 혼자
-              진행하였습니다. 해커톤 예선에서는 통과하였으나 본선에서는 우리
-              은행 앱 내에 비슷한 서비스가 있다는 이유로 입상은 하지
-              못하였습니다.{' '}
+              을 개발하였습니다. 대회에는 팀원과 같이 나갔으나 개발은 100%
+              혼자서 진행하였습니다. React와 달리 React Native는 경험이 없어
+              책으로 학습 후 개발 완료까지 5일이 소요되었습니다.{' '}
               <Link href="/posts/onelinebank" target="_blank">
                 자세히 보기
               </Link>
@@ -225,10 +225,10 @@ const About = () => (
         <Project
           description={
             <p>
-              Next.Js를 이용하여{' '}
-              <OutLink label="블로그" link="https://julrum.github.io" />를
-              제작하는 이력서입니다. 처음엔 React로 개발하였으나 pre-rendered
-              정적 페이지 구현을 위해 Next.Js로 변경하였습니다.{' '}
+              Next.js를 이용하여{' '}
+              <OutLink label="이력서" link="https://julrum.github.io" />를
+              제작하는 프로젝트입니다. 처음엔 React로 개발하였으나 pre-rendered
+              정적 페이지 구현을 위해 Next.js로 변경하였습니다.{' '}
               <Link href="/posts/next-blog" target="_blank">
                 자세히 보기
               </Link>
@@ -236,7 +236,7 @@ const About = () => (
           }
           githubLink="https://github.com/Julrum/julrum.github.io"
           other
-          skill="Typescript, Next.Js, styled-components, MDX"
+          skill="Typescript, Next.js, styled-components, MDX"
           dateFrom="2021-02"
           title="개인 블로그"
         >
@@ -280,7 +280,7 @@ const About = () => (
               'JavaScript',
               'TypeScript',
               'HTML5',
-              'CSS',
+              'CSS3',
             ]}
           />
           <SideList

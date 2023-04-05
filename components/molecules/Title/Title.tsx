@@ -23,28 +23,30 @@ const Title = ({
         <Icons>
           {githubLink && (
             <Icon>
-              <Link href={githubLink} passHref>
-                <a target="_blank" aria-label="Go to Github link">
-                  <Github />
-                </a>
+              <Link
+                href={githubLink}
+                target="_blank"
+                aria-label="Go to Github link"
+              >
+                <Github />
               </Link>
             </Icon>
           )}
           {linkedinLink && (
             <Icon>
-              <Link href={linkedinLink} passHref>
-                <a target="_blank" aria-label="Go to Linkedin link">
-                  <Linkedin />
-                </a>
+              <Link
+                href={linkedinLink}
+                target="_blank"
+                aria-label="Go to Linkedin link"
+              >
+                <Linkedin />
               </Link>
             </Icon>
           )}
           {mailLink && (
             <Icon>
-              <Link href={mailLink} passHref>
-                <a aria-label={mailLink}>
-                  <Mail />
-                </a>
+              <Link href={mailLink} aria-label={mailLink}>
+                <Mail />
               </Link>
             </Icon>
           )}

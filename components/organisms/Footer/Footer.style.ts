@@ -8,10 +8,6 @@ export const Wrapper = styled.div`
   justify-content: center;
 `;
 
-export const LinkWrapper = styled.a`
-  display: flex;
-`;
-
 export const LinkText = styled.p`
   margin: 0px 20px;
 `;

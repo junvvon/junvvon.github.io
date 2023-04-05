@@ -21,10 +21,12 @@ const HistoryBlock = ({
       <Title>
         <h4>{title}</h4>
         {githubLink && (
-          <Link href={githubLink} passHref>
-            <a target="_blank" aria-label="Go to Github link">
-              <Github />
-            </a>
+          <Link
+            href={githubLink}
+            target="_blank"
+            aria-label="Go to Github link"
+          >
+            <Github />
           </Link>
         )}
       </Title>
