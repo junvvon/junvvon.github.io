@@ -28,9 +28,8 @@ const About = () => (
       <div style={{ display: 'flex', flexDirection: 'column' }}>
         <div>
           <p>
-            &nbsp;2년 차 개발자로 스타트업에서 웹 서비스를
-            기획/개발/배포/운영하였습니다. 주로 웹 서비스 개발을 담당하였으며
-            PO(Product Owner) 역할을 겸하였습니다.
+            &nbsp;스타트업에서 웹 서비스를 기획/개발/배포/운영하였습니다. 주로
+            웹 서비스 개발을 담당하였으며 PO(Product Owner) 역할을 겸하였습니다.
           </p>
           <p>
             &nbsp;코드 컨벤션을 설정하여 일관성을 유지하는 것을 좋아하며 같은
@@ -49,7 +48,7 @@ const About = () => (
         <Row
           companyName="볼트마이크로"
           role="Frontend Developer"
-          dateFrom="2022-01"
+          dateFrom="2022-06"
         >
           <Project
             description={
