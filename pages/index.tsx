@@ -1,11 +1,20 @@
+import type { GetStaticProps } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
 import dynamic from 'next/dynamic';
+import { getApps, initializeApp } from 'firebase/app';
+import {
+  DocumentData,
+  collection,
+  getDocs,
+  getFirestore,
+} from 'firebase/firestore/lite';
 
 import OutLink from 'components/atoms/OutLink';
 import Title from 'components/molecules/Title';
 import Layout from 'components/templates/Layout';
 import Row from 'components/templates/Row';
+import firebaseConfig from 'config/firebaseConfig';
 
 const SideList = dynamic(() => import('components/atoms/SideList'));
 const Project = dynamic(() => import('components/molecules/Project'));
@@ -13,7 +22,24 @@ const SideListLayout = dynamic(
   () => import('components/templates/SideListLayout'),
 );
 
-const About = () => (
+interface WorkExperienceProps {
+  companyName: string;
+  role: string;
+  dateFrom: string;
+  project: {
+    skill: string;
+    dateFrom: string;
+    title: string;
+    detail: string[];
+    description: string;
+  }[];
+}
+
+const About = ({
+  work_experience,
+}: {
+  work_experience: WorkExperienceProps[];
+}) => (
   <Layout customMeta={{ title: 'Junwon Park' }}>
     <Head>
       <meta name="robots" content="noindex, nofollow" />
@@ -45,57 +71,32 @@ const About = () => (
           </p>
         </div>
         <h2>Work Experience</h2>
-        <Row
-          companyName="볼트마이크로"
-          role="Frontend Developer"
-          dateFrom="2022-06"
-        >
-          <Project
-            description={
-              <p>
-                웹오버레이 스코어보드 및 자막 서비스를 제공하는{' '}
-                <OutLink
-                  label="CameraFi Studio 서비스"
-                  link="https://studio.camerafi.com"
-                />{' '}
-                제작 프로젝트입니다. 커뮤니티 페이지, 스코어보드 관리 페이지 및
-                계정 정보, 구독 상태를 볼 수 있는 계정 페이지의 설계부터 디자인,
-                개발을 맡았습니다.
-              </p>
-            }
-            skill="Typescript, Next.js, Mui, Firebase, Storybook, PWA"
-            dateFrom="2022-02"
-            title="CameraFi Studio"
+
+        {work_experience.map((work, index: number) => (
+          <Row
+            key={index}
+            companyName={work.companyName}
+            role={work.role}
+            dateFrom={work.dateFrom}
           >
-            <ul>
-              <li>프론트엔드 기술환경 구성 및 기본 기능 구현</li>
-              <li>Mui를 이용한 커스텀 글로벌 테마 개발</li>
-              <li>스토리북을 이용한 컴포넌트 기반 개발</li>
-              <li>Firebase를 사용한 스토어 디자인</li>
-              <li>React기반 컴포넌트 계층 구조 디자인</li>
-              <li>Next-PWA를 이용한 PWA 앱 개발 및 빌드</li>
-            </ul>
-          </Project>
-          <Project
-            description={
-              <p>
-                회사 내에서 사용하는 서비스 관리 페이지입니다. 사용자 관련 통계
-                페이지 및 사용자 관리, 공지 관리 기능을 하고 있습니다.
-              </p>
-            }
-            skill="Typescript, React, Mui, Firebase, Chart.js"
-            dateFrom="2022-03"
-            title="Internal Page"
-          >
-            <ul>
-              <li>프론트엔드 기술환경 구성 및 모든 기능 구현</li>
-              <li>Chart.js를 이용한 DAU 및 각종 서비스 지표 표시</li>
-              <li>
-                데이터 삭제, 수정 기능이 있는 재사용 가능한 테이블 컴포넌트 개발
-              </li>
-            </ul>
-          </Project>
-        </Row>
+            {work.project.map((singleProject, index: number) => (
+              <Project
+                key={index}
+                description={<p>{singleProject.description}</p>}
+                skill={singleProject.skill}
+                dateFrom={singleProject.dateFrom}
+                title={singleProject.title}
+              >
+                <ul>
+                  {singleProject.detail.map((line: string, index: number) => (
+                    <li key={index}>{line}</li>
+                  ))}
+                </ul>
+              </Project>
+            ))}
+          </Row>
+        ))}
+
         <Row
           additional={
             <OutLink
@@ -292,5 +293,24 @@ const About = () => (
     </article>
   </Layout>
 );
+
+export const getStaticProps: GetStaticProps = async () => {
+  let work_experience: DocumentData[] = [];
+  if (!getApps().length) {
+    initializeApp(firebaseConfig);
+  }
+
+  const db = getFirestore();
+  const querySnapshot = await getDocs(collection(db, 'work_experience'));
+  querySnapshot.forEach((doc) => {
+    work_experience.push(doc.data());
+  });
+
+  return {
+    props: {
+      work_experience: work_experience.length === 0 ? null : work_experience,
+    },
+  };
+};
 
 export default About;
