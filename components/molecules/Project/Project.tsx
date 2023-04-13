@@ -8,12 +8,13 @@ import { Block, Header, Title } from './Project.style';
 
 const HistoryBlock = ({
   children,
+  dateFrom,
+  dateTo,
   description,
+  detailLink,
   githubLink,
   other = false,
   skill,
-  dateFrom,
-  dateTo,
   title,
 }: ProjectProps) => (
   <Block other={other}>
@@ -34,7 +35,11 @@ const HistoryBlock = ({
     </Header>
 
     <h5>Description</h5>
-    {description}
+    <p>
+      {description}
+      &nbsp;
+      {detailLink ? <Link href={detailLink}>자세히 보기</Link> : null}
+    </p>
     <h5>What did I Do</h5>
     <div>{children}</div>
     {skill && (
