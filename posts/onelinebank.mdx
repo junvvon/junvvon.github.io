@@ -57,3 +57,38 @@ React Native, Google Firebase
 <ImageDescription src="/images/bank/bank06.webp" alt="Account page">
   사용자에 대한 간략한 정보를 볼 수 있으며 로그아웃을 할 수 있다.
 </ImageDescription>
+
+### 담당 역할
+
+- **Main**
+  - OpenWeatherMap API에서 통신하여 가져온 Data를 RecyclerView에 연결하였습니다.
+  - 사용자의 위치에 기반한 날씨를 제공하기 위해 SharedPreference에 사용자 위치 정보(위도, 경도)를 저장하였습니다.
+  - 다른 Activity로 Intent를 전달하고 연결하며 전체 Flow를 연결하였습니다.
+- **Settings**
+  - LocationManager를 이용해 Main에서 필요한 사용자의 위치 정보를 현재 위치로 설정하였습니다.
+  - VWorld 검색 API와 SearchView를 이용하여 주소 검색 기능을 구현하였습니다.
+- **Splash**
+  - 앱 실행 시 정보 오류에 의한 Runtime Error가 발생하지 않도록 인터넷 연결 및 위치 접근 권한을 확인하였습니다.
+
+### 💬 회고
+
+- **전반적인 안드로이드 개발 프로세스 이해**
+  {' '}
+  <aside>
+    👉 초보 개발자끼리의 프로젝트였지만, 실제로 서비스 가능한 앱으로 만들기 위해
+    권한 확인 및 사용자의 위치 정보 저장 여부 확인 등의 예외 처리를 하는 등,
+    앱이 출시되기까지 과정을 경험할 수 있었습니다.
+  </aside>
+- **콜백 패턴에 대한 이해**
+  {' '}
+  <aside>
+    👉 Volley를 통해 처음으로 네트워킹을 하며 여러 오류를 겪었습니다. 오류를
+    해결하면서 그동안 모르고 썼던 스레드의 개념을 알게 되었습니다.
+  </aside>
+- **리팩토링을 통한 복습**
+  {' '}
+  <aside>
+    👉 리팩토링을 하며 당시엔 몰랐던 이전 코드의 문제점을 알 수 있었습니다.
+    불필요한 변수 선언, 모듈화의 필요성, 싱글톤 객체 활용 등에 대해 고민해볼 수
+    있었습니다.
+  </aside>
