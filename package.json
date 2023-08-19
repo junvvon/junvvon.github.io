@@ -20,10 +20,10 @@
     "@types/styled-components": "^5.1.26",
     "cross-env": "^7.0.3",
     "date-fns": "^2.29.3",
-    "firebase": "^9.19.1",
-    "firebase-admin": "^11.6.0",
+    "firebase": "^10.1.0",
+    "firebase-admin": "^11.10.1",
     "gray-matter": "^4.0.3",
-    "next": "13.2.3",
+    "next": "13.4.12",
     "next-mdx-remote": "^4.4.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
@@ -34,19 +34,20 @@
     "remark-emoji": "^3.1.1",
     "remark-gfm": "^3.0.1",
     "remark-supersub": "^1.0.0",
-    "styled-components": "^5.3.8",
+    "styled-components": "^6.0.5",
     "styled-normalize": "^8.0.7",
     "use-dark-mode": "^2.3.1"
   },
   "devDependencies": {
-    "@types/node": "18.14.5",
-    "@types/react": "18.0.28",
-    "eslint": "8.35.0",
-    "eslint-config-next": "13.2.3",
+    "@types/node": "20.4.5",
+    "@types/react": "18.2.17",
+    "babel-plugin-styled-components": "^2.1.4",
+    "eslint": "8.46.0",
+    "eslint-config-next": "13.4.12",
     "eslint-config-prettier": "^8.6.0",
-    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-prettier": "^5.0.0",
     "gh-pages": "^5.0.0",
-    "prettier": "^2.8.4",
-    "typescript": "4.9.5"
+    "prettier": "^3.0.0",
+    "typescript": "5.1.6"
   }
 }
