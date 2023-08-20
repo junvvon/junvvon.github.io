@@ -7,9 +7,7 @@ import PostPreview from 'components/molecules/PostPreview';
 const Index = ({ posts }: { posts: PostType[] }): JSX.Element => {
   return (
     <Layout>
-      {posts?.map((post) => (
-        <PostPreview post={post} key={post.slug} />
-      ))}
+      {posts?.map((post) => <PostPreview post={post} key={post.slug} />)}
     </Layout>
   );
 };
