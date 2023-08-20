@@ -1,6 +1,6 @@
 import Link from 'next/link';
 
-import { Github } from 'components/atoms/Icons';
+import { Github, OpenInNewTab } from 'components/atoms/Icons';
 import Period from 'components/atoms/Period';
 
 import { ProjectProps } from './Project.type';
@@ -14,18 +14,33 @@ const HistoryBlock = ({
   detailLink,
   githubLink,
   other = false,
+  productLink,
   skill,
   title,
 }: ProjectProps) => (
   <Block other={other}>
     <Header>
       <Title>
-        <h4>{title}</h4>
+        <h4>
+          {title}
+          {productLink ? (
+            <Link
+              href={productLink}
+              target="_blank"
+              aria-label="Go to product page"
+              title="Go to product page"
+            >
+              <OpenInNewTab />
+            </Link>
+          ) : null}
+        </h4>
+
         {githubLink && (
           <Link
             href={githubLink}
             target="_blank"
-            aria-label="Go to Github link"
+            aria-label="Go to Github page"
+            title="Go to Github page"
           >
             <Github />
           </Link>

@@ -24,7 +24,8 @@ const Title = ({
               <Link
                 href={githubLink}
                 target="_blank"
-                aria-label="Go to Github link"
+                aria-label="Go to Github page"
+                title="Go to Github page"
               >
                 <Github />
               </Link>
@@ -35,7 +36,8 @@ const Title = ({
               <Link
                 href={linkedinLink}
                 target="_blank"
-                aria-label="Go to Linkedin link"
+                aria-label="Go to Linkedin page"
+                title="Go to Linkedin page"
               >
                 <Linkedin />
               </Link>
@@ -43,7 +45,11 @@ const Title = ({
           )}
           {mailLink && (
             <Icon>
-              <Link href={mailLink} aria-label={mailLink}>
+              <Link
+                href={mailLink}
+                aria-label={`Mail to ${mailLink}`}
+                title={`Mail to ${mailLink}`}
+              >
                 <Mail />
               </Link>
             </Icon>

@@ -13,7 +13,7 @@ interface ProjectProps {
     description: string;
     detail: string[];
     detailLink?: string;
-    gitthuLink?: string;
+    githubLink?: string;
     skill: string;
     title: string;
   }[];

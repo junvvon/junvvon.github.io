@@ -73,15 +73,7 @@ const About = ({
               dateTo={experience.dateTo}
             >
               {experience.project.map((singleProject, index) => (
-                <Project
-                  dateFrom={singleProject.dateFrom}
-                  dateTo={singleProject.dateTo}
-                  description={singleProject.description}
-                  detailLink={singleProject.detailLink}
-                  key={index}
-                  skill={singleProject.skill}
-                  title={singleProject.title}
-                >
+                <Project key={index} {...singleProject}>
                   <ul>
                     {singleProject.detail.map((line, index) => (
                       <li key={index}>{line}</li>
@@ -103,16 +95,7 @@ const About = ({
                 key={index}
               >
                 {experience.project.map((singleProject, index) => (
-                  <Project
-                    dateFrom={singleProject.dateFrom}
-                    dateTo={singleProject.dateTo}
-                    description={singleProject.description}
-                    detailLink={singleProject.detailLink}
-                    githubLink={singleProject.gitthuLink}
-                    key={index}
-                    skill={singleProject.skill}
-                    title={singleProject.title}
-                  >
+                  <Project key={index} {...singleProject}>
                     <ul>
                       {singleProject.detail.map((line, index) => (
                         <li key={index}>{line}</li>
@@ -124,17 +107,7 @@ const About = ({
             ) : (
               <>
                 {experience.project.map((singleProject, index) => (
-                  <Project
-                    dateFrom={singleProject.dateFrom}
-                    dateTo={singleProject.dateTo}
-                    description={singleProject.description}
-                    detailLink={singleProject.detailLink}
-                    githubLink={singleProject.gitthuLink}
-                    key={index}
-                    other
-                    skill={singleProject.skill}
-                    title={singleProject.title}
-                  >
+                  <Project key={index} other {...singleProject}>
                     <ul>
                       {singleProject.detail.map((line, index) => (
                         <li key={index}>{line}</li>

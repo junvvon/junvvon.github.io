@@ -8,6 +8,7 @@ export interface ProjectProps {
   detailLink?: string;
   githubLink?: string;
   other?: boolean;
+  productLink?: string;
   skill?: string;
   title: string;
 }
