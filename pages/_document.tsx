@@ -42,9 +42,16 @@ export default class MyDocument extends Document {
           <meta name="twitter:image" content={APP_IMAGE} />
           <meta name="twitter:site" content="@julrum" />
           <link
-            href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css"
+            as="style"
+            crossOrigin="anonymous"
+            href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.8/dist/web/static/pretendard-dynamic-subset.css"
             rel="stylesheet"
-            type="text/css"
+          />
+          <link
+            as="style"
+            crossOrigin="anonymous"
+            href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.8/dist/web/variable/pretendardvariable-dynamic-subset.css"
+            rel="stylesheet"
           />
           <link
             href="https://cdn.jsdelivr.net/gh/joungkyun/font-d2coding/d2coding.css"
