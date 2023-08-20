@@ -3,6 +3,7 @@ title: OnelineBank
 description: 2021 우리은행 온(On)택트 해커톤 본선대회 출품작
 date: '2021-06-05'
 image: '/images/bank/bank01.webp'
+originalLink: 'https://github.com/Julrum/OnelineBank'
 ---
 
 2021 우리은행 온(On)택트 해커톤 본선대회 출품작
@@ -16,21 +17,23 @@ image: '/images/bank/bank01.webp'
 
 ### 사용한 기술 스택
 
-React Native, Google Firebase
+- React Native
+- Google Firebase
+- Expo
 
 ## 프로젝트 스크린샷
 
-### 스플래쉬 화면
+#### 스플래쉬 화면
 
 <ImageDescription src='/images/bank/bank01.webp' alt="Splash page">
 
 </ImageDescription>
 
-### 로그인
+#### 로그인
 
 <ImageDescription src="/images/bank/bank02.webp" alt="Login page" />
 
-### 채팅
+#### 채팅
 
 <ImageDescription src="/images/bank/bank03.webp" alt="Chatting page">
   채팅 텍스트를 분석하여 은행과 계좌번호 및 금액을 인식하고 인식이 제대로
@@ -38,7 +41,7 @@ React Native, Google Firebase
   개인 인증(Touch ID, Face ID 등) 후 우리은행 송금 API를 이용하여 송금한다.
 </ImageDescription>
 
-### 주소록
+#### 주소록
 
 <ImageDescription src="/images/bank/bank04.webp" alt="Contact page">
   주소록 화면에는 친구나 가족처럼 자주 보내는 계좌를 미리 등록하여 채팅 화면에서
@@ -46,13 +49,13 @@ React Native, Google Firebase
   등록할 수 있다.
 </ImageDescription>
 
-### 계좌추가
+#### 계좌추가
 
 <ImageDescription src="/images/bank/bank05.webp" alt="Account add page">
   예금자명과 은행, 계좌번호르 입력 후 등록할 수 있다.
 </ImageDescription>
 
-### 사용자 정보
+#### 사용자 정보
 
 <ImageDescription src="/images/bank/bank06.webp" alt="Account page">
   사용자에 대한 간략한 정보를 볼 수 있으며 로그아웃을 할 수 있다.
@@ -60,35 +63,18 @@ React Native, Google Firebase
 
 ### 담당 역할
 
-- **Main**
-  - OpenWeatherMap API에서 통신하여 가져온 Data를 RecyclerView에 연결하였습니다.
-  - 사용자의 위치에 기반한 날씨를 제공하기 위해 SharedPreference에 사용자 위치 정보(위도, 경도)를 저장하였습니다.
-  - 다른 Activity로 Intent를 전달하고 연결하며 전체 Flow를 연결하였습니다.
-- **Settings**
-  - LocationManager를 이용해 Main에서 필요한 사용자의 위치 정보를 현재 위치로 설정하였습니다.
-  - VWorld 검색 API와 SearchView를 이용하여 주소 검색 기능을 구현하였습니다.
-- **Splash**
-  - 앱 실행 시 정보 오류에 의한 Runtime Error가 발생하지 않도록 인터넷 연결 및 위치 접근 권한을 확인하였습니다.
+- 모든 기능을 개발하였습니다.
+- 우리은행 API를 사용하여 송금 기능을 구현하였습니다.
+- 모바일의 생체인증 기능을 활용하여 송금 전 사용자를 확인하도록 구현하였습니다.
+- Firebase Firestore에 채팅 내용을 저장/로드하여 데이터를 관리하였습니다.
 
 ### 💬 회고
 
-- **전반적인 안드로이드 개발 프로세스 이해**
+- **React Native를 통한 애플리케이션 개발 및 배포 프로세스 이해**
   {' '}
   <aside>
-    👉 초보 개발자끼리의 프로젝트였지만, 실제로 서비스 가능한 앱으로 만들기 위해
-    권한 확인 및 사용자의 위치 정보 저장 여부 확인 등의 예외 처리를 하는 등,
-    앱이 출시되기까지 과정을 경험할 수 있었습니다.
-  </aside>
-- **콜백 패턴에 대한 이해**
-  {' '}
-  <aside>
-    👉 Volley를 통해 처음으로 네트워킹을 하며 여러 오류를 겪었습니다. 오류를
-    해결하면서 그동안 모르고 썼던 스레드의 개념을 알게 되었습니다.
-  </aside>
-- **리팩토링을 통한 복습**
-  {' '}
-  <aside>
-    👉 리팩토링을 하며 당시엔 몰랐던 이전 코드의 문제점을 알 수 있었습니다.
-    불필요한 변수 선언, 모듈화의 필요성, 싱글톤 객체 활용 등에 대해 고민해볼 수
-    있었습니다.
+    👉 기존에 배웠던 React를 이용하여 어렵지 않게 애플리케이션을 만들어보는
+    경험을 하였으며 생체인증 등 애플리케이션 고유 기능들도 사용해볼 수
+    있었습니다. 또한 Expo를 사용하여 손쉽게 배포도 해보면서 간략한 전체적인
+    프로세스를 이해할 수 있었습니다.
   </aside>
