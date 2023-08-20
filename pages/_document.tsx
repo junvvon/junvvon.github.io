@@ -47,7 +47,7 @@ export default class MyDocument extends Document {
             type="text/css"
           />
           <link
-            href="http://cdn.jsdelivr.net/gh/joungkyun/font-d2coding/d2coding.css"
+            href="https://cdn.jsdelivr.net/gh/joungkyun/font-d2coding/d2coding.css"
             rel="stylesheet"
             type="text/css"
           />
