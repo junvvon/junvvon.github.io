@@ -20,7 +20,7 @@
     "@types/styled-components": "^5.1.26",
     "cross-env": "^7.0.3",
     "date-fns": "^2.29.3",
-    "firebase": "^10.2.0",
+    "firebase": "^10.3.0",
     "firebase-admin": "^11.10.1",
     "gray-matter": "^4.0.3",
     "next": "13.4.19",
