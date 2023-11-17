@@ -23,7 +23,7 @@
     "firebase": "^10.2.0",
     "firebase-admin": "^11.10.1",
     "gray-matter": "^4.0.3",
-    "next": "13.4.19",
+    "next": "14.0.3",
     "next-mdx-remote": "^4.4.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
