@@ -6603,10 +6603,10 @@ styled-jsx@5.1.1:
   dependencies:
     client-only "0.0.1"
 
-styled-normalize@^8.0.7:
-  version "8.0.7"
-  resolved "https://registry.yarnpkg.com/styled-normalize/-/styled-normalize-8.0.7.tgz#e883bff6a0c59a65a39365a4eb9c6cf48372c61f"
-  integrity sha512-qQV4O7B9g7ZUnStCwGde7Dc/mcFF/pz0Ha/LL7+j/r6uopf6kJCmmR7jCPQMCBrDkYiQ4xvw1hUoceVJkdaMuQ==
+styled-normalize@^8.1.1:
+  version "8.1.1"
+  resolved "https://registry.yarnpkg.com/styled-normalize/-/styled-normalize-8.1.1.tgz#333e2f7832d6d6443d05eacb2b29908dc26a0222"
+  integrity sha512-Nd6iLDjKuxotRHSewe+qFqvw33WxIotbjZ3YkC8802manACBchUIb7vJt/C8ylDrO5850HmlnQTApwJLuN9sug==
 
 stylis@^4.3.0:
   version "4.3.0"
